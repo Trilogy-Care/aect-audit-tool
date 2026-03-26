@@ -7,11 +7,11 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#1a365d;--blue:#2b6cb0;--blue-light:#3182ce;--blue-pale:#ebf8ff;
-  --green:#38a169;--green-bg:#f0fff4;--amber:#d69e2e;--amber-bg:#fffff0;
-  --red:#e53e3e;--red-bg:#fff5f5;--gray-50:#f7fafc;--gray-100:#edf2f7;
-  --gray-200:#e2e8f0;--gray-300:#cbd5e0;--gray-400:#a0aec0;--gray-500:#718096;
-  --gray-600:#4a5568;--gray-700:#2d3748;--gray-800:#1a202c;
+  --navy:#2C4C79;--blue:#64BCEA;--blue-light:#64BCEA;--blue-pale:#D6E8FA;
+  --green:#43C0BE;--green-bg:#E3F6F5;--amber:#FEBD33;--amber-bg:#FFF8E1;
+  --red:#E04B51;--red-bg:#FDEBED;--gray-50:#F0F5FA;--gray-100:#edf2f7;
+  --gray-200:#e2e8f0;--gray-300:#cbd5e0;--gray-400:#5373A3;--gray-500:#5373A3;
+  --gray-600:#2C4C79;--gray-700:#162C4C;--gray-800:#162C4C;
   --radius:6px;--shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
   --shadow-md:0 4px 6px rgba(0,0,0,.1),0 2px 4px rgba(0,0,0,.06);
   --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
@@ -24,7 +24,7 @@ button{cursor:pointer;font-family:inherit;font-size:inherit}
 input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* Header */
-.header{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-md);position:sticky;top:0;z-index:100}
+.header{background:linear-gradient(135deg,#2C4C79 0%,#007F7E 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-md);position:sticky;top:0;z-index:100}
 .header-left{display:flex;align-items:center;gap:16px}
 .logo{font-size:1.4rem;font-weight:700;letter-spacing:-.5px}
 .logo span{font-weight:300;opacity:.85;margin-left:4px}
@@ -37,7 +37,7 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .tabs{background:#fff;border-bottom:1px solid var(--gray-200);display:flex;padding:0 24px;box-shadow:var(--shadow)}
 .tab{padding:12px 20px;font-weight:500;color:var(--gray-500);border-bottom:2px solid transparent;cursor:pointer;transition:var(--transition);white-space:nowrap;user-select:none}
 .tab:hover{color:var(--gray-700);background:var(--gray-50)}
-.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab.active{color:#007F7E;border-bottom-color:#43C0BE}
 
 /* Main */
 .main{flex:1;display:flex;overflow:hidden;height:calc(100vh - 98px)}
@@ -995,9 +995,61 @@ function renderDocList() {
   const container = document.getElementById('docList');
   if (!container) return;
 
+  const docLocations = {
+    1:{where:"TC-003, CM-003",loc:"SharePoint Policies folder",status:"Verify current version"},
+    2:{where:"TC-003, CM-001, CM-002",loc:"SharePoint Policies folder",status:"Verify current version"},
+    3:{where:"TC-004",loc:"SharePoint Policies folder | OneDrive: 2024 ACQSC Audit/Policies/TC-004.pdf",status:"Confirmed in 2024 ACQSC submission",link:""},
+    4:{where:"TC-003, CM-024",loc:"SharePoint Policies folder",status:"Verify current version"},
+    5:{where:"PM-001",loc:"SharePoint Policies folder",status:"Verify current version"},
+    6:{where:"CO-001, TC-005",loc:"SharePoint Policies folder",status:"Verify current version"},
+    7:{where:"CO-004",loc:"SharePoint Policies folder | OneDrive: 2022 ACQSC/CO-004_1 CI Register.xlsx",status:"CI Register confirmed in archive"},
+    8:{where:"GAP — No TC policy mapped",loc:"Needs to be created or confirmed as covered by CO-004/CO-005",status:"POLICY GAP",gap:true},
+    9:{where:"GAP — No TC policy mapped",loc:"Needs to be created or confirmed as covered by CO-004",status:"POLICY GAP",gap:true},
+    10:{where:"CO-007, CM-023, CM-025",loc:"SharePoint Policies folder",status:"Verify current version"},
+    11:{where:"CM-008",loc:"SharePoint Policies folder | OneDrive: 2024 ACQSC Audit/Policies/CM-008.docx",status:"Confirmed in 2024 ACQSC submission"},
+    12:{where:"CM-010",loc:"SharePoint Policies folder",status:"Verify current version"},
+    13:{where:"CO-008, CO-009",loc:"SharePoint Policies folder",status:"Verify current version"},
+    14:{where:"GAP — No TC policy mapped",loc:"Needs dedicated Workforce Planning Policy or confirm HR-003 covers",status:"POLICY GAP",gap:true},
+    15:{where:"GAP — No TC policy mapped",loc:"Needs dedicated Workforce Training Policy or confirm HR-003 covers",status:"POLICY GAP",gap:true},
+    16:{where:"HR-003",loc:"SharePoint Policies folder",status:"Verify current version"},
+    17:{where:"CM-016, CO-012",loc:"SharePoint Policies folder",status:"Verify current version"},
+    18:{where:"CM-001, CM-002",loc:"SharePoint Policies folder | OneDrive: 2024 ACQSC Audit/Policies/CM-001.docx, CM-002.docx",status:"Confirmed in 2024 ACQSC submission"},
+    19:{where:"CM-003, CM-011",loc:"SharePoint Policies folder",status:"Verify current version"},
+    20:{where:"CM-019",loc:"SharePoint Policies folder",status:"Verify current version"},
+    21:{where:"GAP — No TC policy mapped",loc:"Needs dedicated Transitions Policy. CM-003 partially covers.",status:"POLICY GAP",gap:true},
+    22:{where:"CO-010",loc:"SharePoint Policies folder",status:"Verify current version"},
+    23:{where:"CM-013, CM-013A, CM-013B",loc:"AECT-Policies/ folder (markdown on disk)",status:"On disk — needs formatting for submission",link:"file:///Users/ashw/Downloads/AECT-Policies/"},
+    24:{where:"TC-005",loc:"SharePoint Policies folder",status:"Verify current version"},
+    25:{where:"CM-012",loc:"SharePoint Policies folder",status:"Verify current version"},
+    26:{where:"CM-022, CM-009",loc:"SharePoint Policies folder",status:"Verify current version"},
+    27:{where:"CM-005, CM-028",loc:"AECT-Policies/ folder (CM-028 on disk) | SharePoint (CM-005)",status:"CM-028 on disk, CM-005 in register"},
+    28:{where:"CM-015 (Cat 6 only)",loc:"SharePoint Policies folder",status:"N/A unless Category 6"},
+    29:{where:"GAP (Cat 6 only)",loc:"N/A unless Category 6",status:"N/A"},
+    30:{where:"CM-027",loc:"AECT-Policies/ folder (markdown on disk)",status:"On disk — needs formatting for submission"},
+    31:{where:"Consumer Advisory Body",loc:"To be collected — Celeste restarting meetings week of 31 March",status:"COLLECTION NEEDED",gap:true},
+    32:{where:"Joan / Candice team",loc:"To be collected — surveys not sent recently",status:"COLLECTION NEEDED",gap:true},
+    33:{where:"HR / SharePoint",loc:"Likely exists — needs locating and confirming current",status:"Verify exists"},
+    34:{where:"Board Secretary",loc:"SharePoint / Board portal",status:"COLLECTION NEEDED — need last 4 meetings",gap:true},
+    35:{where:"Quality Committee",loc:"To be collected — meetings need to start/restart fortnightly",status:"COLLECTION NEEDED",gap:true},
+    36:{where:"Quality Care Advisory Committee",loc:"To be collected — meetings need to start/restart",status:"COLLECTION NEEDED",gap:true},
+    37:{where:"CO-004, Confluence",loc:"CO-004_1 CI Register | Backfill from Confluence SaH uplift work",status:"Exists but needs updating"},
+    38:{where:"Clinical Team / Maryanne",loc:"To be confirmed — what clinical audits done in last 12 months",status:"COLLECTION NEEDED",gap:true},
+    39:{where:"CO-007",loc:"Confluence page 822116723",status:"Exists in Confluence — verify current",link:"https://trilogycare.atlassian.net/wiki/spaces/TCB/pages/822116723/Risk+Register"},
+    40:{where:"QA Team",loc:"AECT-Policies/Incident_Trend_Analysis_12months.md (draft on disk)",status:"Draft exists — needs finalising"},
+    41:{where:"QA Team",loc:"AECT-Policies/Complaint_Trend_Analysis_12months.md (draft on disk)",status:"Draft exists — must include unresolved >3 months"},
+    42:{where:"OneDrive ACQSC Audits archive",loc:"2024 DOH Assurance Review, 2024 Clinical Compliance Audit, 2026 DOH Review",status:"In archive — compile summary"},
+    43:{where:"Management team",loc:"To be collected — Celeste starting fortnightly meetings",status:"COLLECTION NEEDED",gap:true},
+    44:{where:"HR / Employment Hero",loc:"Pull from Employment Hero",status:"Should exist — verify"},
+    45:{where:"HR / Employment Hero / Supplier Portal",loc:"TMC-81 (banning list) released, SPO2 in progress",status:"Partial — compile results"},
+    46:{where:"HR / Employment Hero",loc:"Pull from Employment Hero",status:"Should exist — verify"},
+    47:{where:"Clinical Team / Maryanne",loc:"To be collected — clinical governance meetings need to start",status:"COLLECTION NEEDED",gap:true},
+    48:{where:"Various — Confluence, Zoho",loc:"Check-in reports (CHK project), Hypercare sampling",status:"Compile from project outputs"},
+  };
+
   let html = '';
   AECT_DOCS.forEach(doc => {
     const ds = state.docs[doc.num] || {policies:[],docStatus:'current',lastReviewed:'',owner:''};
+    const dloc = docLocations[doc.num] || {};
     if (search && !doc.desc.toLowerCase().includes(search) && !String(doc.num).includes(search)) return;
     if (statusFilter && ds.docStatus !== statusFilter) return;
 
@@ -1045,6 +1097,17 @@ function renderDocList() {
         <div class="action-field">
           <label>Owner</label>
           <input type="text" class="field-input doc-owner" data-docnum="${doc.num}" value="${ds.owner}" placeholder="e.g. Quality Manager">
+        </div>
+        <div class="action-field" style="grid-column:1/-1">
+          <label>Where to Find / Location</label>
+          <div style="font-size:.85rem;padding:8px 12px;background:${dloc.gap ? 'var(--red-bg)' : 'var(--gray-50)'};border-radius:var(--radius);border:1px solid ${dloc.gap ? 'var(--red)' : 'var(--gray-200)'}">
+            <div style="font-weight:600;color:${dloc.gap ? 'var(--red)' : 'var(--navy)'}">
+              ${dloc.gap ? '\u26A0 ' : '\uD83D\uDCC2 '}${dloc.status || 'Unknown'}
+            </div>
+            <div style="margin-top:4px;color:var(--gray-600)">${dloc.loc || 'Location not documented'}</div>
+            <div style="margin-top:2px;color:var(--gray-400);font-size:.8rem">TC Policy: ${dloc.where || 'Not mapped'}</div>
+            ${dloc.link ? '<a href="' + dloc.link + '" target="_blank" style="display:inline-block;margin-top:4px;color:var(--blue);font-size:.8rem;font-weight:500">\u2192 Open document location</a>' : ''}
+          </div>
         </div>
       </div>
     </div>`;
