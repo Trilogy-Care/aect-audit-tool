@@ -6,6 +6,16 @@
 <title>AECT Policy Mapper - Trilogy Care</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#162C4C;color:#fff;padding:6px 12px;border-radius:6px;font-size:.75rem;font-weight:400;white-space:normal;width:max-content;max-width:280px;z-index:300;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.15);pointer-events:none}
+[data-tip]:hover::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#162C4C;z-index:301;pointer-events:none}
+.clickable{cursor:pointer;transition:all .15s ease}.clickable:hover{opacity:.85;text-decoration:underline}
+.policy-link{color:#2C4C79;font-weight:600;cursor:pointer;border-bottom:1px dashed #2C4C79;transition:all .15s ease}
+.policy-link:hover{color:#007F7E;border-bottom-color:#43C0BE}
+.linear-link{color:#64BCEA;font-weight:600;text-decoration:none;transition:all .15s ease}
+.linear-link:hover{color:#2C4C79;text-decoration:underline}
+.doc-card:hover,.gap-card:hover,.action-card:hover{box-shadow:0 6px 16px rgba(0,0,0,.1);transform:translateY(-1px)}
+.ev-table tbody tr:hover td{background:rgba(67,192,190,.06)}
 :root{
   --navy:#2C4C79;--blue:#64BCEA;--blue-light:#64BCEA;--blue-pale:#D6E8FA;
   --green:#43C0BE;--green-bg:#E3F6F5;--amber:#FEBD33;--amber-bg:#FFF8E1;
@@ -207,6 +217,27 @@ input,select,textarea{font-family:inherit;font-size:inherit}
   .sidebar{display:none!important}
   .action-card,.doc-card,.gap-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ccc!important}
 }
+/* Tooltip system */
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#162C4C;color:#fff;padding:6px 12px;border-radius:6px;font-size:.75rem;font-weight:400;white-space:normal;width:max-content;max-width:280px;z-index:300;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.15);pointer-events:none}
+[data-tip]:hover::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#162C4C;z-index:301;pointer-events:none}
+
+/* Clickable policy badge */
+a.policy-link{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap;background:var(--blue-pale);color:var(--blue);text-decoration:none;cursor:pointer;transition:all .15s ease}
+a.policy-link:hover{background:var(--blue);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+a.linear-link{color:var(--blue);font-weight:600;text-decoration:none;border-bottom:1px dashed var(--blue)}
+a.linear-link:hover{color:var(--navy);border-bottom-color:var(--navy)}
+
+/* Enhanced hover effects */
+.gap-card{transition:all .2s ease}
+.gap-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.doc-card:hover{transform:translateY(-1px)}
+.action-card:hover{transform:translateY(-1px)}
+.ev-table tbody tr:hover td{background:var(--gray-50)!important}
+.heatmap-table tbody tr:hover td{background:var(--blue-pale)!important}
+.ev-stat{transition:all .2s ease}
+.ev-stat:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+
 /* Scrollbar */
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--gray-400)}
 </style>
@@ -216,7 +247,7 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 <div class="header">
   <div class="header-left">
     <div class="logo">Trilogy Care<span>AECT Policy Mapper</span></div>
-    <div class="header-badge">Registration Renewal 2026</div>
+    <a href="https://www.agedcarequality.gov.au/sites/default/files/media/renewal-of-registration-audit-guide.pdf" target="_blank" class="header-badge" style="text-decoration:none;color:#fff;cursor:pointer" data-tip="Open ACQSC Renewal of Registration Audit Guide (PDF)">Registration Renewal 2026</a>
   </div>
   <div class="header-right">
     <div class="save-indicator"><span class="dot"></span> Auto-saved</div>
@@ -224,14 +255,14 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 </div>
 
 <div class="tabs" id="tabBar">
-  <div class="tab active" data-tab="gap">Gap Analysis</div>
-  <div class="tab" data-tab="workshop">Workshop Actions</div>
-  <div class="tab" data-tab="ci">Continuous Improvement</div>
-  <div class="tab" data-tab="prep">Staff Prep</div>
-  <div class="tab" data-tab="standards">Standards View</div>
-  <div class="tab" data-tab="documents">Documents View</div>
-  <div class="tab" data-tab="evidence">Verified Evidence</div>
-  <div class="tab" data-tab="export">Export / Import</div>
+  <div class="tab active" data-tab="gap" data-tip="Policy gaps, coverage scores, and per-standard breakdown with Linear projects">Gap Analysis</div>
+  <div class="tab" data-tab="workshop" data-tip="Action items and decisions from the registration renewal workshop">Workshop Actions</div>
+  <div class="tab" data-tab="ci" data-tip="35 continuous improvement initiatives mapped to Quality Standards">Continuous Improvement</div>
+  <div class="tab" data-tab="prep" data-tip="Golden rules, likely questions, and terminology for staff audit interviews">Staff Prep</div>
+  <div class="tab" data-tab="standards" data-tip="Map TC policies to individual Standard outcomes and actions">Standards View</div>
+  <div class="tab" data-tab="documents" data-tip="All 48 AECT required supporting documents with policy mappings">Documents View</div>
+  <div class="tab" data-tab="evidence" data-tip="Cross-referenced policy verification against Register, Archive, Disk, and Qdrant">Verified Evidence</div>
+  <div class="tab" data-tab="export" data-tip="Export mappings as CSV or JSON, import backups, or reset data">Export / Import</div>
 </div>
 
 <div class="main">
@@ -702,6 +733,30 @@ function loadState() {
 
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+// Helper: make Linear IDs clickable
+function linearLink(id, title) {
+  const slug = id.toLowerCase();
+  const display = title ? id + ': ' + title : id;
+  return '<a href="https://linear.app/trilogycare/issue/' + slug + '" target="_blank" class="linear-link" data-tip="Open in Linear">' + display + '</a>';
+}
+// Helper: make policy codes clickable (search in docs tab)
+function policyLink(code) {
+  return '<span class="policy-link" onclick="switchToDoc(\'' + code + '\')" data-tip="Click to find this policy in Documents View">' + code + '</span>';
+}
+// Helper: switch to documents tab and search
+function switchToDoc(search) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  var tab = document.querySelector('[data-tab=documents]');
+  tab.classList.add('active');
+  document.getElementById('panel-documents').classList.add('active');
+  renderDocuments();
+  setTimeout(function(){
+    var s = document.getElementById('docSearch');
+    if(s){s.value=search;s.dispatchEvent(new Event('input'));}
+  },100);
 }
 
 function showToast(msg, type='success') {
@@ -1378,19 +1433,19 @@ function renderGap() {
     <div class="gap-card">
       <h3>Summary Breakdown</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-        <div style="background:var(--green-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--green)">
+        <div style="background:var(--green-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--green)" data-tip="TC policies verified against Master Register, ACQSC Archive, On Disk, and Qdrant KB">
           <div style="font-size:1.5rem;font-weight:700;color:var(--green)">${policyMapped.length}</div>
           <div style="font-size:.8rem;color:var(--gray-600)">Policies Verified</div>
         </div>
-        <div style="background:var(--red-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--red)">
+        <div style="background:var(--red-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--red)" data-tip="AECT-required policies with no matching TC policy found in any verified source">
           <div style="font-size:1.5rem;font-weight:700;color:var(--red)">${policyGaps.length}</div>
           <div style="font-size:.8rem;color:var(--gray-600)">Policy Gaps</div>
         </div>
-        <div style="background:var(--amber-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--amber)">
+        <div style="background:var(--amber-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--amber)" data-tip="Meeting minutes, reports, analyses, and registers that need to be physically gathered for audit">
           <div style="font-size:1.5rem;font-weight:700;color:var(--amber)">${evidenceToCollect.length}</div>
           <div style="font-size:.8rem;color:var(--gray-600)">Evidence to Collect</div>
         </div>
-        <div style="background:var(--gray-50);padding:12px;border-radius:var(--radius);border-left:3px solid var(--gray-400)">
+        <div style="background:var(--gray-50);padding:12px;border-radius:var(--radius);border-left:3px solid var(--gray-400)" data-tip="Category 6 (residential) only policies. N/A if TC is Category 4 or 5">
           <div style="font-size:1.5rem;font-weight:700;color:var(--gray-500)">${cat6.length}</div>
           <div style="font-size:.8rem;color:var(--gray-600)">Cat 6 Only (N/A)</div>
         </div>
@@ -1404,7 +1459,7 @@ function renderGap() {
       <h3 style="color:var(--red)">\u274C Critical: ${policyGaps.length} Policy Gaps \u2014 No TC Policy Found</h3>
       <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:12px">These AECT-required policies have no matching TC policy in the Master Register, ACQSC Archive, local disk, or Qdrant KB.</p>
       <table class="heatmap-table" style="width:100%">
-        <thead><tr><th class="row-header" style="text-align:left">Doc</th><th style="text-align:left">Required AECT Policy</th><th style="text-align:left">Outcomes Affected</th><th>Impact</th><th style="text-align:left">Recommendation</th></tr></thead>
+        <thead><tr><th class="row-header" style="text-align:left" data-tip="AECT supporting document number from the audit evidence list">Doc</th><th style="text-align:left" data-tip="The policy name required by the AECT audit evidence checklist">Required AECT Policy</th><th style="text-align:left" data-tip="Which Strengthened Quality Standard outcomes this policy covers">Outcomes Affected</th><th data-tip="Number of AECT Quality Standard outcomes affected by this gap">Impact</th><th style="text-align:left" data-tip="Suggested action to close this gap before audit">Recommendation</th></tr></thead>
         <tbody>${policyGaps.map(d => {
           const oc = d.outcomes.split(',').map(o=>o.trim()).filter(Boolean);
           const rec = d.num === 8 ? 'May be covered by CO-004 or CO-005 — needs confirmation'
@@ -1430,7 +1485,7 @@ function renderGap() {
     <h3 style="color:var(--amber)">\uD83D\uDCCB ${evidenceDocs.length} Evidence Documents to Collect</h3>
     <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:12px">These are meeting minutes, reports, analyses, and registers that need to be physically gathered — not policies to write.</p>
     <table class="heatmap-table" style="width:100%">
-      <thead><tr><th class="row-header" style="text-align:left">Doc</th><th style="text-align:left">Required Evidence</th><th style="text-align:left">Outcomes</th><th>Impact</th><th>Priority</th></tr></thead>
+      <thead><tr><th class="row-header" style="text-align:left" data-tip="AECT supporting document number">Doc</th><th style="text-align:left" data-tip="Evidence document required for the audit submission">Required Evidence</th><th style="text-align:left" data-tip="Which Quality Standard outcomes this evidence supports">Outcomes</th><th data-tip="Number of outcomes affected - higher means more critical to collect">Impact</th><th data-tip="Based on number of outcomes: HIGH (7+), MED (3-6), LOW (1-2)">Priority</th></tr></thead>
       <tbody>${evidenceDocs.sort((a,b) => {
         const ac = b.outcomes.split(',').length - a.outcomes.split(',').length;
         return ac;
@@ -1465,7 +1520,7 @@ function renderGap() {
     <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:12px">TC policies ranked by number of AECT outcomes they cover. Source verification shown.</p>
     <div style="overflow-x:auto">
       <table class="heatmap-table">
-        <thead><tr><th class="row-header" style="text-align:left">TC Policy</th><th style="text-align:left">Policy Name</th><th style="text-align:left">Verification</th><th style="text-align:left">AECT Docs</th><th>Outcomes</th></tr></thead>
+        <thead><tr><th class="row-header" style="text-align:left" data-tip="Trilogy Care internal policy code">TC Policy</th><th style="text-align:left" data-tip="Full policy name from the Master Register or source">Policy Name</th><th style="text-align:left" data-tip="Where this policy was verified: Register, Archive, On Disk, or Qdrant KB">Verification</th><th style="text-align:left" data-tip="Which AECT supporting documents this policy satisfies">AECT Docs</th><th data-tip="Total number of Quality Standard outcomes covered by this policy">Outcomes</th></tr></thead>
         <tbody>`;
 
   // Build coverage map from verified docs
@@ -1483,10 +1538,10 @@ function renderGap() {
     const name = masterRegister[code] || onDisk[code] || code;
     const heatClass = 'heat-' + Math.min(6, Math.ceil(data.outcomes.size / 3));
     html += `<tr>
-      <td style="font-weight:600">${code}</td>
+      <td style="font-weight:600"><a class="policy-link">${code}</a></td>
       <td style="font-size:.82rem">${name}</td>
       <td>${getSourceBadges(code)}</td>
-      <td style="font-size:.75rem">${[...data.docs].sort((a,b)=>a-b).map(n=>'Doc '+n).join(', ')}</td>
+      <td style="font-size:.75rem">${[...data.docs].sort((a,b)=>a-b).map(n=>'<a style="cursor:pointer;color:var(--blue);text-decoration:underline" onclick="switchToDocumentsTab(\''+n+'\')">Doc '+n+'</a>').join(', ')}</td>
       <td class="${heatClass}" style="font-weight:700;text-align:center">${data.outcomes.size}</td>
     </tr>`;
   });
@@ -1649,7 +1704,7 @@ function renderGap() {
         <div style="font-weight:600;color:var(--red);margin-bottom:8px">\u274C Policy Gaps</div>
         <table style="width:100%;border-collapse:collapse;font-size:.85rem">
           <thead><tr style="border-bottom:1px solid #fca5a5"><th style="text-align:left;padding:4px 8px">Doc</th><th style="text-align:left;padding:4px 8px">Required Policy</th><th style="padding:4px 8px">Impact</th><th style="text-align:left;padding:4px 8px">Recommendation</th></tr></thead>
-          <tbody>${std.gaps.map(g => '<tr><td style="padding:4px 8px;font-weight:700">'+g.doc+'</td><td style="padding:4px 8px">'+g.desc+'</td><td style="padding:4px 8px;text-align:center;font-weight:700;color:var(--red)">'+g.impact+'</td><td style="padding:4px 8px;font-size:.8rem">'+g.suggestion+'</td></tr>').join('')}</tbody>
+          <tbody>${std.gaps.map(g => '<tr><td style="padding:4px 8px;font-weight:700"><a style="cursor:pointer;color:var(--blue);text-decoration:underline" onclick="switchToDocumentsTab(\''+g.doc+'\')">'+g.doc+'</a></td><td style="padding:4px 8px">'+g.desc+'</td><td style="padding:4px 8px;text-align:center;font-weight:700;color:var(--red)">'+g.impact+'</td><td style="padding:4px 8px;font-size:.8rem">'+g.suggestion+'</td></tr>').join('')}</tbody>
         </table>
       </div>`;
     }
@@ -1659,9 +1714,9 @@ function renderGap() {
       html += `<div style="margin-bottom:14px">
         <div style="font-weight:600;color:var(--green);margin-bottom:6px">\u2705 Verified Policies (${std.policies.length})</div>
         <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
-          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px">AECT Doc</th><th style="text-align:left;padding:6px 10px">Description</th><th style="text-align:left;padding:6px 10px">TC Policies</th><th style="text-align:left;padding:6px 10px">Verification</th></tr></thead>
+          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px" data-tip="AECT audit evidence document number">AECT Doc</th><th style="text-align:left;padding:6px 10px" data-tip="Brief description of the required policy">Description</th><th style="text-align:left;padding:6px 10px" data-tip="Matching Trilogy Care internal policy codes">TC Policies</th><th style="text-align:left;padding:6px 10px" data-tip="Where the policy was found: Register, Archive, Disk, or Qdrant">Verification</th></tr></thead>
           <tbody>${std.policies.map(p => {
-            return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px;font-weight:700">Doc '+p.doc+'</td><td style="padding:6px 10px">'+p.desc+'</td><td style="padding:6px 10px;font-weight:500">'+p.tc.join(', ')+'</td><td style="padding:6px 10px">'+p.tc.map(c => getSourceBadges(c)).join(' ')+'</td></tr>';
+            return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px;font-weight:700"><a style="cursor:pointer;color:var(--blue);text-decoration:underline" onclick="switchToDocumentsTab(\''+p.doc+'\')">Doc '+p.doc+'</a></td><td style="padding:6px 10px">'+p.desc+'</td><td style="padding:6px 10px;font-weight:500">'+p.tc.map(c => '<a class="policy-link">'+c+'</a>').join(' ')+'</td><td style="padding:6px 10px">'+p.tc.map(c => getSourceBadges(c)).join(' ')+'</td></tr>';
           }).join('')}</tbody>
         </table>
       </div>`;
@@ -1672,9 +1727,9 @@ function renderGap() {
       html += `<div style="margin-bottom:14px">
         <div style="font-weight:600;color:var(--blue);margin-bottom:6px">\uD83D\uDCC1 Supporting Linear Projects (${std.projects.length})</div>
         <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
-          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px">Project</th><th style="padding:6px 10px">Status</th><th style="text-align:left;padding:6px 10px">How it Supports this Standard</th></tr></thead>
+          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px" data-tip="Linear project name - click to open in Linear">Project</th><th style="padding:6px 10px" data-tip="Current project status: Done, QA, Dev, In Progress, Design, Backlog">Status</th><th style="text-align:left;padding:6px 10px" data-tip="How this project provides evidence for the standard outcomes">How it Supports this Standard</th></tr></thead>
           <tbody>${std.projects.map(p => {
-            const link = p.url ? '<a href="'+p.url+'" target="_blank" style="color:var(--blue);font-weight:500">'+p.id+'</a>' : '<span style="font-weight:500">'+p.id+'</span>';
+            const link = p.url ? '<a href="'+p.url+'" target="_blank" class="linear-link" data-tip="Open project in Linear">'+p.id+'</a>' : '<span style="font-weight:500">'+p.id+'</span>';
             return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px">'+link+'</td><td style="padding:6px 10px;text-align:center">'+statusBadge(p.status)+'</td><td style="padding:6px 10px;font-size:.82rem">'+p.why+'</td></tr>';
           }).join('')}</tbody>
         </table>
@@ -1686,9 +1741,9 @@ function renderGap() {
       html += `<div style="margin-bottom:14px">
         <div style="font-weight:600;color:var(--navy);margin-bottom:6px">\uD83D\uDD27 Active Linear Issues (${std.issues.length})</div>
         <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
-          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px">Issue</th><th style="text-align:left;padding:6px 10px">Title</th><th style="padding:6px 10px">Status</th><th style="text-align:left;padding:6px 10px">Relevance</th></tr></thead>
+          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px" data-tip="Linear issue ID - click to open in Linear">Issue</th><th style="text-align:left;padding:6px 10px" data-tip="Issue title from Linear">Title</th><th style="padding:6px 10px" data-tip="Current issue status: Done, In Progress, Todo, Backlog, Blocked">Status</th><th style="text-align:left;padding:6px 10px" data-tip="How this issue relates to the standard outcomes">Relevance</th></tr></thead>
           <tbody>${std.issues.map(i => {
-            const link = i.url ? '<a href="'+i.url+'" target="_blank" style="color:var(--blue);font-weight:600">'+i.id+'</a>' : '<span style="font-weight:600">'+i.id+'</span>';
+            const link = i.url ? '<a href="'+i.url+'" target="_blank" class="linear-link" data-tip="Open '+i.id+' in Linear">'+i.id+'</a>' : '<span style="font-weight:600">'+i.id+'</span>';
             return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px">'+link+'</td><td style="padding:6px 10px">'+i.title+'</td><td style="padding:6px 10px;text-align:center">'+statusBadge(i.status)+'</td><td style="padding:6px 10px;font-size:.82rem">'+i.why+'</td></tr>';
           }).join('')}</tbody>
         </table>
@@ -1702,7 +1757,7 @@ function renderGap() {
         <div style="font-weight:600;color:var(--amber);margin-bottom:6px">\uD83D\uDCCB Evidence to Collect (${evDocs.length})</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">${evDocs.map(d => {
           const oc = d.outcomes.split(',').length;
-          return '<span style="background:var(--amber-bg);border:1px solid var(--amber);padding:4px 10px;border-radius:var(--radius);font-size:.8rem">Doc '+d.num+': '+d.desc.substring(0,50)+(d.desc.length>50?'...':'')+'<span style="font-weight:700;margin-left:4px">('+oc+')</span></span>';
+          return '<span style="background:var(--amber-bg);border:1px solid var(--amber);padding:4px 10px;border-radius:var(--radius);font-size:.8rem;cursor:pointer" onclick="switchToDocumentsTab(\''+d.num+'\')"><strong style="color:var(--blue)">Doc '+d.num+'</strong>: '+d.desc.substring(0,50)+(d.desc.length>50?'...':'')+'<span style="font-weight:700;margin-left:4px">('+oc+')</span></span>';
         }).join('')}</div>
       </div>`;
     }
@@ -1807,10 +1862,10 @@ function renderPrep() {
 
   // Summary stats
   html += '<div class="ev-summary">' +
-    '<div class="ev-stat" style="border-top-color:var(--navy)"><div class="num">6</div><div class="label">Golden Rules</div></div>' +
-    '<div class="ev-stat" style="border-top-color:var(--blue)"><div class="num">5</div><div class="label">Standards Covered</div></div>' +
-    '<div class="ev-stat" style="border-top-color:var(--amber)"><div class="num">' + totalQuestions + '</div><div class="label">Likely Questions</div></div>' +
-    '<div class="ev-stat" style="border-top-color:var(--red)"><div class="num">10</div><div class="label">Key Terms</div></div>' +
+    '<div class="ev-stat" style="border-top-color:var(--navy)" data-tip="Core principles every staff member should follow during audit interviews"><div class="num">6</div><div class="label">Golden Rules</div></div>' +
+    '<div class="ev-stat" style="border-top-color:var(--blue)" data-tip="Standards 1-5 with Q&A preparation. Std 6 and 7 are N/A for Category 5"><div class="num">5</div><div class="label">Standards Covered</div></div>' +
+    '<div class="ev-stat" style="border-top-color:var(--amber)" data-tip="Questions auditors are likely to ask staff, with suggested responses and warnings"><div class="num">' + totalQuestions + '</div><div class="label">Likely Questions</div></div>' +
+    '<div class="ev-stat" style="border-top-color:var(--red)" data-tip="Correct terminology to use during interviews - the Commission notices consistency"><div class="num">10</div><div class="label">Key Terms</div></div>' +
   '</div>';
 
   // Golden Rules
@@ -1886,7 +1941,7 @@ function renderPrep() {
   // Key Terminology
   html += '<div class="ev-section-title" style="margin-top:32px"><span class="icon">&#128218;</span> Key Terminology</div>';
   html += '<p style="font-size:.85rem;color:var(--gray-500);margin-bottom:16px">Use the language of the Strengthened Quality Standards. The Commission notices when staff use consistent, formal terminology.</p>';
-  html += '<table class="ev-table"><thead><tr><th style="width:50%;background:var(--green);color:#fff">Use This</th><th style="width:50%;background:var(--red);color:#fff">Not This</th></tr></thead><tbody>';
+  html += '<table class="ev-table"><thead><tr><th style="width:50%;background:var(--green);color:#fff" data-tip="Preferred terminology aligned with the Strengthened Quality Standards">Use This</th><th style="width:50%;background:var(--red);color:#fff" data-tip="Informal or outdated terminology to avoid during audit interviews">Not This</th></tr></thead><tbody>';
   terminology.forEach(function(t) {
     html += '<tr><td style="font-weight:600;color:var(--green)">' + t.use + '</td><td style="color:var(--red)">' + t.avoid + '</td></tr>';
   });
@@ -2046,13 +2101,14 @@ function renderCI() {
 
     // Summary stats
     html += '<div class="ev-summary">' +
-      '<div class="ev-stat mapped"><div class="num">' + total + '</div><div class="label">Total Initiatives</div></div>' +
-      '<div class="ev-stat" style="border-top-color:var(--green)"><div class="num">' + doneCount + '</div><div class="label">Completed</div></div>' +
-      '<div class="ev-stat" style="border-top-color:var(--blue)"><div class="num">' + inProgCount + '</div><div class="label">In Progress / Dev / QA</div></div>' +
-      '<div class="ev-stat" style="border-top-color:var(--amber)"><div class="num">' + designCount + '</div><div class="label">Design</div></div>' +
-      '<div class="ev-stat" style="border-top-color:var(--gray-400)"><div class="num">' + backlogCount + '</div><div class="label">Backlog</div></div>';
+      '<div class="ev-stat mapped" data-tip="All continuous improvement initiatives tracked in the last 12 months"><div class="num">' + total + '</div><div class="label">Total Initiatives</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--green)" data-tip="Initiatives successfully delivered and available as audit evidence"><div class="num">' + doneCount + '</div><div class="label">Completed</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--blue)" data-tip="Initiatives actively being built, tested, or deployed"><div class="num">' + inProgCount + '</div><div class="label">In Progress / Dev / QA</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--amber)" data-tip="Initiatives in design phase - requirements or UX being defined"><div class="num">' + designCount + '</div><div class="label">Design</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--gray-400)" data-tip="Initiatives planned but not yet started"><div class="num">' + backlogCount + '</div><div class="label">Backlog</div></div>';
+    var stdTips = {1:'Standard 1: The Individual - person-centred care, dignity, choice, transparency',2:'Standard 2: The Organisation - governance, risk, incidents, complaints, workforce',3:'Standard 3: Care and Services - assessment, delivery, communication, coordination',4:'Standard 4: The Environment - home safety, equipment, infection control',5:'Standard 5: Clinical Care - clinical governance, medication, comprehensive care'};
     for (var s = 1; s <= 5; s++) {
-      html += '<div class="ev-stat" style="border-top-color:var(--navy)"><div class="num">' + stdCounts[s] + '</div><div class="label">Std ' + s + '</div></div>';
+      html += '<div class="ev-stat" style="border-top-color:var(--navy)" data-tip="' + stdTips[s] + '"><div class="num">' + stdCounts[s] + '</div><div class="label">Std ' + s + '</div></div>';
     }
     html += '</div>';
 
@@ -2092,14 +2148,14 @@ function renderCI() {
 
     // Table
     html += '<table class="ev-table"><thead><tr>' +
-      '<th style="width:70px">ID</th>' +
-      '<th>Initiative</th>' +
-      '<th style="width:120px">Standards</th>' +
-      '<th style="width:100px">Category</th>' +
-      '<th style="width:95px">Status</th>' +
-      '<th style="width:75px">Date</th>' +
-      '<th style="width:150px">Owner</th>' +
-      '<th>Evidence & Link</th>' +
+      '<th style="width:70px" data-tip="Unique CI register identifier">ID</th>' +
+      '<th data-tip="Initiative name and description">Initiative</th>' +
+      '<th style="width:120px" data-tip="Which Strengthened Quality Standard outcomes this supports">Standards</th>' +
+      '<th style="width:100px" data-tip="Category: Technology, Process, System, Compliance, etc.">Category</th>' +
+      '<th style="width:95px" data-tip="Current status: Done, In Progress, Dev, QA, Design, Backlog">Status</th>' +
+      '<th style="width:75px" data-tip="When the initiative was started or completed">Date</th>' +
+      '<th style="width:150px" data-tip="Person or team responsible for this initiative">Owner</th>' +
+      '<th data-tip="Linear tickets, Confluence pages, or other evidence of the work done">Evidence & Link</th>' +
     '</tr></thead><tbody>';
 
     filtered.forEach(function(item) {
@@ -2112,7 +2168,7 @@ function renderCI() {
         '<td>' + statusBadge(item.status) + '</td>' +
         '<td style="white-space:nowrap">' + item.date + '</td>' +
         '<td style="font-size:.8rem">' + item.owner + '</td>' +
-        '<td style="font-size:.8rem">' + item.evidence + (item.url ? ' <a href="' + item.url + '" target="_blank" style="color:var(--blue);white-space:nowrap">View</a>' : '') + '</td>' +
+        '<td style="font-size:.8rem">' + item.evidence + (item.url ? ' <a href="' + item.url + '" target="_blank" class="linear-link" data-tip="Open in Linear" style="white-space:nowrap">\u2192 View</a>' : '') + '</td>' +
       '</tr>';
     });
 
@@ -2314,16 +2370,16 @@ function renderEvidence() {
   </div>
 
   <div class="ev-summary">
-    <div class="ev-stat mapped"><div class="num" style="color:var(--green)">${mapped.length}</div><div class="label">Policies Verified</div></div>
-    <div class="ev-stat gap"><div class="num" style="color:var(--red)">${gaps.length}</div><div class="label">Policy Gaps</div></div>
-    <div class="ev-stat evidence"><div class="num" style="color:var(--amber)">${evidenceGaps.length}</div><div class="label">Evidence to Collect</div></div>
-    <div class="ev-stat na"><div class="num" style="color:var(--gray-400)">${policiesCat6.length}</div><div class="label">Cat 6 Only</div></div>
+    <div class="ev-stat mapped" data-tip="AECT policies with at least one TC policy verified in Master Register, Archive, Disk, or Qdrant"><div class="num" style="color:var(--green)">${mapped.length}</div><div class="label">Policies Verified</div></div>
+    <div class="ev-stat gap" data-tip="AECT-required policies with no matching TC policy found in any verified source"><div class="num" style="color:var(--red)">${gaps.length}</div><div class="label">Policy Gaps</div></div>
+    <div class="ev-stat evidence" data-tip="Meeting minutes, reports, registers that need to be physically collected for the audit submission"><div class="num" style="color:var(--amber)">${evidenceGaps.length}</div><div class="label">Evidence to Collect</div></div>
+    <div class="ev-stat na" data-tip="Policies only required for Category 6 (residential) providers. N/A for Category 4/5"><div class="num" style="color:var(--gray-400)">${policiesCat6.length}</div><div class="label">Cat 6 Only</div></div>
   </div>`;
 
   // GAPS SECTION FIRST
   if (gaps.length > 0) {
     html += `<div class="ev-section-title"><span class="icon">\u274C</span> Policy Gaps \u2014 No TC Policy Identified (${gaps.length})</div>
-    <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Required AECT Policy</th><th>Outcomes Affected</th><th style="width:60px">Impact</th><th>Action Needed</th></tr></thead><tbody>`;
+    <table class="ev-table"><thead><tr><th style="width:50px" data-tip="AECT supporting document number">Doc</th><th data-tip="Policy name required by the AECT audit evidence checklist">Required AECT Policy</th><th data-tip="Quality Standard outcomes this policy covers">Outcomes Affected</th><th style="width:60px" data-tip="Number of outcomes affected by this gap">Impact</th><th data-tip="Recommended action to close this gap">Action Needed</th></tr></thead><tbody>`;
     for (const d of gaps) {
       const oc = d.outcomes.split(',').map(o=>o.trim()).filter(Boolean);
       html += `<tr class="gap-row">
@@ -2339,11 +2395,11 @@ function renderEvidence() {
 
   // MAPPED POLICIES
   html += `<div class="ev-section-title"><span class="icon">\u2705</span> Verified Policy Mappings (${mapped.length}/30)</div>
-  <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Required AECT Policy</th><th>TC Policy Mapping</th><th>Verification Sources</th><th>Outcomes</th></tr></thead><tbody>`;
+  <table class="ev-table"><thead><tr><th style="width:50px" data-tip="AECT supporting document number">Doc</th><th data-tip="Required policy from the AECT evidence checklist">Required AECT Policy</th><th data-tip="TC internal policy codes that satisfy this requirement">TC Policy Mapping</th><th data-tip="Where verification was found: Master Register, ACQSC Archive, On Disk, or Qdrant KB">Verification Sources</th><th data-tip="Quality Standard outcomes covered by this document">Outcomes</th></tr></thead><tbody>`;
   for (const d of mapped) {
     const policyRows = d.tc.map(code => {
       const name = masterRegister[code] || onDisk[code] || code;
-      return `<div style="margin-bottom:4px"><strong>${code}</strong> <span style="color:var(--gray-500)">${name}</span><br>${getBadges(code)}</div>`;
+      return `<div style="margin-bottom:4px"><a class="policy-link">${code}</a> <span style="color:var(--gray-500)">${name}</span><br>${getBadges(code)}</div>`;
     }).join('');
     const sources = new Set();
     d.tc.forEach(code => {
@@ -2364,7 +2420,7 @@ function renderEvidence() {
 
   // EVIDENCE TO COLLECT
   html += `<div class="ev-section-title"><span class="icon">\uD83D\uDCCB</span> Evidence Documents to Collect (${evidenceDocs.length})</div>
-  <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Required Evidence</th><th>Outcomes Affected</th><th style="width:60px">Impact</th><th>Status</th></tr></thead><tbody>`;
+  <table class="ev-table"><thead><tr><th style="width:50px" data-tip="AECT supporting document number">Doc</th><th data-tip="Evidence document required for audit submission">Required Evidence</th><th data-tip="Quality Standard outcomes this evidence supports">Outcomes Affected</th><th style="width:60px" data-tip="Number of outcomes affected - higher means more critical to collect">Impact</th><th data-tip="To Collect = not yet gathered, Partial = some evidence exists">Status</th></tr></thead><tbody>`;
   for (const d of evidenceDocs) {
     const oc = d.outcomes.split(',').map(o=>o.trim()).filter(Boolean);
     const hasTc = d.tc.length > 0;
@@ -2381,7 +2437,7 @@ function renderEvidence() {
   // CAT 6 ONLY
   if (policiesCat6.length > 0) {
     html += `<div class="ev-section-title"><span class="icon">\u2B1C</span> Category 6 Only (${policiesCat6.length})</div>
-    <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Policy</th><th>TC Mapping</th><th>Outcomes</th><th>Note</th></tr></thead><tbody>`;
+    <table class="ev-table"><thead><tr><th style="width:50px" data-tip="AECT supporting document number">Doc</th><th data-tip="Policy name from AECT evidence checklist">Policy</th><th data-tip="TC internal policy mapping, if any">TC Mapping</th><th data-tip="Quality Standard outcomes covered">Outcomes</th><th data-tip="Category 6 = residential aged care only">Note</th></tr></thead><tbody>`;
     for (const d of policiesCat6) {
       html += `<tr>
         <td style="font-weight:700">${d.num}</td>
@@ -2513,15 +2569,15 @@ function renderWorkshop() {
   </div>
 
   <div class="ev-summary">
-    <div class="ev-stat gap"><div class="num" style="color:var(--red)">${actions.filter(a=>a.priority==='URGENT').length}</div><div class="label">Urgent Actions</div></div>
-    <div class="ev-stat mapped"><div class="num" style="color:#c05621">${actions.filter(a=>a.priority==='HIGH').length}</div><div class="label">High Priority</div></div>
-    <div class="ev-stat evidence"><div class="num" style="color:var(--amber)">${actions.filter(a=>a.priority==='MEDIUM').length}</div><div class="label">Medium Priority</div></div>
-    <div class="ev-stat na"><div class="num" style="color:var(--gray-400)">${decisions.length}</div><div class="label">Key Decisions</div></div>
+    <div class="ev-stat gap" data-tip="Actions requiring immediate attention this week - critical for audit timeline"><div class="num" style="color:var(--red)">${actions.filter(a=>a.priority==='URGENT').length}</div><div class="label">Urgent Actions</div></div>
+    <div class="ev-stat mapped" data-tip="Actions needed within 2 weeks to stay on track for audit preparation"><div class="num" style="color:#c05621">${actions.filter(a=>a.priority==='HIGH').length}</div><div class="label">High Priority</div></div>
+    <div class="ev-stat evidence" data-tip="Important but can be addressed over the coming weeks"><div class="num" style="color:var(--amber)">${actions.filter(a=>a.priority==='MEDIUM').length}</div><div class="label">Medium Priority</div></div>
+    <div class="ev-stat na" data-tip="Strategic decisions made during the workshop that guide audit preparation"><div class="num" style="color:var(--gray-400)">${decisions.length}</div><div class="label">Key Decisions</div></div>
   </div>
 
   <div class="ev-section-title"><span class="icon">\u26A1</span> Action Items (${actions.length})</div>
   <table class="ev-table">
-    <thead><tr><th style="width:30px">#</th><th style="min-width:300px">Action</th><th style="width:90px">Owner</th><th style="width:100px">Due</th><th style="width:85px;text-align:center">Priority</th><th style="width:100px;text-align:center">Status</th><th style="width:120px">Standards</th><th style="min-width:160px">Supporting Docs</th></tr></thead>
+    <thead><tr><th style="width:30px" data-tip="Action item number from the workshop">#</th><th style="min-width:300px" data-tip="What needs to be done and detailed context">Action</th><th style="width:90px" data-tip="Person responsible for completing this action">Owner</th><th style="width:100px" data-tip="Target completion date">Due</th><th style="width:85px;text-align:center" data-tip="URGENT = this week, HIGH = 2 weeks, MEDIUM = before audit, LOW = nice to have">Priority</th><th style="width:100px;text-align:center" data-tip="Current progress: Not Started, In Progress, Known Issue, Done">Status</th><th style="width:120px" data-tip="Which Strengthened Quality Standard outcomes this action supports">Standards</th><th style="min-width:160px" data-tip="AECT documents that depend on this action being completed">Supporting Docs</th></tr></thead>
     <tbody>
       ${actions.map(a => `<tr${a.priority==='URGENT'?' class="gap-row"':''}>
         <td style="font-weight:700">${a.id}</td>
@@ -2531,14 +2587,14 @@ function renderWorkshop() {
         <td style="text-align:center">${prBadge(a.priority)}</td>
         <td style="text-align:center">${stBadge(a.status)}</td>
         <td><div class="ev-outcomes">${a.standard.split(',').map(s => '<span class="ev-outcome-chip">'+s.trim()+'</span>').join('')}</div></td>
-        <td style="font-size:.8rem">${a.doc}</td>
+        <td style="font-size:.8rem">${a.doc.replace(/Doc (\d+)/g, (m, n) => '<a style="cursor:pointer;color:var(--blue);font-weight:600;text-decoration:underline" onclick="switchToDocumentsTab(\''+n+'\')">Doc '+n+'</a>')}</td>
       </tr>`).join('')}
     </tbody>
   </table>
 
   <div class="ev-section-title"><span class="icon">\u2705</span> Key Decisions from Workshop (${decisions.length})</div>
   <table class="ev-table">
-    <thead><tr><th>Decision</th><th>Detail</th><th style="width:80px">By</th></tr></thead>
+    <thead><tr><th data-tip="Strategic decision made during the workshop">Decision</th><th data-tip="Context and implications of the decision">Detail</th><th style="width:80px" data-tip="Who made or owns this decision">By</th></tr></thead>
     <tbody>
       ${decisions.map(d => `<tr>
         <td style="font-weight:600">${d.decision}</td>
@@ -2550,12 +2606,12 @@ function renderWorkshop() {
 
   <div class="ev-section-title"><span class="icon">\uD83D\uDCC2</span> Where to Find Supporting Documents (${docLocations.length})</div>
   <table class="ev-table">
-    <thead><tr><th style="width:160px">Document</th><th>Current Location</th><th>Status</th><th>Action Required</th></tr></thead>
+    <thead><tr><th style="width:160px" data-tip="AECT supporting document reference">Document</th><th data-tip="Where this document should be found or stored">Current Location</th><th data-tip="Whether the document exists, needs creating, or needs updating">Status</th><th data-tip="What needs to happen to make this document audit-ready">Action Required</th></tr></thead>
     <tbody>
       ${docLocations.map(d => {
         const isGap = d.current.includes('lapsed') || d.current.includes('Not sent') || d.current.includes('not be happening') || d.current.includes('To be created') || d.current.includes('need to start');
         return `<tr${isGap?' class="gap-row"':''}>
-          <td style="font-weight:600;font-size:.82rem">${d.doc}</td>
+          <td style="font-weight:600;font-size:.82rem">${d.doc.replace(/Doc(?:s)? (\d+)/g, (m, n) => '<a style="cursor:pointer;color:var(--blue);text-decoration:underline" onclick="switchToDocumentsTab(\''+n+'\')">'+m+'</a>')}</td>
           <td style="font-size:.85rem">${d.location}</td>
           <td style="font-size:.85rem">${d.current}</td>
           <td style="font-size:.85rem">${d.action}</td>
@@ -2695,6 +2751,41 @@ function downloadFile(content, filename, type) {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   showToast(`Downloaded ${filename}`);
+}
+
+// ============ HELPERS: Navigation & Clickable Elements ============
+function switchToDocumentsTab(searchTerm) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const docTab = document.querySelector('.tab[data-tab="documents"]');
+  if (docTab) docTab.classList.add('active');
+  document.getElementById('panel-documents').classList.add('active');
+  renderDocuments();
+  setTimeout(() => {
+    const searchInput = document.getElementById('docSearch');
+    if (searchInput && searchTerm) {
+      searchInput.value = searchTerm;
+      searchInput.dispatchEvent(new Event('input'));
+    }
+  }, 50);
+}
+
+function makeLinearIssueLink(id) {
+  if (!id) return id;
+  const match = id.match(/^([A-Z]+-\d+)$/);
+  if (match) {
+    return '<a class="linear-link" href="https://linear.app/trilogycare/issue/' + id.toLowerCase() + '" target="_blank" title="Open in Linear">' + id + '</a>';
+  }
+  return id;
+}
+
+function makePolicyCodeClickable(code) {
+  if (!code) return code;
+  return '<a class="policy-link" title="' + code + '">' + code + '</a>';
+}
+
+function makeDocLink(docNum, label) {
+  return '<a style="cursor:pointer;color:var(--blue);font-weight:700;text-decoration:underline" onclick="switchToDocumentsTab(\'' + docNum + '\')" title="View in Documents tab">' + (label || 'Doc ' + docNum) + '</a>';
 }
 
 // ============ INIT ============
