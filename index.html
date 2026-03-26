@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AECT Policy Mapper - Trilogy Care</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a365d;--blue:#2b6cb0;--blue-light:#3182ce;--blue-pale:#ebf8ff;
+  --green:#38a169;--green-bg:#f0fff4;--amber:#d69e2e;--amber-bg:#fffff0;
+  --red:#e53e3e;--red-bg:#fff5f5;--gray-50:#f7fafc;--gray-100:#edf2f7;
+  --gray-200:#e2e8f0;--gray-300:#cbd5e0;--gray-400:#a0aec0;--gray-500:#718096;
+  --gray-600:#4a5568;--gray-700:#2d3748;--gray-800:#1a202c;
+  --radius:6px;--shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
+  --shadow-md:0 4px 6px rgba(0,0,0,.1),0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+  --transition:all .2s ease;
+}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--gray-800);background:var(--gray-50);min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--blue);text-decoration:none}
+button{cursor:pointer;font-family:inherit;font-size:inherit}
+input,select,textarea{font-family:inherit;font-size:inherit}
+
+/* Header */
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-md);position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:16px}
+.logo{font-size:1.4rem;font-weight:700;letter-spacing:-.5px}
+.logo span{font-weight:300;opacity:.85;margin-left:4px}
+.header-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:500}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-right .save-indicator{font-size:.8rem;opacity:.7;display:flex;align-items:center;gap:4px}
+.header-right .save-indicator .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+
+/* Tabs */
+.tabs{background:#fff;border-bottom:1px solid var(--gray-200);display:flex;padding:0 24px;box-shadow:var(--shadow)}
+.tab{padding:12px 20px;font-weight:500;color:var(--gray-500);border-bottom:2px solid transparent;cursor:pointer;transition:var(--transition);white-space:nowrap;user-select:none}
+.tab:hover{color:var(--gray-700);background:var(--gray-50)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* Main */
+.main{flex:1;display:flex;overflow:hidden;height:calc(100vh - 98px)}
+
+/* Panels */
+.panel{display:none;width:100%;overflow:auto}
+.panel.active{display:flex}
+
+/* Standards View */
+.standards-view{display:flex;width:100%}
+.sidebar{width:280px;min-width:280px;background:#fff;border-right:1px solid var(--gray-200);overflow-y:auto;padding:8px 0}
+.sidebar-section{border-bottom:1px solid var(--gray-100)}
+.sidebar-standard{padding:10px 16px;font-weight:600;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:var(--transition);font-size:.85rem}
+.sidebar-standard:hover{background:var(--gray-50)}
+.sidebar-standard .arrow{transition:transform .2s;font-size:.7rem;color:var(--gray-400)}
+.sidebar-standard.expanded .arrow{transform:rotate(90deg)}
+.sidebar-outcomes{display:none;padding:0 0 4px 0}
+.sidebar-standard.expanded+.sidebar-outcomes{display:block}
+.sidebar-outcome{padding:7px 16px 7px 28px;font-size:.82rem;color:var(--gray-600);cursor:pointer;transition:var(--transition);border-left:3px solid transparent}
+.sidebar-outcome:hover{background:var(--blue-pale);color:var(--blue)}
+.sidebar-outcome.active{background:var(--blue-pale);color:var(--blue);border-left-color:var(--blue);font-weight:500}
+.sidebar-outcome .badge{font-size:.7rem;background:var(--gray-200);color:var(--gray-600);padding:1px 6px;border-radius:8px;margin-left:6px}
+
+.content-area{flex:1;overflow-y:auto;padding:24px}
+.content-header{margin-bottom:20px}
+.content-header h2{font-size:1.2rem;color:var(--navy);margin-bottom:4px}
+.content-header p{color:var(--gray-500);font-size:.88rem}
+.content-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;color:var(--gray-400);text-align:center}
+.content-placeholder svg{width:64px;height:64px;margin-bottom:16px;opacity:.4}
+
+/* Action Card */
+.action-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);transition:var(--transition)}
+.action-card:hover{box-shadow:var(--shadow-md)}
+.action-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:12px}
+.action-id{font-weight:600;color:var(--blue);font-size:.9rem;white-space:nowrap}
+.action-desc{color:var(--gray-700);font-size:.88rem;line-height:1.5;flex:1}
+.status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.status-dot.red{background:var(--red)}.status-dot.amber{background:var(--amber)}.status-dot.green{background:var(--green)}.status-dot.gray{background:var(--gray-300)}
+
+.action-card-body{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.action-field label{display:block;font-size:.75rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.action-field.full{grid-column:1/-1}
+
+.supporting-docs{font-size:.8rem;color:var(--gray-500);margin-bottom:10px;padding:6px 10px;background:var(--gray-50);border-radius:4px;border-left:3px solid var(--blue)}
+.supporting-docs strong{color:var(--gray-600)}
+
+/* Multi-select */
+.multi-select{position:relative}
+.multi-select-trigger{border:1px solid var(--gray-300);border-radius:var(--radius);padding:6px 10px;min-height:36px;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px;align-items:center;background:#fff;transition:var(--transition)}
+.multi-select-trigger:hover{border-color:var(--blue-light)}
+.multi-select-trigger:focus-within{border-color:var(--blue);box-shadow:0 0 0 2px rgba(43,108,176,.15)}
+.ms-tag{background:var(--blue-pale);color:var(--blue);padding:2px 8px;border-radius:3px;font-size:.78rem;display:flex;align-items:center;gap:4px}
+.ms-tag .ms-remove{cursor:pointer;font-size:.9rem;line-height:1;opacity:.6}
+.ms-tag .ms-remove:hover{opacity:1}
+.ms-placeholder{color:var(--gray-400);font-size:.85rem}
+.multi-select-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:50;display:none;max-height:240px;overflow:hidden;flex-direction:column}
+.multi-select-dropdown.open{display:flex}
+.ms-search{border:none;border-bottom:1px solid var(--gray-200);padding:8px 10px;outline:none;font-size:.85rem;width:100%}
+.ms-options{overflow-y:auto;flex:1}
+.ms-option{padding:6px 10px;cursor:pointer;font-size:.83rem;display:flex;align-items:center;gap:8px;transition:background .1s}
+.ms-option:hover{background:var(--gray-50)}
+.ms-option input[type="checkbox"]{accent-color:var(--blue)}
+.ms-option.selected{background:var(--blue-pale)}
+
+/* Select & Input */
+.field-select,.field-input,.field-textarea,.field-date{width:100%;border:1px solid var(--gray-300);border-radius:var(--radius);padding:7px 10px;transition:var(--transition);background:#fff;outline:none}
+.field-select:hover,.field-input:hover,.field-textarea:hover,.field-date:hover{border-color:var(--blue-light)}
+.field-select:focus,.field-input:focus,.field-textarea:focus,.field-date:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(43,108,176,.15)}
+.field-textarea{resize:vertical;min-height:60px}
+.field-select{appearance:auto}
+
+/* Documents View */
+.documents-view{width:100%;overflow-y:auto;padding:24px}
+.doc-filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.doc-filter-bar input{flex:1;min-width:200px}
+.doc-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow);transition:var(--transition)}
+.doc-card:hover{box-shadow:var(--shadow-md)}
+.doc-card-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.doc-num{background:var(--navy);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;flex-shrink:0}
+.doc-desc{font-weight:500;color:var(--gray-700);flex:1;font-size:.9rem;line-height:1.4}
+.doc-outcomes-list{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.outcome-chip{background:var(--gray-100);color:var(--gray-600);padding:2px 8px;border-radius:3px;font-size:.72rem;font-weight:500}
+.doc-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+
+/* Gap Analysis */
+.gap-view{width:100%;overflow-y:auto;padding:24px}
+.gap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-bottom:24px}
+.gap-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.gap-card h3{font-size:.95rem;color:var(--navy);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--gray-100)}
+.score-circle{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px}
+.score-circle .score-value{font-size:2rem;font-weight:700;color:#fff}
+.score-circle .score-label{font-size:.7rem;color:rgba(255,255,255,.85);font-weight:500}
+
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:.83rem}
+.progress-row .std-label{width:100px;flex-shrink:0;font-weight:500;color:var(--gray-600)}
+.progress-bar{flex:1;height:20px;background:var(--gray-100);border-radius:10px;overflow:hidden;position:relative}
+.progress-fill{height:100%;border-radius:10px;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:.7rem;color:#fff;font-weight:600;min-width:30px}
+.progress-row .pct{width:40px;text-align:right;font-weight:600;color:var(--gray-600);font-size:.82rem}
+
+.unmapped-list{max-height:300px;overflow-y:auto}
+.unmapped-item{padding:6px 0;border-bottom:1px solid var(--gray-100);font-size:.82rem;color:var(--gray-600);display:flex;gap:8px}
+.unmapped-item .uid{font-weight:600;color:var(--red);flex-shrink:0}
+
+/* Heatmap */
+.heatmap-container{overflow-x:auto}
+.heatmap-table{border-collapse:collapse;font-size:.72rem;width:100%}
+.heatmap-table th,.heatmap-table td{padding:4px 6px;text-align:center;border:1px solid var(--gray-200)}
+.heatmap-table th{background:var(--gray-50);font-weight:600;color:var(--gray-600);position:sticky;top:0}
+.heatmap-table th.row-header{text-align:left;min-width:80px}
+.heat-0{background:#fff}.heat-1{background:#ebf8ff}.heat-2{background:#bee3f8}.heat-3{background:#90cdf4}.heat-4{background:#63b3ed}.heat-5{background:#4299e1;color:#fff}.heat-6{background:#3182ce;color:#fff}
+
+/* Export View */
+.export-view{width:100%;overflow-y:auto;padding:24px;max-width:800px;margin:0 auto}
+.export-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.export-card h3{font-size:1rem;color:var(--navy);margin-bottom:8px}
+.export-card p{font-size:.85rem;color:var(--gray-500);margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid transparent;font-weight:500;font-size:.88rem;transition:var(--transition)}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-primary:hover{background:var(--navy)}
+.btn-outline{background:#fff;color:var(--gray-600);border-color:var(--gray-300)}.btn-outline:hover{background:var(--gray-50);border-color:var(--gray-400)}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{background:#c53030}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap}
+
+.import-area{border:2px dashed var(--gray-300);border-radius:var(--radius);padding:24px;text-align:center;color:var(--gray-400);transition:var(--transition);cursor:pointer}
+.import-area:hover{border-color:var(--blue);color:var(--blue)}
+.import-area input{display:none}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--gray-800);color:#fff;padding:10px 20px;border-radius:var(--radius);font-size:.85rem;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .3s ease;z-index:200;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--green)}.toast.error{background:var(--red)}
+
+/* Evidence View */
+.evidence-view{width:100%;padding:24px;overflow:auto}
+.ev-header{margin-bottom:24px}
+.ev-header h2{font-size:1.4rem;color:var(--navy);margin-bottom:4px}
+.ev-header p{color:var(--gray-500);font-size:.9rem}
+.ev-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+.ev-stat{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);text-align:center;border-top:3px solid var(--gray-300)}
+.ev-stat.mapped{border-top-color:var(--green)}
+.ev-stat.gap{border-top-color:var(--red)}
+.ev-stat.evidence{border-top-color:var(--amber)}
+.ev-stat.na{border-top-color:var(--gray-400)}
+.ev-stat .num{font-size:2rem;font-weight:700;line-height:1}
+.ev-stat .label{font-size:.8rem;color:var(--gray-500);margin-top:4px}
+.ev-table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:28px}
+.ev-table th{background:var(--navy);color:#fff;text-align:left;padding:10px 14px;font-weight:500;font-size:.82rem;position:sticky;top:0;z-index:2}
+.ev-table td{padding:10px 14px;border-bottom:1px solid var(--gray-100);font-size:.85rem;vertical-align:top}
+.ev-table tr:hover td{background:var(--gray-50)}
+.ev-table tr.gap-row td{background:var(--red-bg)}
+.ev-table tr.gap-row:hover td{background:#fee2e2}
+.ev-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap;margin:1px 2px}
+.ev-badge.master{background:#e6fffa;color:#234e52}
+.ev-badge.archive{background:#ebf8ff;color:#2a4365}
+.ev-badge.disk{background:#faf5ff;color:#553c9a}
+.ev-badge.qdrant{background:#fefcbf;color:#744210}
+.ev-badge.gap{background:#fed7d7;color:#9b2c2c}
+.ev-outcomes{display:flex;flex-wrap:wrap;gap:3px}
+.ev-outcome-chip{background:var(--blue-pale);color:var(--blue);padding:1px 6px;border-radius:8px;font-size:.72rem;font-weight:500}
+.ev-section-title{font-size:1.1rem;font-weight:600;color:var(--navy);margin:24px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:8px}
+.ev-section-title .icon{font-size:1.2rem}
+
+/* Print */
+@media print{
+  .header,.tabs{display:none!important}
+  .main{height:auto!important}
+  .panel{overflow:visible!important}
+  .sidebar{display:none!important}
+  .action-card,.doc-card,.gap-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ccc!important}
+}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--gray-400)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">Trilogy Care<span>AECT Policy Mapper</span></div>
+    <div class="header-badge">Registration Renewal 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="save-indicator"><span class="dot"></span> Auto-saved</div>
+  </div>
+</div>
+
+<div class="tabs" id="tabBar">
+  <div class="tab active" data-tab="gap">Gap Analysis</div>
+  <div class="tab" data-tab="workshop">Workshop Actions</div>
+  <div class="tab" data-tab="standards">Standards View</div>
+  <div class="tab" data-tab="documents">Documents View</div>
+  <div class="tab" data-tab="evidence">Verified Evidence</div>
+  <div class="tab" data-tab="export">Export / Import</div>
+</div>
+
+<div class="main">
+  <div class="panel" id="panel-standards">
+    <div class="standards-view">
+      <div class="sidebar" id="sidebar"></div>
+      <div class="content-area" id="contentArea">
+        <div class="content-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <div style="font-size:1.1rem;font-weight:500;margin-bottom:4px">Select an Outcome</div>
+          <div style="font-size:.85rem">Choose a Standard and Outcome from the sidebar to view and map actions.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel" id="panel-documents">
+    <div class="documents-view" id="documentsView"></div>
+  </div>
+  <div class="panel active" id="panel-gap">
+    <div class="gap-view" id="gapView"></div>
+  </div>
+  <div class="panel" id="panel-evidence">
+    <div class="evidence-view" id="evidenceView"></div>
+  </div>
+  <div class="panel" id="panel-workshop">
+    <div class="evidence-view" id="workshopView"></div>
+  </div>
+  <div class="panel" id="panel-export">
+    <div class="export-view" id="exportView"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ DATA ============
+const TC_POLICIES = [
+  "CM-001: Initial Assessment Policy",
+  "CM-002: Care Planning Policy",
+  "CM-003: Service Delivery and Participation Policy",
+  "CM-004: Care Plan and Evaluation Policy",
+  "CM-007: Risk Management Policy",
+  "CM-008: Client Incident Management Policy",
+  "CM-009: High Impact and High Prevalence Risks Policy",
+  "CM-010: Feedback and Complaints Policy",
+  "CM-011: Personal Care Policy",
+  "CM-012: Medication Management Policy",
+  "CM-013: Infection Control Policy",
+  "CM-014: Waste Management Policy",
+  "CM-015: Food Safety Policy",
+  "CM-016: Emergency Planning Policy",
+  "CM-019: Dementia Care Policy",
+  "CM-021: Recognition and Response to Deterioration Policy",
+  "CM-023: Home Risk Assessment Policy",
+  "CM-024: Balancing Duty of Care with Dignity of Risk Policy",
+  "CM-025: Consumer Risk Assessment Policy",
+  "CM-026: Internal Clinical Escalation Pathway",
+  "CO-001: Governance Policy and Procedure",
+  "CO-002: Conflict of Interest Policy",
+  "CO-003: Strategic and Operational Planning Policy",
+  "CO-004: Continuous Improvement Policy",
+  "CO-006: Financial Management Policy",
+  "CO-008: Privacy and Confidentiality Policy",
+  "CO-009: Records and Information Management Policy",
+  "CO-010: Workplace Health and Safety Policy",
+  "CO-011: Workplace Incident Management Policy",
+  "CO-029: Working with Vulnerable Consumers Policy",
+  "HR-002: Equal Employment Opportunity Policy",
+  "HR-003: Recruitment and Selection Policy",
+  "HR-004: Disputes and Grievances Policy",
+  "HR-005: Performance Management Policy",
+  "PM-001: Client HCP Budget Management Policy",
+  "PM-002: Client Money and Property Policy",
+  "PM-003: Service Exit Policy",
+  "SM-002: Service Access and Intake Policy",
+  "SM-003: Subcontract/Brokerage Policy",
+  "TC-002: Culturally Safe Care and Services Policy",
+  "TC-003: Decision Making, Dignity and Choice Policy",
+  "TC-004: Elder Abuse and Neglect Policy",
+  "TC-006: Open Disclosure Policy",
+  "AU Code of Conduct",
+  "CM-013B: Outbreak Management Plan",
+  "CM-027: Minimising Restrictive Practices Policy",
+  "CM-028: End of Life Palliative Care Policy"
+];
+
+const AECT_DOCS = [
+  {num:1,desc:"Person Centred Care Policy (current)",outcomes:"1.1, 2.1, 3.1, 5.4, 6.2, 7.1"},
+  {num:2,desc:"Communication, Consultation and Partnering Policy (current)",outcomes:"1.1, 1.3, 2.1, 2.6a, 2.6b, 3.1, 3.2, 3.3, 3.4, 5.3, 5.4, 6.1, 6.2, 6.3, 7.2"},
+  {num:3,desc:"Recognising, Preventing and Responding to Violence, Abuse, Racism, Neglect, Exploitation and Discrimination Policy (current)",outcomes:"1.2, 2.2a, 2.2b, 3.2"},
+  {num:4,desc:"Choice, Independence and Quality of Life Policy (current)",outcomes:"1.3, 3.1, 3.2, 5.4, 5.5, 5.7, 6.3, 6.4, 7.1"},
+  {num:5,desc:"Management of Agreements, Fees, Pricing, Invoicing and Statements Policy/Procedure (current)",outcomes:"1.4, 3.3"},
+  {num:6,desc:"Corporate Governance Framework (current)",outcomes:"2.1, 2.2a, 2.2b, 2.3, 5.1"},
+  {num:7,desc:"Continuous Improvement Policy (current)",outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.4, 2.6a, 2.6b, 5.1, 6.1"},
+  {num:8,desc:"Quality Assurance and Monitoring Policy (current)",outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.9, 3.2, 5.1, 5.3, 5.5, 6.1"},
+  {num:9,desc:"Quality and Safety Management Policy (current)",outcomes:"1.1, 2.2a, 2.2b, 2.3, 2.4, 2.10, 3.3, 4.1a, 4.1b, 5.1, 5.3, 5.5"},
+  {num:10,desc:"Risk Management Policy (current)",outcomes:"1.3, 2.4, 2.10, 3.1, 3.2, 3.3, 4.1a, 4.1b, 4.2, 5.2, 5.3, 5.5"},
+  {num:11,desc:"Incident Management Policy (current)",outcomes:"1.2, 2.3, 2.5, 3.1, 3.3"},
+  {num:12,desc:"Feedback and Complaints Management Policy (current)",outcomes:"2.3, 2.6a, 2.6b, 6.1"},
+  {num:13,desc:"Information Management Policy including privacy (current)",outcomes:"1.3, 1.4, 2.2a, 2.2b, 2.7, 3.1, 3.3, 5.1, 5.3, 7.2"},
+  {num:14,desc:"Workforce Planning Policy (current)",outcomes:"2.2a, 2.3, 2.6a, 2.8, 2.9, 6.4"},
+  {num:15,desc:"Workforce Competency/Training Policy (current)",outcomes:"2.2a, 2.3, 2.6a, 2.8, 2.9, 5.1"},
+  {num:16,desc:"Police Checks, Working With Vulnerable People checks and Banning Order checks Policy (current)",outcomes:"2.9"},
+  {num:17,desc:"Emergency and Disaster Management Policy (current)",outcomes:"2.1, 2.10"},
+  {num:18,desc:"Assessment and Planning Policy (current)",outcomes:"1.1, 2.4, 2.7, 3.1, 5.4, 5.6, 5.7, 6.2, 6.3, 7.1, 7.2"},
+  {num:19,desc:"Delivery of Non-clinical Care Policy (current)",outcomes:"3.2, 6.2"},
+  {num:20,desc:"Cognitive Impairment Policy (current)",outcomes:"3.1, 3.2, 4.1b, 5.3, 5.4, 5.5, 5.6"},
+  {num:21,desc:"Transitions and Coordination of Care Policy (current)",outcomes:"2.7, 3.1, 3.3, 3.4, 5.3, 5.4, 7.2"},
+  {num:22,desc:"Managing the Cleanliness, Maintenance and Safety of Equipment Policy (current)",outcomes:"4.1a, 4.1b, 4.2, 5.2"},
+  {num:23,desc:"Infection Prevention and Control Management Policy and Outbreak Management Plan (current)",outcomes:"4.2, 5.2"},
+  {num:24,desc:"Clinical Governance Framework (current)",outcomes:"2.3, 5.1, 5.4, 5.6"},
+  {num:25,desc:"Medication Policy \u2013 Safe Administration and Review (current)",outcomes:"5.2, 5.3"},
+  {num:26,desc:"Delivery of Clinical Care Policy (falls, swallowing, choking, hydration, nutrition, mental health) (current)",outcomes:"5.4, 5.5, 5.6, 6.2"},
+  {num:27,desc:"Advance Care Planning and End Of Life Care Policy (current)",outcomes:"3.1, 5.7"},
+  {num:28,desc:"Food and Nutrition Policy (current) - Category 6 only",outcomes:"5.5, 6.1, 6.2, 6.3, 6.4"},
+  {num:29,desc:"Activities for Daily Living Policy (current) - Category 6 only",outcomes:"3.1, 3.2, 7.1"},
+  {num:30,desc:"Minimising the Use of Restrictive Practices Policy",outcomes:"3.2, 4.1b, 5.3, 5.5, 5.6"},
+  {num:31,desc:"Provider Partnering meetings with older people (last 4 meetings)",outcomes:"1.1, 2.1, 2.6b, 2.10, 6.1"},
+  {num:32,desc:"Older persons experience survey results (latest)",outcomes:"2.1, 2.6b, 4.1a, 4.1b, 6.1"},
+  {num:33,desc:"Organisational Structure (current)",outcomes:"2.1"},
+  {num:34,desc:"Governing body meeting reports/minutes (last 4 meetings)",outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.5, 2.6a, 2.6b, 4.2, 5.1"},
+  {num:35,desc:"Mandatory Quality Committee meeting reports/minutes (last 4 meetings)",outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b, 7.2"},
+  {num:36,desc:"Quality Care Advisory Committee meeting reports/minutes (last 4 meetings)",outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b"},
+  {num:37,desc:"Continuous Improvement Plan (current)",outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.4, 2.6a, 2.6b, 5.1, 6.1"},
+  {num:38,desc:"Results of clinical systems audits/reviews (past 12 months)",outcomes:"2.3, 4.2, 5.1, 5.2, 5.3, 5.4, 5.5, 6.2"},
+  {num:39,desc:"Enterprise Risk Register",outcomes:"2.2a, 2.2b, 2.4, 5.3, 5.5"},
+  {num:40,desc:"Incident trend analysis (last 12 months)",outcomes:"1.2, 2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b, 2.8, 5.5"},
+  {num:41,desc:"Complaint trend analysis and feedback including unresolved >3 months (past 12 months)",outcomes:"1.2, 2.3, 2.6a, 2.6b, 5.4, 6.1"},
+  {num:42,desc:"Results of other authority audits/reviews/findings (past 12 months)",outcomes:"2.3, 2.7"},
+  {num:43,desc:"Management meeting minutes (last 4 meetings)",outcomes:"2.3, 2.7"},
+  {num:44,desc:"Position descriptions for key management (current)",outcomes:"2.8, 2.9"},
+  {num:45,desc:"Worker qualifications/training/competency audit results",outcomes:"2.8, 2.9"},
+  {num:46,desc:"Register of adverse police/vulnerable people/banning order checks",outcomes:"2.8, 2.9"},
+  {num:47,desc:"Clinical Governance meeting minutes (last 4 meetings)",outcomes:"2.2b, 2.3, 5.1, 5.5"},
+  {num:48,desc:"Results of other care/service delivery audits/reviews (past 12 months)",outcomes:"2.1, 2.3, 2.6a, 2.6b, 6.4"}
+];
+
+const STANDARDS = [
+  {id:"1",name:"The Individual",outcomes:[
+    {id:"1.1",name:"Person-centred care",actions:[
+      {id:"1.1.1",desc:"Care and services are provided in a way that is based on the individual's needs, goals, preferences, and circumstances."},
+      {id:"1.1.2",desc:"The individual participates in their ongoing assessment and planning."},
+      {id:"1.1.3",desc:"The individual is supported to make informed choices about their care."},
+      {id:"1.1.4",desc:"Care and services adapt when the individual's needs change."}
+    ]},
+    {id:"1.2",name:"Dignity, respect and privacy",actions:[
+      {id:"1.2.1",desc:"The individual's identity, culture, and diversity are valued and supported."},
+      {id:"1.2.2",desc:"The individual is treated with dignity and respect."},
+      {id:"1.2.3",desc:"The individual's right to privacy is respected and maintained."},
+      {id:"1.2.4",desc:"The individual is free from all forms of violence, abuse, neglect, exploitation and discrimination."}
+    ]},
+    {id:"1.3",name:"Choice, independence and quality of life",actions:[
+      {id:"1.3.1",desc:"The individual is supported to exercise choice and independence."},
+      {id:"1.3.2",desc:"The individual is supported to take risks to maintain their quality of life."},
+      {id:"1.3.3",desc:"The individual is supported to maintain and develop social connections and participate in activities."},
+      {id:"1.3.4",desc:"The individual has access to information about their rights and how to exercise them."},
+      {id:"1.3.5",desc:"The individual is supported to access advocacy services where needed."},
+      {id:"1.3.6",desc:"The individual's right to make decisions about their own care is respected."}
+    ]},
+    {id:"1.4",name:"Transparency and agreements",actions:[
+      {id:"1.4.1",desc:"The individual is given clear, understandable information about the care and services available."},
+      {id:"1.4.2",desc:"The individual is given information about all fees and charges."},
+      {id:"1.4.3",desc:"Agreements are documented and provided to the individual."},
+      {id:"1.4.4",desc:"The individual is informed of changes to fees, charges, or services."},
+      {id:"1.4.5",desc:"Billing and invoicing is accurate and timely."},
+      {id:"1.4.6",desc:"The individual has access to their own records."},
+      {id:"1.4.7",desc:"The individual is supported to understand their agreement."}
+    ]}
+  ]},
+  {id:"2",name:"The Organisation",outcomes:[
+    {id:"2.1",name:"Partnering with individuals",actions:[
+      {id:"2.1.1",desc:"The organisation partners with individuals in the design, delivery and evaluation of care and services."},
+      {id:"2.1.2",desc:"The organisation uses feedback from individuals to improve care and services."},
+      {id:"2.1.3",desc:"The organisation demonstrates how individual input has been incorporated."}
+    ]},
+    {id:"2.2a",name:"Quality, safety and inclusion culture (workers)",actions:[
+      {id:"2.2a.1",desc:"Workers understand and contribute to a culture of quality, safety and inclusion."},
+      {id:"2.2a.2",desc:"Workers are supported to raise concerns and contribute to improvements."}
+    ]},
+    {id:"2.2b",name:"Quality, safety and inclusion culture (individuals)",actions:[
+      {id:"2.2b.1",desc:"Individuals experience a culture of quality, safety and inclusion."},
+      {id:"2.2b.2",desc:"Individuals feel safe and supported to provide feedback and raise concerns."}
+    ]},
+    {id:"2.3",name:"Accountability, quality system and policies",actions:[
+      {id:"2.3.1",desc:"Governance structures ensure accountability for quality and safety."},
+      {id:"2.3.2",desc:"Quality management systems are in place and operating effectively."},
+      {id:"2.3.3",desc:"Policies and procedures guide safe and quality care delivery."},
+      {id:"2.3.4",desc:"Clinical governance systems are in place where clinical care is provided."},
+      {id:"2.3.5",desc:"Monitoring and review processes identify areas for improvement."},
+      {id:"2.3.6",desc:"Data and information are used to drive improvement."},
+      {id:"2.3.7",desc:"The governing body oversees the quality management system."}
+    ]},
+    {id:"2.4",name:"Risk management",actions:[
+      {id:"2.4.1",desc:"Risks to quality and safety are identified and managed."},
+      {id:"2.4.2",desc:"Risk management is integrated into organisational processes."},
+      {id:"2.4.3",desc:"Risk assessment considers individual and systemic risks."},
+      {id:"2.4.4",desc:"The organisation's risk management approach is reviewed and improved."}
+    ]},
+    {id:"2.5",name:"Incident management",actions:[
+      {id:"2.5.1",desc:"Incidents are identified, reported, and responded to in a timely manner."},
+      {id:"2.5.2",desc:"The impact of incidents on individuals is assessed and addressed."},
+      {id:"2.5.3",desc:"Incidents are investigated and root causes identified."},
+      {id:"2.5.4",desc:"Actions are taken to prevent recurrence of incidents."},
+      {id:"2.5.5",desc:"Reportable incidents are reported to relevant authorities."},
+      {id:"2.5.6",desc:"The incident management system is reviewed and improved."}
+    ]},
+    {id:"2.6a",name:"Complaints/feedback management (workers)",actions:[
+      {id:"2.6a.1",desc:"Workers are supported and encouraged to provide feedback and make complaints."},
+      {id:"2.6a.2",desc:"Worker complaints and feedback are managed fairly and in a timely manner."},
+      {id:"2.6a.3",desc:"Workers are informed of the outcome of their complaints."},
+      {id:"2.6a.4",desc:"Worker complaints and feedback are used to improve care and services."},
+      {id:"2.6a.5",desc:"Workers are not subject to reprisal for making complaints."}
+    ]},
+    {id:"2.6b",name:"Complaints/feedback management (individuals)",actions:[
+      {id:"2.6b.1",desc:"Individuals are supported and encouraged to provide feedback and make complaints."},
+      {id:"2.6b.2",desc:"Individual complaints and feedback are managed fairly and in a timely manner."},
+      {id:"2.6b.3",desc:"Individuals are informed of the outcome of their complaints."},
+      {id:"2.6b.4",desc:"Individual complaints and feedback are used to improve care and services."},
+      {id:"2.6b.5",desc:"Individuals are not subject to reprisal for making complaints."},
+      {id:"2.6b.6",desc:"The individual is informed about external complaints mechanisms."}
+    ]},
+    {id:"2.7",name:"Information management",actions:[
+      {id:"2.7.1",desc:"Information is managed securely, accurately and in accordance with privacy requirements."},
+      {id:"2.7.2",desc:"Information systems support the delivery of safe and quality care."},
+      {id:"2.7.3",desc:"Information is shared appropriately with relevant parties including during transitions."}
+    ]},
+    {id:"2.8",name:"Workforce planning",actions:[
+      {id:"2.8.1",desc:"The workforce is planned to meet the needs of individuals."},
+      {id:"2.8.2",desc:"Workforce planning considers the skills and competencies required."}
+    ]},
+    {id:"2.9",name:"Human resource management",actions:[
+      {id:"2.9.1",desc:"Workers are recruited safely and have appropriate qualifications and experience."},
+      {id:"2.9.2",desc:"Workers undergo required screening and background checks."},
+      {id:"2.9.3",desc:"Workers receive induction, training and ongoing development."},
+      {id:"2.9.4",desc:"Worker performance is managed and monitored."},
+      {id:"2.9.5",desc:"Workers are supervised and supported to deliver safe care."},
+      {id:"2.9.6",desc:"The organisation maintains a register of worker qualifications and checks."},
+      {id:"2.9.7",desc:"Workers comply with the Code of Conduct."}
+    ]},
+    {id:"2.10",name:"Emergency and disaster management",actions:[
+      {id:"2.10.1",desc:"Emergency and disaster plans are in place and maintained."},
+      {id:"2.10.2",desc:"Plans are tested and reviewed regularly."},
+      {id:"2.10.3",desc:"Workers are trained in emergency and disaster procedures."},
+      {id:"2.10.4",desc:"Individual needs are considered in emergency planning."}
+    ]}
+  ]},
+  {id:"3",name:"The Care and Services",outcomes:[
+    {id:"3.1",name:"Assessment and planning",actions:[
+      {id:"3.1.1",desc:"The individual's needs are assessed comprehensively upon entry and on an ongoing basis."},
+      {id:"3.1.2",desc:"Assessment considers the individual's physical, mental, emotional, social and spiritual needs."},
+      {id:"3.1.3",desc:"Care plans are developed in partnership with the individual."},
+      {id:"3.1.4",desc:"Care plans reflect the individual's assessed needs, goals and preferences."},
+      {id:"3.1.5",desc:"Care plans are reviewed and updated regularly and when needs change."},
+      {id:"3.1.6",desc:"Individuals are referred to appropriate services when needs cannot be met."}
+    ]},
+    {id:"3.2",name:"Delivery of funded aged care services",actions:[
+      {id:"3.2.1",desc:"Care and services are delivered safely and effectively in accordance with care plans."},
+      {id:"3.2.2",desc:"Care and services are delivered by appropriately skilled workers."},
+      {id:"3.2.3",desc:"Care and services support the individual's independence and wellbeing."},
+      {id:"3.2.4",desc:"Care and services are culturally safe and responsive to diversity."},
+      {id:"3.2.5",desc:"Care and services are delivered in a way that minimises the use of restrictive practices."},
+      {id:"3.2.6",desc:"Any use of restrictive practices is authorised, documented and reviewed."},
+      {id:"3.2.7",desc:"Aids, equipment and assistive technology are provided and maintained as needed."},
+      {id:"3.2.8",desc:"The individual's daily living activities are supported as needed."},
+      {id:"3.2.9",desc:"Subcontracted or brokered services meet the same quality standards."}
+    ]},
+    {id:"3.3",name:"Communicating for safety and quality",actions:[
+      {id:"3.3.1",desc:"Effective communication systems ensure safe delivery of care."},
+      {id:"3.3.2",desc:"Communication between workers, individuals and families supports safety."},
+      {id:"3.3.3",desc:"Handover and information transfer processes are effective."},
+      {id:"3.3.4",desc:"The individual and their representative are communicated with in a way they understand."}
+    ]},
+    {id:"3.4",name:"Planning and coordination",actions:[
+      {id:"3.4.1",desc:"Care is coordinated across different services and providers."},
+      {id:"3.4.2",desc:"Care coordination ensures continuity of care."},
+      {id:"3.4.3",desc:"External services and supports are integrated into care planning."}
+    ]}
+  ]},
+  {id:"4",name:"The Environment",outcomes:[
+    {id:"4.1a",name:"Environment \u2013 home",actions:[
+      {id:"4.1a.1",desc:"The individual's home environment is assessed for safety and suitability."},
+      {id:"4.1a.2",desc:"Risks in the home environment are identified and managed in partnership with the individual."}
+    ]},
+    {id:"4.1b",name:"Environment \u2013 other than home",actions:[
+      {id:"4.1b.1",desc:"The environment is safe, clean, well-maintained and suitable for the care provided."},
+      {id:"4.1b.2",desc:"Equipment is safe, clean, well-maintained and fit for purpose."},
+      {id:"4.1b.3",desc:"The environment supports the individual's independence, comfort and quality of life."}
+    ]},
+    {id:"4.2",name:"Infection prevention and control",actions:[
+      {id:"4.2.1",desc:"Infection prevention and control systems and practices are in place and effective."}
+    ]}
+  ]},
+  {id:"5",name:"Clinical Care",outcomes:[
+    {id:"5.1",name:"Clinical governance",actions:[
+      {id:"5.1.1",desc:"Clinical governance systems ensure safe and quality clinical care."},
+      {id:"5.1.2",desc:"Clinical roles and responsibilities are clearly defined."},
+      {id:"5.1.3",desc:"Clinical care is evidence-based and reflects best practice."},
+      {id:"5.1.4",desc:"Clinical outcomes are monitored and used to drive improvement."},
+      {id:"5.1.5",desc:"Clinical incidents are managed within the clinical governance framework."}
+    ]},
+    {id:"5.2",name:"Preventing and controlling infections",actions:[
+      {id:"5.2.1",desc:"Infection prevention and control practices are integrated into clinical care."},
+      {id:"5.2.2",desc:"Antimicrobial stewardship principles are applied."}
+    ]},
+    {id:"5.3",name:"Safe and quality use of medicines",actions:[
+      {id:"5.3.1",desc:"Medicines are prescribed, dispensed and administered safely."},
+      {id:"5.3.2",desc:"Medication management is person-centred and considers the individual's needs."},
+      {id:"5.3.3",desc:"Medication reviews are conducted regularly."},
+      {id:"5.3.4",desc:"High-risk medicines are managed with additional safeguards."},
+      {id:"5.3.5",desc:"Medication incidents are reported, investigated and used for improvement."},
+      {id:"5.3.6",desc:"Workers administering medicines are trained and competent."}
+    ]},
+    {id:"5.4",name:"Comprehensive care",actions:[
+      {id:"5.4.1",desc:"The individual receives comprehensive, coordinated care that addresses all identified needs."},
+      {id:"5.4.2",desc:"Clinical assessments are thorough and evidence-based."},
+      {id:"5.4.3",desc:"Deterioration in the individual's condition is recognised and responded to."},
+      {id:"5.4.4",desc:"The individual's care is reviewed when there is a change in condition."},
+      {id:"5.4.5",desc:"Specialist care needs are identified and addressed through referral or consultation."}
+    ]},
+    {id:"5.5",name:"Safety of clinical care services",actions:[
+      {id:"5.5.1",desc:"Falls are prevented and managed effectively."},
+      {id:"5.5.2",desc:"Pressure injuries are prevented and managed effectively."},
+      {id:"5.5.3",desc:"Skin integrity is monitored and maintained."},
+      {id:"5.5.4",desc:"Continence care is provided in a dignified and effective manner."},
+      {id:"5.5.5",desc:"Pain is assessed and managed effectively."},
+      {id:"5.5.6",desc:"Wound care is provided according to best practice."},
+      {id:"5.5.7",desc:"Nutritional and hydration needs are assessed and managed clinically."},
+      {id:"5.5.8",desc:"Swallowing and choking risks are assessed and managed."},
+      {id:"5.5.9",desc:"Mental health needs are identified and supported."},
+      {id:"5.5.10",desc:"Sensory loss is identified and supported."}
+    ]},
+    {id:"5.6",name:"Cognitive impairment",actions:[
+      {id:"5.6.1",desc:"Cognitive impairment is identified and assessed."},
+      {id:"5.6.2",desc:"Care is tailored to support individuals with cognitive impairment."},
+      {id:"5.6.3",desc:"Behavioural and psychological symptoms of dementia are responded to appropriately."}
+    ]},
+    {id:"5.7",name:"Palliative care and end-of-life care",actions:[
+      {id:"5.7.1",desc:"Advance care planning is supported and documented."},
+      {id:"5.7.2",desc:"Palliative care needs are identified and addressed."},
+      {id:"5.7.3",desc:"End-of-life care respects the individual's wishes and provides comfort."},
+      {id:"5.7.4",desc:"Families and representatives are supported during end-of-life care."}
+    ]}
+  ]},
+  {id:"6",name:"Food and Nutrition",outcomes:[
+    {id:"6.1",name:"Partnering on food and drinks",actions:[
+      {id:"6.1.1",desc:"Individuals are consulted about food and drink preferences and choices."},
+      {id:"6.1.2",desc:"Individual feedback about food and drinks is used to improve services."}
+    ]},
+    {id:"6.2",name:"Assessment of nutritional needs",actions:[
+      {id:"6.2.1",desc:"Nutritional needs are assessed and care planned accordingly."}
+    ]},
+    {id:"6.3",name:"Provision of food and drinks",actions:[
+      {id:"6.3.1",desc:"Food and drinks provided are nutritious, adequate and meet assessed needs."},
+      {id:"6.3.2",desc:"Food and drinks reflect the individual's preferences and cultural needs."},
+      {id:"6.3.3",desc:"Food safety practices are followed."},
+      {id:"6.3.4",desc:"Texture-modified food and drinks are provided when needed."}
+    ]},
+    {id:"6.4",name:"Dining experience",actions:[
+      {id:"6.4.1",desc:"The dining experience supports the individual's independence and social participation."},
+      {id:"6.4.2",desc:"Assistance with eating and drinking is provided in a dignified manner."},
+      {id:"6.4.3",desc:"The dining environment is pleasant and appropriate."}
+    ]}
+  ]},
+  {id:"7",name:"The Residential Community",outcomes:[
+    {id:"7.1",name:"Daily living",actions:[
+      {id:"7.1.1",desc:"The individual is supported to maintain their daily routines and lifestyle."},
+      {id:"7.1.2",desc:"The individual has opportunities for meaningful activities and social engagement."},
+      {id:"7.1.3",desc:"The individual's emotional and spiritual wellbeing is supported."},
+      {id:"7.1.4",desc:"The individual is supported to maintain connections with family and community."},
+      {id:"7.1.5",desc:"The individual's living environment feels like home."},
+      {id:"7.1.6",desc:"The individual is supported to access services and facilities in the community."}
+    ]},
+    {id:"7.2",name:"Transitions",actions:[
+      {id:"7.2.1",desc:"Transitions are planned and managed to minimise disruption and risk."},
+      {id:"7.2.2",desc:"The individual and their representative are supported during transitions."},
+      {id:"7.2.3",desc:"Information is shared appropriately during transitions to ensure continuity of care."}
+    ]}
+  ]}
+];
+
+// Build supporting docs lookup: outcomeId -> [doc nums]
+const outcomeDocsMap = {};
+AECT_DOCS.forEach(d => {
+  d.outcomes.split(',').map(s=>s.trim()).forEach(oid => {
+    if (!outcomeDocsMap[oid]) outcomeDocsMap[oid] = [];
+    outcomeDocsMap[oid].push(d.num);
+  });
+});
+
+// Pre-populated doc->policy mappings
+const DOC_POLICY_DEFAULTS = {
+  1:["TC-003: Decision Making, Dignity and Choice Policy","CM-003: Service Delivery and Participation Policy"],
+  2:["TC-003: Decision Making, Dignity and Choice Policy","CM-001: Initial Assessment Policy","CM-002: Care Planning Policy","CM-003: Service Delivery and Participation Policy"],
+  3:["TC-004: Elder Abuse and Neglect Policy"],
+  4:["TC-003: Decision Making, Dignity and Choice Policy","CM-024: Balancing Duty of Care with Dignity of Risk Policy"],
+  5:["PM-001: Client HCP Budget Management Policy"],
+  6:["CO-001: Governance Policy and Procedure","CO-003: Strategic and Operational Planning Policy"],
+  7:["CO-004: Continuous Improvement Policy"],
+  8:["CO-004: Continuous Improvement Policy"],
+  9:["CO-004: Continuous Improvement Policy"],
+  10:["CM-007: Risk Management Policy","CM-023: Home Risk Assessment Policy","CM-025: Consumer Risk Assessment Policy"],
+  11:["CM-008: Client Incident Management Policy"],
+  12:["CM-010: Feedback and Complaints Policy"],
+  13:["CO-008: Privacy and Confidentiality Policy","CO-009: Records and Information Management Policy"],
+  14:["HR-003: Recruitment and Selection Policy"],
+  15:["HR-003: Recruitment and Selection Policy"],
+  16:["HR-003: Recruitment and Selection Policy"],
+  17:["CM-016: Emergency Planning Policy"],
+  18:["CM-001: Initial Assessment Policy","CM-002: Care Planning Policy"],
+  19:["CM-003: Service Delivery and Participation Policy","CM-011: Personal Care Policy"],
+  20:["CM-019: Dementia Care Policy"],
+  21:["CM-003: Service Delivery and Participation Policy"],
+  22:["CO-010: Workplace Health and Safety Policy"],
+  23:["CM-013: Infection Control Policy","CM-013B: Outbreak Management Plan"],
+  24:["CO-001: Governance Policy and Procedure"],
+  25:["CM-012: Medication Management Policy"],
+  26:["CM-021: Recognition and Response to Deterioration Policy","CM-026: Internal Clinical Escalation Pathway"],
+  27:["CM-028: End of Life Palliative Care Policy"],
+  28:["CM-015: Food Safety Policy"],
+  30:["CM-027: Minimising Restrictive Practices Policy"],
+  37:["CO-004: Continuous Improvement Policy"],
+  39:["CM-007: Risk Management Policy"]
+};
+
+// ============ STATE ============
+const STORAGE_KEY = 'aect-policy-mapper-v1';
+let state = loadState();
+
+function defaultState() {
+  // Actions state: keyed by action id
+  const actions = {};
+  STANDARDS.forEach(s => s.outcomes.forEach(o => o.actions.forEach(a => {
+    actions[a.id] = {policies:[], status:'not_started', notes:''};
+  })));
+  // Docs state: keyed by doc num
+  const docs = {};
+  AECT_DOCS.forEach(d => {
+    docs[d.num] = {
+      policies: DOC_POLICY_DEFAULTS[d.num] || [],
+      docStatus: 'current',
+      lastReviewed: '',
+      owner: ''
+    };
+  });
+  return {actions, docs};
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      // Merge with defaults for any missing keys
+      const def = defaultState();
+      Object.keys(def.actions).forEach(k => { if (!saved.actions[k]) saved.actions[k] = def.actions[k]; });
+      Object.keys(def.docs).forEach(k => { if (!saved.docs[k]) saved.docs[k] = def.docs[k]; });
+      return saved;
+    }
+  } catch(e) {}
+  return defaultState();
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============ TABS ============
+document.getElementById('tabBar').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  if (tab.dataset.tab === 'gap') renderGap();
+  if (tab.dataset.tab === 'documents') renderDocuments();
+  if (tab.dataset.tab === 'evidence') renderEvidence();
+  if (tab.dataset.tab === 'workshop') renderWorkshop();
+  if (tab.dataset.tab === 'export') renderExport();
+});
+
+// ============ SIDEBAR ============
+function renderSidebar() {
+  const sb = document.getElementById('sidebar');
+  let html = '';
+  STANDARDS.forEach(s => {
+    html += `<div class="sidebar-section">
+      <div class="sidebar-standard" data-std="${s.id}">
+        <span>Standard ${s.id}: ${s.name}</span>
+        <span class="arrow">\u25B6</span>
+      </div>
+      <div class="sidebar-outcomes">`;
+    s.outcomes.forEach(o => {
+      const actionCount = o.actions.length;
+      const mapped = o.actions.filter(a => state.actions[a.id] && state.actions[a.id].policies.length > 0).length;
+      html += `<div class="sidebar-outcome" data-outcome="${o.id}">
+        ${o.id} ${o.name}
+        <span class="badge">${mapped}/${actionCount}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  sb.innerHTML = html;
+
+  sb.querySelectorAll('.sidebar-standard').forEach(el => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('expanded');
+    });
+  });
+  sb.querySelectorAll('.sidebar-outcome').forEach(el => {
+    el.addEventListener('click', () => {
+      sb.querySelectorAll('.sidebar-outcome').forEach(o => o.classList.remove('active'));
+      el.classList.add('active');
+      renderOutcome(el.dataset.outcome);
+    });
+  });
+}
+
+// ============ OUTCOME CONTENT ============
+function getOutcome(outcomeId) {
+  for (const s of STANDARDS) for (const o of s.outcomes) if (o.id === outcomeId) return {standard:s, outcome:o};
+  return null;
+}
+
+function getStatusColor(actionId) {
+  const a = state.actions[actionId];
+  if (!a) return 'gray';
+  if (a.status === 'ready') return 'green';
+  if (a.status === 'in_progress') return 'amber';
+  if (a.status === 'gap_identified') return 'red';
+  if (a.policies.length > 0) return 'amber';
+  return 'gray';
+}
+
+function renderOutcome(outcomeId) {
+  const data = getOutcome(outcomeId);
+  if (!data) return;
+  const {standard, outcome} = data;
+  const ca = document.getElementById('contentArea');
+
+  // Get supporting docs for this outcome
+  const docNums = outcomeDocsMap[outcomeId] || [];
+  const docDescs = docNums.map(n => {
+    const d = AECT_DOCS.find(x => x.num === n);
+    return d ? `Doc ${d.num}: ${d.desc}` : '';
+  }).filter(Boolean);
+
+  let html = `<div class="content-header">
+    <h2>Standard ${standard.id}: ${standard.name} &mdash; Outcome ${outcome.id}: ${outcome.name}</h2>
+    <p>${outcome.actions.length} actions | ${docDescs.length} supporting documents required for this outcome</p>
+  </div>`;
+
+  if (docDescs.length > 0) {
+    html += `<div class="supporting-docs"><strong>AECT Supporting Documents for Outcome ${outcomeId}:</strong><br>${docDescs.join('<br>')}</div>`;
+  }
+
+  outcome.actions.forEach(action => {
+    const as = state.actions[action.id] || {policies:[],status:'not_started',notes:''};
+    const color = getStatusColor(action.id);
+
+    // Find docs that reference this outcome
+    const relatedDocNums = outcomeDocsMap[outcomeId] || [];
+
+    html += `<div class="action-card" data-action="${action.id}">
+      <div class="action-card-header">
+        <span class="action-id">${action.id}</span>
+        <span class="action-desc">${action.desc}</span>
+        <span class="status-dot ${color}" title="${as.status.replace(/_/g,' ')}"></span>
+      </div>
+      <div class="action-card-body">
+        <div class="action-field">
+          <label>Mapped TC Policies</label>
+          <div class="multi-select" data-action="${action.id}" data-field="policies">
+            <div class="multi-select-trigger" tabindex="0">
+              ${as.policies.length ? as.policies.map(p => `<span class="ms-tag">${p.split(':')[0]}<span class="ms-remove" data-policy="${p}">&times;</span></span>`).join('') : '<span class="ms-placeholder">Select policies...</span>'}
+            </div>
+            <div class="multi-select-dropdown">
+              <input type="text" class="ms-search" placeholder="Search policies...">
+              <div class="ms-options">
+                ${TC_POLICIES.map(p => `<div class="ms-option ${as.policies.includes(p)?'selected':''}" data-value="${p}"><input type="checkbox" ${as.policies.includes(p)?'checked':''}> ${p}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="action-field">
+          <label>Status</label>
+          <select class="field-select" data-action="${action.id}" data-field="status">
+            <option value="not_started" ${as.status==='not_started'?'selected':''}>Not Started</option>
+            <option value="in_progress" ${as.status==='in_progress'?'selected':''}>In Progress</option>
+            <option value="ready" ${as.status==='ready'?'selected':''}>Ready</option>
+            <option value="gap_identified" ${as.status==='gap_identified'?'selected':''}>Gap Identified</option>
+          </select>
+        </div>
+        <div class="action-field full">
+          <label>Notes</label>
+          <textarea class="field-textarea" data-action="${action.id}" data-field="notes" placeholder="Add notes for auditors or team...">${as.notes}</textarea>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  ca.innerHTML = html;
+  bindActionEvents();
+}
+
+function bindActionEvents() {
+  // Status selects
+  document.querySelectorAll('.field-select[data-field="status"]').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const id = sel.dataset.action;
+      state.actions[id].status = sel.value;
+      saveState();
+      updateSidebarBadges();
+      // Update dot
+      const card = sel.closest('.action-card');
+      const dot = card.querySelector('.status-dot');
+      dot.className = 'status-dot ' + getStatusColor(id);
+    });
+  });
+
+  // Notes
+  document.querySelectorAll('.field-textarea[data-field="notes"]').forEach(ta => {
+    let timer;
+    ta.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        state.actions[ta.dataset.action].notes = ta.value;
+        saveState();
+      }, 300);
+    });
+  });
+
+  // Multi-selects
+  document.querySelectorAll('.multi-select').forEach(ms => {
+    const trigger = ms.querySelector('.multi-select-trigger');
+    const dropdown = ms.querySelector('.multi-select-dropdown');
+    const search = ms.querySelector('.ms-search');
+    const actionId = ms.dataset.action;
+
+    trigger.addEventListener('click', e => {
+      if (e.target.classList.contains('ms-remove')) {
+        const pol = e.target.dataset.policy;
+        state.actions[actionId].policies = state.actions[actionId].policies.filter(p => p !== pol);
+        saveState();
+        refreshMultiSelect(ms, actionId);
+        updateSidebarBadges();
+        const card = ms.closest('.action-card');
+        card.querySelector('.status-dot').className = 'status-dot ' + getStatusColor(actionId);
+        return;
+      }
+      closeAllDropdowns();
+      dropdown.classList.toggle('open');
+      if (dropdown.classList.contains('open')) search.focus();
+    });
+
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase();
+      ms.querySelectorAll('.ms-option').forEach(opt => {
+        opt.style.display = opt.dataset.value.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    ms.querySelectorAll('.ms-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const val = opt.dataset.value;
+        const policies = state.actions[actionId].policies;
+        if (policies.includes(val)) {
+          state.actions[actionId].policies = policies.filter(p => p !== val);
+        } else {
+          state.actions[actionId].policies.push(val);
+        }
+        saveState();
+        refreshMultiSelect(ms, actionId);
+        updateSidebarBadges();
+        const card = ms.closest('.action-card');
+        card.querySelector('.status-dot').className = 'status-dot ' + getStatusColor(actionId);
+      });
+    });
+
+    // Click outside to close
+    search.addEventListener('click', e => e.stopPropagation());
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.multi-select')) closeAllDropdowns();
+  });
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll('.multi-select-dropdown.open').forEach(d => d.classList.remove('open'));
+}
+
+function refreshMultiSelect(ms, actionId) {
+  const policies = state.actions[actionId].policies;
+  const trigger = ms.querySelector('.multi-select-trigger');
+  trigger.innerHTML = policies.length
+    ? policies.map(p => `<span class="ms-tag">${p.split(':')[0]}<span class="ms-remove" data-policy="${p}">&times;</span></span>`).join('')
+    : '<span class="ms-placeholder">Select policies...</span>';
+
+  ms.querySelectorAll('.ms-option').forEach(opt => {
+    const sel = policies.includes(opt.dataset.value);
+    opt.classList.toggle('selected', sel);
+    opt.querySelector('input').checked = sel;
+  });
+}
+
+function updateSidebarBadges() {
+  document.querySelectorAll('.sidebar-outcome').forEach(el => {
+    const oid = el.dataset.outcome;
+    const data = getOutcome(oid);
+    if (!data) return;
+    const total = data.outcome.actions.length;
+    const mapped = data.outcome.actions.filter(a => state.actions[a.id] && state.actions[a.id].policies.length > 0).length;
+    el.querySelector('.badge').textContent = `${mapped}/${total}`;
+  });
+}
+
+// ============ DOCUMENTS VIEW ============
+function renderDocuments() {
+  const dv = document.getElementById('documentsView');
+  let html = `<div class="content-header">
+    <h2>AECT Required Supporting Documents</h2>
+    <p>48 documents required for registration renewal. Map each to your TC internal policies.</p>
+  </div>
+  <div class="doc-filter-bar">
+    <input type="text" class="field-input" id="docSearch" placeholder="Search documents...">
+    <select class="field-select" id="docStatusFilter" style="width:auto;min-width:140px">
+      <option value="">All Statuses</option>
+      <option value="current">Current</option>
+      <option value="expired">Expired</option>
+      <option value="missing">Missing</option>
+      <option value="na">N/A</option>
+    </select>
+  </div>
+  <div id="docList"></div>`;
+  dv.innerHTML = html;
+  renderDocList();
+
+  document.getElementById('docSearch').addEventListener('input', renderDocList);
+  document.getElementById('docStatusFilter').addEventListener('change', renderDocList);
+}
+
+function renderDocList() {
+  const search = (document.getElementById('docSearch')?.value || '').toLowerCase();
+  const statusFilter = document.getElementById('docStatusFilter')?.value || '';
+  const container = document.getElementById('docList');
+  if (!container) return;
+
+  let html = '';
+  AECT_DOCS.forEach(doc => {
+    const ds = state.docs[doc.num] || {policies:[],docStatus:'current',lastReviewed:'',owner:''};
+    if (search && !doc.desc.toLowerCase().includes(search) && !String(doc.num).includes(search)) return;
+    if (statusFilter && ds.docStatus !== statusFilter) return;
+
+    const outcomesList = doc.outcomes.split(',').map(s => s.trim());
+    const mappedCount = ds.policies.length;
+    const hasMappingClass = mappedCount > 0 ? 'green' : 'gray';
+
+    html += `<div class="doc-card" data-docnum="${doc.num}">
+      <div class="doc-card-header">
+        <div class="doc-num">${doc.num}</div>
+        <div class="doc-desc">${doc.desc}</div>
+        <span class="status-dot ${hasMappingClass}"></span>
+      </div>
+      <div class="doc-outcomes-list">
+        ${outcomesList.map(o => `<span class="outcome-chip">${o}</span>`).join('')}
+      </div>
+      <div class="doc-fields">
+        <div class="action-field" style="grid-column:1/-1">
+          <label>Mapped TC Policies</label>
+          <div class="multi-select" data-docnum="${doc.num}">
+            <div class="multi-select-trigger" tabindex="0">
+              ${ds.policies.length ? ds.policies.map(p => `<span class="ms-tag">${p.split(':')[0]}<span class="ms-remove" data-policy="${p}">&times;</span></span>`).join('') : '<span class="ms-placeholder">Select policies...</span>'}
+            </div>
+            <div class="multi-select-dropdown">
+              <input type="text" class="ms-search" placeholder="Search policies...">
+              <div class="ms-options">
+                ${TC_POLICIES.map(p => `<div class="ms-option ${ds.policies.includes(p)?'selected':''}" data-value="${p}"><input type="checkbox" ${ds.policies.includes(p)?'checked':''}> ${p}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="action-field">
+          <label>Document Status</label>
+          <select class="field-select doc-status-sel" data-docnum="${doc.num}">
+            <option value="current" ${ds.docStatus==='current'?'selected':''}>Current</option>
+            <option value="expired" ${ds.docStatus==='expired'?'selected':''}>Expired</option>
+            <option value="missing" ${ds.docStatus==='missing'?'selected':''}>Missing</option>
+            <option value="na" ${ds.docStatus==='na'?'selected':''}>N/A</option>
+          </select>
+        </div>
+        <div class="action-field">
+          <label>Last Reviewed</label>
+          <input type="date" class="field-date doc-date" data-docnum="${doc.num}" value="${ds.lastReviewed}">
+        </div>
+        <div class="action-field">
+          <label>Owner</label>
+          <input type="text" class="field-input doc-owner" data-docnum="${doc.num}" value="${ds.owner}" placeholder="e.g. Quality Manager">
+        </div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+  bindDocEvents();
+}
+
+function bindDocEvents() {
+  // Status
+  document.querySelectorAll('.doc-status-sel').forEach(sel => {
+    sel.addEventListener('change', () => {
+      state.docs[sel.dataset.docnum].docStatus = sel.value;
+      saveState();
+    });
+  });
+  // Date
+  document.querySelectorAll('.doc-date').forEach(inp => {
+    inp.addEventListener('change', () => {
+      state.docs[inp.dataset.docnum].lastReviewed = inp.value;
+      saveState();
+    });
+  });
+  // Owner
+  document.querySelectorAll('.doc-owner').forEach(inp => {
+    let timer;
+    inp.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        state.docs[inp.dataset.docnum].owner = inp.value;
+        saveState();
+      }, 300);
+    });
+  });
+  // Multi-selects for docs
+  document.querySelectorAll('#docList .multi-select').forEach(ms => {
+    const trigger = ms.querySelector('.multi-select-trigger');
+    const dropdown = ms.querySelector('.multi-select-dropdown');
+    const search = ms.querySelector('.ms-search');
+    const docNum = ms.dataset.docnum;
+
+    trigger.addEventListener('click', e => {
+      if (e.target.classList.contains('ms-remove')) {
+        const pol = e.target.dataset.policy;
+        state.docs[docNum].policies = state.docs[docNum].policies.filter(p => p !== pol);
+        saveState();
+        refreshDocMultiSelect(ms, docNum);
+        return;
+      }
+      closeAllDropdowns();
+      dropdown.classList.toggle('open');
+      if (dropdown.classList.contains('open')) search.focus();
+    });
+
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase();
+      ms.querySelectorAll('.ms-option').forEach(opt => {
+        opt.style.display = opt.dataset.value.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    ms.querySelectorAll('.ms-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const val = opt.dataset.value;
+        const policies = state.docs[docNum].policies;
+        if (policies.includes(val)) {
+          state.docs[docNum].policies = policies.filter(p => p !== val);
+        } else {
+          state.docs[docNum].policies.push(val);
+        }
+        saveState();
+        refreshDocMultiSelect(ms, docNum);
+      });
+    });
+    search.addEventListener('click', e => e.stopPropagation());
+  });
+}
+
+function refreshDocMultiSelect(ms, docNum) {
+  const policies = state.docs[docNum].policies;
+  const trigger = ms.querySelector('.multi-select-trigger');
+  trigger.innerHTML = policies.length
+    ? policies.map(p => `<span class="ms-tag">${p.split(':')[0]}<span class="ms-remove" data-policy="${p}">&times;</span></span>`).join('')
+    : '<span class="ms-placeholder">Select policies...</span>';
+  ms.querySelectorAll('.ms-option').forEach(opt => {
+    const sel = policies.includes(opt.dataset.value);
+    opt.classList.toggle('selected', sel);
+    opt.querySelector('input').checked = sel;
+  });
+  // Update dot
+  const card = ms.closest('.doc-card');
+  if (card) {
+    const dot = card.querySelector('.status-dot');
+    dot.className = 'status-dot ' + (policies.length > 0 ? 'green' : 'gray');
+  }
+}
+
+// ============ GAP ANALYSIS ============
+function renderGap() {
+  const gv = document.getElementById('gapView');
+
+  // ---- VERIFIED DATA ----
+  const masterRegister = {
+    "CO-001":"Governance","CO-002":"Conflict of Interest","CO-003":"Strategic and Operational Planning",
+    "CO-004":"Continuous Improvement","CO-005":"Compliance","CO-006":"Financial Management",
+    "CO-007":"Risk Management","CO-008":"Privacy and Confidentiality","CO-009":"Records and Information Management",
+    "CO-010":"Workplace Health and Safety","CO-011":"Workplace Incident Management",
+    "CO-012":"COVID19 Response and Business Continuity Plan","CO-013":"Emergency Planning",
+    "CO-014":"Physical Accessibility","CO-015":"Safety and Security",
+    "TC-001":"Client Rights and Responsibilities","TC-002":"Culturally Safe Care and Services",
+    "TC-003":"Decision Making, Dignity and Choice","TC-004":"Elder Abuse and Neglect",
+    "TC-005":"Clinical Governance Framework","TC-006":"Open Disclosure",
+    "SM-001":"Providing Information Advice and Referrals","SM-002":"Service Access and Intake",
+    "SM-003":"Subcontract Brokerage","SM-004":"Home Care Agreement",
+    "CM-001":"Initial Assessment","CM-002":"Care Planning","CM-003":"Service Delivery and Participation",
+    "CM-004":"Care Plan and Evaluation","CM-005":"End of Life Care Planning","CM-006":"Client Case Notes",
+    "CM-007":"Clients that do not respond to a scheduled visit","CM-008":"Client Incident",
+    "CM-009":"High Impact and High Prevalence Risks","CM-010":"Feedback and Complaints",
+    "CM-011":"Personal Care","CM-012":"Medication Management","CM-013":"Infection Control",
+    "CM-014":"Waste Management","CM-015":"Food Safety","CM-016":"Emergency Planning",
+    "CM-019":"Dementia Care","CM-020":"Antimicrobial Stewardship",
+    "CM-021":"Inclusions and Exclusions","CM-022":"Recognition and Response to Deterioration",
+    "CM-023":"Home Risk Assessment","CM-024":"Balancing Duty of Care with Dignity of Risk",
+    "CM-025":"Consumer Risk Assessment",
+    "PM-001":"Client HCP Budget Management","PM-002":"Client Money and Property","PM-003":"Service Exit",
+    "HR-002":"EEO, Discrimination, Harassment and Workplace Bullying","HR-003":"Recruitment and Selection",
+    "HR-004":"Disputes and Grievances","HR-005":"Remote Work and Working From Home"
+  };
+  const onDisk = {"CM-013A":"Clinical IPC Home Care Policy","CM-013B":"Home Care Outbreak Management Plan","CM-027":"Restrictive Practices Minimisation Policy","CM-028":"End of Life Palliative Care Policy"};
+  const inArchive = {"CM-001":"2024 ACQSC","CM-002":"2024 ACQSC","CM-008":"2024 ACQSC","TC-004":"2024 ACQSC","CO-004":"2022 ACQSC"};
+  const inQdrant = ["CM-001","CM-002","CM-003","CM-004","CM-005","CM-008","CM-009","CM-010","CM-019","CM-024","CO-004","CO-005","CO-007","CO-008","CO-009","CO-010","CO-011","CO-014","HR-002","HR-003","HR-004","HR-005","PM-003","SM-001","SM-002","SM-003","TC-001","TC-002","TC-003","TC-004","TC-005","TC-006"];
+
+  const verifiedDocs = [
+    {num:1, desc:"Person Centred Care Policy", outcomes:"1.1, 2.1, 3.1, 5.4, 6.2, 7.1", tc:["TC-003","CM-003"], cat:"policy"},
+    {num:2, desc:"Communication, Consultation and Partnering Policy", outcomes:"1.1, 1.3, 2.1, 2.6a, 2.6b, 3.1, 3.2, 3.3, 3.4, 5.3, 5.4, 6.1, 6.2, 6.3, 7.2", tc:["TC-003","CM-001","CM-002"], cat:"policy"},
+    {num:3, desc:"Violence, Abuse, Racism, Neglect, Exploitation and Discrimination Policy", outcomes:"1.2, 2.2a, 2.2b, 3.2", tc:["TC-004"], cat:"policy"},
+    {num:4, desc:"Choice, Independence and Quality of Life Policy", outcomes:"1.3, 3.1, 3.2, 5.4, 5.5, 5.7, 6.3, 6.4, 7.1", tc:["TC-003","CM-024"], cat:"policy"},
+    {num:5, desc:"Agreements, Fees, Pricing, Invoicing and Statements Policy", outcomes:"1.4, 3.3", tc:["PM-001"], cat:"policy"},
+    {num:6, desc:"Corporate Governance Framework", outcomes:"2.1, 2.2a, 2.2b, 2.3, 5.1", tc:["CO-001","TC-005"], cat:"policy"},
+    {num:7, desc:"Continuous Improvement Policy", outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.4, 2.6a, 2.6b, 5.1, 6.1", tc:["CO-004"], cat:"policy"},
+    {num:8, desc:"Quality Assurance and Monitoring Policy", outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.9, 3.2, 5.1, 5.3, 5.5, 6.1", tc:[], cat:"policy"},
+    {num:9, desc:"Quality and Safety Management Policy", outcomes:"1.1, 2.2a, 2.2b, 2.3, 2.4, 2.10, 3.3, 4.1a, 4.1b, 5.1, 5.3, 5.5", tc:[], cat:"policy"},
+    {num:10, desc:"Risk Management Policy", outcomes:"1.3, 2.4, 2.10, 3.1, 3.2, 3.3, 4.1a, 4.1b, 4.2, 5.2, 5.3, 5.5", tc:["CO-007","CM-023","CM-025"], cat:"policy"},
+    {num:11, desc:"Incident Management Policy", outcomes:"1.2, 2.3, 2.5, 3.1, 3.3", tc:["CM-008"], cat:"policy"},
+    {num:12, desc:"Feedback and Complaints Management Policy", outcomes:"2.3, 2.6a, 2.6b, 6.1", tc:["CM-010"], cat:"policy"},
+    {num:13, desc:"Information Management Policy (incl privacy)", outcomes:"1.3, 1.4, 2.2a, 2.2b, 2.7, 3.1, 3.3, 5.1, 5.3, 7.2", tc:["CO-008","CO-009"], cat:"policy"},
+    {num:14, desc:"Workforce Planning Policy", outcomes:"2.2a, 2.3, 2.6a, 2.8, 2.9, 6.4", tc:[], cat:"policy"},
+    {num:15, desc:"Workforce Competency/Training Policy", outcomes:"2.2a, 2.3, 2.6a, 2.8, 2.9, 5.1", tc:[], cat:"policy"},
+    {num:16, desc:"Police Checks, Vulnerable People, Banning Order checks Policy", outcomes:"2.9", tc:["HR-003"], cat:"policy"},
+    {num:17, desc:"Emergency and Disaster Management Policy", outcomes:"2.1, 2.10", tc:["CM-016","CO-012"], cat:"policy"},
+    {num:18, desc:"Assessment and Planning Policy", outcomes:"1.1, 2.4, 2.7, 3.1, 5.4, 5.6, 5.7, 6.2, 6.3, 7.1, 7.2", tc:["CM-001","CM-002"], cat:"policy"},
+    {num:19, desc:"Delivery of Non-clinical Care Policy", outcomes:"3.2, 6.2", tc:["CM-003","CM-011"], cat:"policy"},
+    {num:20, desc:"Cognitive Impairment Policy", outcomes:"3.1, 3.2, 4.1b, 5.3, 5.4, 5.5, 5.6", tc:["CM-019"], cat:"policy"},
+    {num:21, desc:"Transitions and Coordination of Care Policy", outcomes:"2.7, 3.1, 3.3, 3.4, 5.3, 5.4, 7.2", tc:[], cat:"policy"},
+    {num:22, desc:"Cleanliness, Maintenance and Safety of Equipment Policy", outcomes:"4.1a, 4.1b, 4.2, 5.2", tc:["CO-010"], cat:"policy"},
+    {num:23, desc:"Infection Prevention and Control + Outbreak Management Plan", outcomes:"4.2, 5.2", tc:["CM-013","CM-013A","CM-013B"], cat:"policy"},
+    {num:24, desc:"Clinical Governance Framework", outcomes:"2.3, 5.1, 5.4, 5.6", tc:["TC-005"], cat:"policy"},
+    {num:25, desc:"Medication Policy \u2013 Safe Administration and Review", outcomes:"5.2, 5.3", tc:["CM-012"], cat:"policy"},
+    {num:26, desc:"Clinical Care Policy (falls, choking, hydration, mental health)", outcomes:"5.4, 5.5, 5.6, 6.2", tc:["CM-022","CM-009"], cat:"policy"},
+    {num:27, desc:"Advance Care Planning and End Of Life Care Policy", outcomes:"3.1, 5.7", tc:["CM-005","CM-028"], cat:"policy"},
+    {num:28, desc:"Food and Nutrition Policy (Cat 6 only)", outcomes:"5.5, 6.1, 6.2, 6.3, 6.4", tc:["CM-015"], cat:"policy-cat6"},
+    {num:29, desc:"Activities for Daily Living Policy (Cat 6 only)", outcomes:"3.1, 3.2, 7.1", tc:[], cat:"policy-cat6"},
+    {num:30, desc:"Minimising the Use of Restrictive Practices Policy", outcomes:"3.2, 4.1b, 5.3, 5.5, 5.6", tc:["CM-027"], cat:"policy"},
+    {num:31, desc:"Provider Partnering meetings with older people (last 4 meetings)", outcomes:"1.1, 2.1, 2.6b, 2.10, 6.1", tc:[], cat:"evidence"},
+    {num:32, desc:"Older persons experience survey results (latest)", outcomes:"2.1, 2.6b, 4.1a, 4.1b, 6.1", tc:[], cat:"evidence"},
+    {num:33, desc:"Organisational Structure (current)", outcomes:"2.1", tc:[], cat:"evidence"},
+    {num:34, desc:"Governing body meeting reports/minutes (last 4 meetings)", outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.5, 2.6a, 2.6b, 4.2, 5.1", tc:[], cat:"evidence"},
+    {num:35, desc:"Mandatory Quality Committee meeting reports/minutes (last 4 meetings)", outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b, 7.2", tc:[], cat:"evidence"},
+    {num:36, desc:"Quality Care Advisory Committee meeting reports/minutes (last 4 meetings)", outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b", tc:[], cat:"evidence"},
+    {num:37, desc:"Continuous Improvement Plan (current)", outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.4, 2.6a, 2.6b, 5.1, 6.1", tc:["CO-004"], cat:"evidence"},
+    {num:38, desc:"Results of clinical systems audits/reviews (past 12 months)", outcomes:"2.3, 4.2, 5.1, 5.2, 5.3, 5.4, 5.5, 6.2", tc:[], cat:"evidence"},
+    {num:39, desc:"Enterprise Risk Register", outcomes:"2.2a, 2.2b, 2.4, 5.3, 5.5", tc:["CO-007"], cat:"evidence"},
+    {num:40, desc:"Incident trend analysis (last 12 months)", outcomes:"1.2, 2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b, 2.8, 5.5", tc:[], cat:"evidence"},
+    {num:41, desc:"Complaint trend analysis incl unresolved >3 months (past 12 months)", outcomes:"1.2, 2.3, 2.6a, 2.6b, 5.4, 6.1", tc:[], cat:"evidence"},
+    {num:42, desc:"Results of other authority audits/reviews (past 12 months)", outcomes:"2.3, 2.7", tc:[], cat:"evidence"},
+    {num:43, desc:"Management meeting minutes (last 4 meetings)", outcomes:"2.3, 2.7", tc:[], cat:"evidence"},
+    {num:44, desc:"Position descriptions for key management (current)", outcomes:"2.8, 2.9", tc:[], cat:"evidence"},
+    {num:45, desc:"Worker qualifications/training/competency audit results", outcomes:"2.8, 2.9", tc:[], cat:"evidence"},
+    {num:46, desc:"Register of adverse police/vulnerable people/banning order checks", outcomes:"2.8, 2.9", tc:[], cat:"evidence"},
+    {num:47, desc:"Clinical Governance meeting minutes (last 4 meetings)", outcomes:"2.2b, 2.3, 5.1, 5.5", tc:[], cat:"evidence"},
+    {num:48, desc:"Results of other care/service delivery audits/reviews (past 12 months)", outcomes:"2.1, 2.3, 2.6a, 2.6b, 6.4", tc:[], cat:"evidence"}
+  ];
+
+  function isVerified(code) { return !!(masterRegister[code] || onDisk[code]); }
+  function getSourceBadges(code) {
+    const b = [];
+    if (masterRegister[code]) b.push('<span style="background:#e6fffa;color:#234e52;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">Register</span>');
+    if (onDisk[code]) b.push('<span style="background:#faf5ff;color:#553c9a;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">On Disk</span>');
+    if (inArchive[code]) b.push('<span style="background:#ebf8ff;color:#2a4365;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">Archive</span>');
+    if (inQdrant.includes(code)) b.push('<span style="background:#fefcbf;color:#744210;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">Qdrant</span>');
+    return b.join(' ');
+  }
+
+  // ---- CALCULATE VERIFIED STATS ----
+  const policies = verifiedDocs.filter(d => d.cat === 'policy');
+  const policyGaps = policies.filter(d => d.tc.length === 0);
+  const policyMapped = policies.filter(d => d.tc.length > 0 && d.tc.some(c => isVerified(c)));
+  const evidenceDocs = verifiedDocs.filter(d => d.cat === 'evidence');
+  const evidenceToCollect = evidenceDocs.filter(d => d.tc.length === 0);
+  const cat6 = verifiedDocs.filter(d => d.cat === 'policy-cat6');
+
+  // Per-standard coverage from verified doc mappings
+  const stdDefs = {"1":["1.1","1.2","1.3","1.4"],"2":["2.1","2.2a","2.2b","2.3","2.4","2.5","2.6a","2.6b","2.7","2.8","2.9","2.10"],"3":["3.1","3.2","3.3","3.4"],"4":["4.1a","4.1b","4.2"],"5":["5.1","5.2","5.3","5.4","5.5","5.6","5.7"],"6":["6.1","6.2","6.3","6.4"],"7":["7.1","7.2"]};
+  const coveredOutcomes = new Set();
+  policyMapped.forEach(d => d.outcomes.split(',').forEach(o => coveredOutcomes.add(o.trim())));
+
+  // Also include action-level mappings from user state
+  let userMappedActions = 0, totalActions = 0;
+  const userUnmapped = [];
+  const userGapActions = [];
+  STANDARDS.forEach(s => s.outcomes.forEach(o => o.actions.forEach(a => {
+    totalActions++;
+    const as = state.actions[a.id];
+    if (as && as.policies.length > 0) userMappedActions++;
+    else userUnmapped.push({id:a.id, desc:a.desc});
+    if (as && as.status === 'gap_identified') userGapActions.push({id:a.id, desc:a.desc});
+  })));
+  const userPct = totalActions > 0 ? Math.round((userMappedActions / totalActions) * 100) : 0;
+
+  // Count unique outcomes affected by gaps
+  const gapOutcomes = new Set();
+  policyGaps.forEach(d => d.outcomes.split(',').forEach(o => gapOutcomes.add(o.trim())));
+
+  // Readiness score: verified doc coverage
+  const verifiedPct = policies.length > 0 ? Math.round((policyMapped.length / policies.length) * 100) : 0;
+  const scoreColor = verifiedPct >= 80 ? 'var(--green)' : verifiedPct >= 60 ? 'var(--amber)' : 'var(--red)';
+  const userScoreColor = userPct >= 75 ? 'var(--green)' : userPct >= 40 ? 'var(--amber)' : 'var(--red)';
+
+  let html = `<div class="content-header">
+    <h2>Gap Analysis Dashboard</h2>
+    <p>Combined verified evidence analysis and user-mapped action coverage across all 7 Quality Standards.</p>
+  </div>
+
+  <div class="gap-grid">
+    <div class="gap-card" style="text-align:center">
+      <h3>Document Readiness (Verified)</h3>
+      <div class="score-circle" style="background:${scoreColor}">
+        <span class="score-value">${verifiedPct}%</span>
+        <span class="score-label">${policyMapped.length}/${policies.length} Policies</span>
+      </div>
+      <div style="font-size:.85rem;color:var(--gray-500);margin-top:8px">Cross-referenced against Master Register, Archive, Disk &amp; Qdrant</div>
+    </div>
+    <div class="gap-card" style="text-align:center">
+      <h3>Action Mapping (Your Progress)</h3>
+      <div class="score-circle" style="background:${userScoreColor}">
+        <span class="score-value">${userPct}%</span>
+        <span class="score-label">${userMappedActions}/${totalActions} Actions</span>
+      </div>
+      <div style="font-size:.85rem;color:var(--gray-500);margin-top:8px">Actions with at least one policy mapped in Standards View</div>
+    </div>
+  </div>
+
+  <div class="gap-grid">
+    <div class="gap-card">
+      <h3>Per-Standard Outcome Coverage (Verified Policies)</h3>
+      ${Object.entries(stdDefs).map(([id, outcomes]) => {
+        const covered = outcomes.filter(o => coveredOutcomes.has(o)).length;
+        const pct = outcomes.length > 0 ? Math.round((covered / outcomes.length) * 100) : 0;
+        const barColor = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--amber)' : 'var(--red)';
+        const missing = outcomes.filter(o => !coveredOutcomes.has(o));
+        return `<div class="progress-row">
+          <span class="std-label">Std ${id}</span>
+          <div class="progress-bar"><div class="progress-fill" style="width:${Math.max(pct,8)}%;background:${barColor}">${pct}%</div></div>
+          <span class="pct">${covered}/${outcomes.length}</span>
+        </div>${missing.length ? '<div style="font-size:.72rem;color:var(--red);margin:-4px 0 6px 52px">Missing: '+missing.join(', ')+'</div>' : ''}`;
+      }).join('')}
+    </div>
+    <div class="gap-card">
+      <h3>Summary Breakdown</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+        <div style="background:var(--green-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--green)">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green)">${policyMapped.length}</div>
+          <div style="font-size:.8rem;color:var(--gray-600)">Policies Verified</div>
+        </div>
+        <div style="background:var(--red-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--red)">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--red)">${policyGaps.length}</div>
+          <div style="font-size:.8rem;color:var(--gray-600)">Policy Gaps</div>
+        </div>
+        <div style="background:var(--amber-bg);padding:12px;border-radius:var(--radius);border-left:3px solid var(--amber)">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--amber)">${evidenceToCollect.length}</div>
+          <div style="font-size:.8rem;color:var(--gray-600)">Evidence to Collect</div>
+        </div>
+        <div style="background:var(--gray-50);padding:12px;border-radius:var(--radius);border-left:3px solid var(--gray-400)">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--gray-500)">${cat6.length}</div>
+          <div style="font-size:.8rem;color:var(--gray-600)">Cat 6 Only (N/A)</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // ---- POLICY GAPS ----
+  if (policyGaps.length > 0) {
+    html += `<div class="gap-card" style="margin-top:20px;border-left:4px solid var(--red)">
+      <h3 style="color:var(--red)">\u274C Critical: ${policyGaps.length} Policy Gaps \u2014 No TC Policy Found</h3>
+      <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:12px">These AECT-required policies have no matching TC policy in the Master Register, ACQSC Archive, local disk, or Qdrant KB.</p>
+      <table class="heatmap-table" style="width:100%">
+        <thead><tr><th class="row-header" style="text-align:left">Doc</th><th style="text-align:left">Required AECT Policy</th><th style="text-align:left">Outcomes Affected</th><th>Impact</th><th style="text-align:left">Recommendation</th></tr></thead>
+        <tbody>${policyGaps.map(d => {
+          const oc = d.outcomes.split(',').map(o=>o.trim()).filter(Boolean);
+          const rec = d.num === 8 ? 'May be covered by CO-004 or CO-005 — needs confirmation'
+            : d.num === 9 ? 'May be covered by CO-004 — needs confirmation'
+            : d.num === 14 ? 'Create dedicated Workforce Planning Policy or confirm HR-003 covers this'
+            : d.num === 15 ? 'Create dedicated Workforce Training Policy or confirm HR-003 covers this'
+            : d.num === 21 ? 'CM-003 partially covers — needs dedicated Transitions Policy'
+            : 'Identify or create new policy';
+          return `<tr style="background:var(--red-bg)">
+            <td style="font-weight:700;font-size:1rem">${d.num}</td>
+            <td><strong>${d.desc}</strong></td>
+            <td style="font-size:.75rem">${oc.map(o=>'<span style="background:var(--blue-pale);color:var(--blue);padding:1px 5px;border-radius:8px;font-size:.7rem;margin:1px">'+o+'</span>').join(' ')}</td>
+            <td style="text-align:center;font-weight:700;font-size:1.1rem;color:var(--red)">${oc.length}</td>
+            <td style="font-size:.8rem">${rec}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+
+  // ---- EVIDENCE TO COLLECT ----
+  html += `<div class="gap-card" style="margin-top:20px;border-left:4px solid var(--amber)">
+    <h3 style="color:var(--amber)">\uD83D\uDCCB ${evidenceDocs.length} Evidence Documents to Collect</h3>
+    <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:12px">These are meeting minutes, reports, analyses, and registers that need to be physically gathered — not policies to write.</p>
+    <table class="heatmap-table" style="width:100%">
+      <thead><tr><th class="row-header" style="text-align:left">Doc</th><th style="text-align:left">Required Evidence</th><th style="text-align:left">Outcomes</th><th>Impact</th><th>Priority</th></tr></thead>
+      <tbody>${evidenceDocs.sort((a,b) => {
+        const ac = b.outcomes.split(',').length - a.outcomes.split(',').length;
+        return ac;
+      }).map(d => {
+        const oc = d.outcomes.split(',').map(o=>o.trim()).filter(Boolean);
+        const priority = oc.length >= 7 ? 'HIGH' : oc.length >= 3 ? 'MED' : 'LOW';
+        const prColor = priority === 'HIGH' ? 'var(--red)' : priority === 'MED' ? 'var(--amber)' : 'var(--gray-500)';
+        return `<tr>
+          <td style="font-weight:700">${d.num}</td>
+          <td>${d.desc}${d.tc.length ? '<br><span style="font-size:.72rem;color:var(--green)">Partial: '+d.tc.join(', ')+'</span>' : ''}</td>
+          <td style="font-size:.75rem">${oc.map(o=>'<span style="background:var(--blue-pale);color:var(--blue);padding:1px 5px;border-radius:8px;font-size:.7rem;margin:1px">'+o+'</span>').join(' ')}</td>
+          <td style="text-align:center;font-weight:700">${oc.length}</td>
+          <td style="text-align:center;font-weight:600;color:${prColor}">${priority}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+
+  // ---- USER-FLAGGED GAPS ----
+  if (userGapActions.length > 0) {
+    html += `<div class="gap-card" style="margin-top:20px;border-left:4px solid var(--red)">
+      <h3 style="color:var(--red)">\u26A0 User-Flagged: Gap Identified (${userGapActions.length})</h3>
+      <div class="unmapped-list">
+        ${userGapActions.map(a => `<div class="unmapped-item"><span class="uid">${a.id}</span><span>${a.desc.substring(0,100)}${a.desc.length>100?'...':''}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ---- VERIFIED POLICY COVERAGE MATRIX ----
+  html += `<div class="gap-card" style="margin-top:20px">
+    <h3>Verified Policy Coverage Matrix</h3>
+    <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:12px">TC policies ranked by number of AECT outcomes they cover. Source verification shown.</p>
+    <div style="overflow-x:auto">
+      <table class="heatmap-table">
+        <thead><tr><th class="row-header" style="text-align:left">TC Policy</th><th style="text-align:left">Policy Name</th><th style="text-align:left">Verification</th><th style="text-align:left">AECT Docs</th><th>Outcomes</th></tr></thead>
+        <tbody>`;
+
+  // Build coverage map from verified docs
+  const policyCov = {};
+  policyMapped.forEach(d => {
+    d.tc.forEach(code => {
+      if (!policyCov[code]) policyCov[code] = {outcomes: new Set(), docs: new Set()};
+      d.outcomes.split(',').forEach(o => policyCov[code].outcomes.add(o.trim()));
+      policyCov[code].docs.add(d.num);
+    });
+  });
+  const sortedPolicies = Object.entries(policyCov).sort((a,b) => b[1].outcomes.size - a[1].outcomes.size);
+
+  sortedPolicies.forEach(([code, data]) => {
+    const name = masterRegister[code] || onDisk[code] || code;
+    const heatClass = 'heat-' + Math.min(6, Math.ceil(data.outcomes.size / 3));
+    html += `<tr>
+      <td style="font-weight:600">${code}</td>
+      <td style="font-size:.82rem">${name}</td>
+      <td>${getSourceBadges(code)}</td>
+      <td style="font-size:.75rem">${[...data.docs].sort((a,b)=>a-b).map(n=>'Doc '+n).join(', ')}</td>
+      <td class="${heatClass}" style="font-weight:700;text-align:center">${data.outcomes.size}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table></div></div>`;
+
+  // ---- PER-STANDARD BREAKDOWN: Policies + Projects + Issues ----
+  const stdBreakdown = [
+    {id:"1", name:"The Individual", outcomes:["1.1 Person-centred care","1.2 Dignity, respect and privacy","1.3 Choice, independence and quality of life","1.4 Transparency and agreements"],
+      policies:[
+        {doc:1,desc:"Person Centred Care",tc:["TC-003","CM-003"]},
+        {doc:2,desc:"Communication & Partnering",tc:["TC-003","CM-001","CM-002"]},
+        {doc:3,desc:"Violence/Abuse/Neglect",tc:["TC-004"]},
+        {doc:4,desc:"Choice/Independence/QoL",tc:["TC-003","CM-024"]},
+        {doc:5,desc:"Agreements/Fees",tc:["PM-001"]}
+      ], gaps:[],
+      projects:[
+        {id:"[CHK] Care Partner Check-Ins",status:"QA",url:"https://linear.app/trilogycare/project/chk-care-partner-check-ins-7cb3902aa404",why:"Check-ins demonstrate person-centred engagement (1.1) and monitoring QoL changes (1.3.6)"},
+        {id:"[HCA] Client HCA",status:"In Progress",url:"https://linear.app/trilogycare/project/hca-client-hca",why:"Home Care Agreements directly support Outcome 1.4 (Transparency and agreements)"},
+        {id:"[MOB1] Consumer Mobile V1",status:"Design",url:"",why:"Mobile app enhances individual access to information (1.3.1) and autonomy (1.3.5)"},
+        {id:"[RIN] Relationship Intelligence",status:"Dev",url:"https://linear.app/trilogycare/project/rin-relationship-intelligence-7e83e45e74c9",why:"Understanding relationships supports 1.2.3 and 1.1.1"}
+      ],
+      issues:[
+        {id:"DES-398",title:"HCA Termination wizard — compliance fields",status:"In Progress",url:"https://linear.app/trilogycare/issue/DES-398",why:"1.4 — transparent agreement termination"},
+        {id:"TRI-29",title:"Draft HCA to Sent Transition",status:"Backlog",url:"https://linear.app/trilogycare/issue/TRI-29",why:"1.4 — agreement workflow for informed consent"},
+        {id:"TRI-19",title:"Bulk Recontracting for SAH Transition",status:"Backlog",url:"https://linear.app/trilogycare/issue/TRI-19",why:"1.4 — mass agreement updates for Support at Home transition"}
+      ],
+      evidence:[31,32]
+    },
+    {id:"2", name:"The Organisation", outcomes:["2.1 Partnering with individuals","2.2a Quality/safety culture (workers)","2.2b Quality/safety culture (individuals)","2.3 Accountability & quality system","2.4 Risk management","2.5 Incident management","2.6a Complaints (workers)","2.6b Complaints (individuals)","2.7 Information management","2.8 Workforce planning","2.9 Human resource management","2.10 Emergency & disaster"],
+      policies:[
+        {doc:6,desc:"Corporate Governance",tc:["CO-001","TC-005"]},
+        {doc:7,desc:"Continuous Improvement",tc:["CO-004"]},
+        {doc:10,desc:"Risk Management",tc:["CO-007","CM-023","CM-025"]},
+        {doc:11,desc:"Incident Management",tc:["CM-008"]},
+        {doc:12,desc:"Feedback & Complaints",tc:["CM-010"]},
+        {doc:13,desc:"Information Management",tc:["CO-008","CO-009"]},
+        {doc:16,desc:"Police/Vulnerable People Checks",tc:["HR-003"]},
+        {doc:17,desc:"Emergency & Disaster",tc:["CM-016","CO-012"]}
+      ],
+      gaps:[
+        {doc:8,desc:"Quality Assurance and Monitoring Policy",impact:10,suggestion:"May be covered by CO-004 (Continuous Improvement) or CO-005 (Compliance) — needs confirmation from compliance team"},
+        {doc:9,desc:"Quality and Safety Management Policy",impact:12,suggestion:"May be covered by CO-004 — needs confirmation. This is the HIGHEST IMPACT gap across all standards"},
+        {doc:14,desc:"Workforce Planning Policy",impact:6,suggestion:"Create dedicated policy or confirm HR-003 (Recruitment & Selection) covers workforce planning scope"},
+        {doc:15,desc:"Workforce Competency/Training Policy",impact:6,suggestion:"Create dedicated policy or confirm HR-003 covers training/competency requirements"}
+      ],
+      projects:[
+        {id:"Commission Complaints Process Re-Engineering",status:"Design",url:"https://linear.app/trilogycare/project/commission-complaints-process-re-engineering-a41c33d1aa6d",why:"Directly supports 2.3, 2.5, 2.6a/2.6b — complaint handling re-engineering"},
+        {id:"[COM] Complaints Management",status:"Design",url:"https://linear.app/trilogycare/project/com-complaints-management-eeffdcc4e0cc",why:"2.6a/2.6b — building complaints management platform"},
+        {id:"[ICM] Incident Management",status:"Dev",url:"https://linear.app/trilogycare/project/icm-incident-management-b30dd804abdb",why:"2.5 — incident management system build"},
+        {id:"[RAP] Roles & Permissions Refactor",status:"Backlog",url:"",why:"2.2a/2.2b — governance via auditable permission policies"},
+        {id:"[SPO] Supplier Onboarding 2",status:"In Progress",url:"",why:"2.8/2.9 — supplier compliance docs, police checks, banning orders"},
+        {id:"Monthly KPI Reporting",status:"Design",url:"https://linear.app/trilogycare/project/monthly-kpi-reporting-2cd20024e399",why:"2.3 — systematic performance monitoring and accountability"},
+        {id:"Project One Source",status:"Design",url:"https://linear.app/trilogycare/project/project-one-source-9e6d18679e6c",why:"2.7 — single source of truth for information management"}
+      ],
+      issues:[
+        {id:"OPE-70",title:"WS4: Continuous Improvement & Compliance Framework",status:"Todo",url:"https://linear.app/trilogycare/issue/OPE-70",why:"2.3/2.4 — CI actions on every case record"},
+        {id:"OPE-114",title:"Policy Compliance Check in Investigation",status:"Backlog",url:"https://linear.app/trilogycare/issue/OPE-114",why:"2.3 — automated policy breach detection"},
+        {id:"OPE-112",title:"Review & Reactivate CI Register",status:"Done",url:"https://linear.app/trilogycare/issue/OPE-112",why:"2.3/2.4 — CI register operational"},
+        {id:"PLA-174",title:"Audit Process",status:"Reviewing",url:"https://linear.app/trilogycare/issue/PLA-174",why:"2.8/2.9 — provider audit workflow (archived, needs revival)"},
+        {id:"TMC-69",title:"HOTFIX: Compliance can't upload docs",status:"Blocked",url:"https://linear.app/trilogycare/issue/TMC-69",why:"2.9 — compliance team tooling BROKEN (urgent)"},
+        {id:"TMC-81",title:"NDIS Compliance Banning List",status:"Released",url:"https://linear.app/trilogycare/issue/TMC-81",why:"2.9 — banning order monitoring (live)"},
+        {id:"PLA-1251",title:"Enhance policies to be declarative and auditable",status:"Backlog",url:"https://linear.app/trilogycare/issue/PLA-1251",why:"2.3 — policy auditability enhancement"}
+      ],
+      evidence:[33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48]
+    },
+    {id:"3", name:"The Care and Services", outcomes:["3.1 Assessment and planning","3.2 Delivery of funded aged care services","3.3 Communicating for safety and quality","3.4 Planning and coordination"],
+      policies:[
+        {doc:18,desc:"Assessment & Planning",tc:["CM-001","CM-002"]},
+        {doc:19,desc:"Non-clinical Care",tc:["CM-003","CM-011"]},
+        {doc:20,desc:"Cognitive Impairment",tc:["CM-019"]}
+      ],
+      gaps:[
+        {doc:21,desc:"Transitions and Coordination of Care Policy",impact:7,suggestion:"CM-003 partially covers transitions — need dedicated Transitions & Coordination Policy for 3.4, 5.3, 5.4, 7.2"}
+      ],
+      projects:[
+        {id:"[CHK] Care Partner Check-Ins",status:"QA",url:"https://linear.app/trilogycare/project/chk-care-partner-check-ins-7cb3902aa404",why:"3.1/3.2 — ongoing assessment and service delivery monitoring"},
+        {id:"[COU] Coordinator Uplift",status:"Start",url:"https://linear.app/trilogycare/project/cou-coordinator-uplift-fe52b0be42a3",why:"3.1/3.4 — improved care coordination workflows"},
+        {id:"SaH Inclusions Redesign",status:"Design",url:"https://linear.app/trilogycare/project/sah-inclusions-redesign-be74cae54baf",why:"3.3 — communicating service inclusions for safety and quality"},
+        {id:"SaH Price Cap / Pricing",status:"Design",url:"https://linear.app/trilogycare/project/sah-price-cap-pricing-f7a63d1293fc",why:"3.3 — transparent pricing for safe service delivery"},
+        {id:"Superior Home Health Transfer",status:"Backlog",url:"https://linear.app/trilogycare/project/superior-home-health-transfer-340724390141",why:"3.4 — coordinating care transitions for ~150 transferring clients"}
+      ],
+      issues:[
+        {id:"DUC-257",title:"Transition from Current System",status:"In Review",url:"https://linear.app/trilogycare/issue/DUC-257",why:"3.4 — planning and coordination of service transitions"}
+      ],
+      evidence:[]
+    },
+    {id:"4", name:"The Environment", outcomes:["4.1a Environment — home","4.1b Environment — other than home","4.2 Infection prevention and control"],
+      policies:[
+        {doc:22,desc:"Equipment Safety",tc:["CO-010"]},
+        {doc:23,desc:"IPC + Outbreak Plan",tc:["CM-013","CM-013A","CM-013B"]}
+      ], gaps:[],
+      projects:[
+        {id:"[HMF] Home Modifications Supplier Flow",status:"Start",url:"",why:"4.1a — ensuring home environment safety via supplier modifications workflow"},
+        {id:"[SPO] Supplier Onboarding 2",status:"In Progress",url:"",why:"4.1a/4.1b — supplier compliance for safe care environments"}
+      ],
+      issues:[], evidence:[]
+    },
+    {id:"5", name:"Clinical Care", outcomes:["5.1 Clinical governance","5.2 Infection prevention (clinical)","5.3 Safe use of medicines","5.4 Comprehensive care","5.5 Safety of clinical care","5.6 Cognitive impairment","5.7 Palliative/end-of-life care"],
+      policies:[
+        {doc:24,desc:"Clinical Governance",tc:["TC-005"]},
+        {doc:25,desc:"Medication Management",tc:["CM-012"]},
+        {doc:26,desc:"Clinical Care (falls, deterioration)",tc:["CM-022","CM-009"]},
+        {doc:27,desc:"End of Life Care",tc:["CM-005","CM-028"]},
+        {doc:30,desc:"Restrictive Practices",tc:["CM-027"]}
+      ], gaps:[],
+      projects:[
+        {id:"[ICM] Incident Management",status:"Dev",url:"https://linear.app/trilogycare/project/icm-incident-management-b30dd804abdb",why:"5.5 — clinical incident tracking and safety monitoring"},
+        {id:"[CHK] Care Partner Check-Ins",status:"QA",url:"https://linear.app/trilogycare/project/chk-care-partner-check-ins-7cb3902aa404",why:"5.4 — comprehensive care monitoring via regular check-ins"},
+        {id:"Insights and AI",status:"Design",url:"https://linear.app/trilogycare/project/insights-and-ai-dba5e8fc531e",why:"5.1 — clinical governance analytics and AI decision support"}
+      ],
+      issues:[
+        {id:"OPE-114",title:"Policy Compliance Check in Investigation",status:"Backlog",url:"https://linear.app/trilogycare/issue/OPE-114",why:"5.1 — automated clinical policy compliance checking"},
+        {id:"OPE-63",title:"Investigate policy on substitute decision makers",status:"Todo",url:"https://linear.app/trilogycare/issue/OPE-63",why:"5.4/5.7 — substitute decision-maker policy for comprehensive/end-of-life care"}
+      ],
+      evidence:[]
+    },
+    {id:"6", name:"Food and Nutrition", outcomes:["6.1 Partnering on food and drinks","6.2 Assessment of nutritional needs","6.3 Provision of food and drinks","6.4 Dining experience"],
+      policies:[{doc:28,desc:"Food & Nutrition (Cat 6 only)",tc:["CM-015"]}],
+      gaps:[], projects:[], issues:[], evidence:[],
+      note:"Category 6 (residential) only. If TC is Category 4/5, most of Standard 6 is N/A. Nutritional assessment within care planning (6.2) may still apply."
+    },
+    {id:"7", name:"The Residential Community", outcomes:["7.1 Daily living","7.2 Transitions"],
+      policies:[], gaps:[{doc:29,desc:"Activities for Daily Living Policy (Cat 6 only)",impact:3,suggestion:"Only required if Category 6. If Cat 4/5, N/A."}],
+      projects:[], issues:[], evidence:[],
+      note:"Category 6 (residential) only. If TC is Category 4/5, Standard 7 is N/A."
+    }
+  ];
+
+  function statusBadge(s) {
+    const colors = {'Done':'var(--green)','Released':'var(--green)','Dev Released':'var(--green)','Completed':'var(--green)','QA':'#805ad5','In Review':'#805ad5','Dev':'var(--blue)','In Progress':'var(--blue)','Start':'var(--blue)','Design':'var(--amber)','Todo':'var(--amber)','Backlog':'var(--gray-400)','Reviewing':'var(--amber)','Blocked':'var(--red)'};
+    const c = colors[s] || 'var(--gray-400)';
+    return `<span style="background:${c};color:#fff;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600;white-space:nowrap">${s}</span>`;
+  }
+
+  html += `<div style="margin-top:28px;border-top:3px solid var(--navy);padding-top:20px">
+    <div class="content-header">
+      <h2>Per-Standard Breakdown: Policies + Projects + Issues</h2>
+      <p>Complete mapping of TC policies, Linear projects, and active issues supporting each AECT Quality Standard.</p>
+    </div>`;
+
+  stdBreakdown.forEach(std => {
+    const gapCount = std.gaps.length;
+    const borderColor = gapCount > 0 ? 'var(--red)' : 'var(--green)';
+
+    html += `<div class="gap-card" style="margin-top:16px;border-left:4px solid ${borderColor}">
+      <h3 style="color:var(--navy);display:flex;align-items:center;gap:10px">
+        <span style="background:var(--navy);color:#fff;padding:4px 12px;border-radius:var(--radius);font-size:.9rem">Standard ${std.id}</span>
+        ${std.name}
+        ${gapCount > 0 ? '<span style="background:var(--red);color:#fff;padding:2px 10px;border-radius:10px;font-size:.75rem">'+gapCount+' Gap'+(gapCount>1?'s':'')+'</span>' : '<span style="background:var(--green);color:#fff;padding:2px 10px;border-radius:10px;font-size:.75rem">No Gaps</span>'}
+      </h3>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 16px">
+        ${std.outcomes.map(o => '<span style="background:var(--blue-pale);color:var(--blue);padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:500">'+o+'</span>').join('')}
+      </div>
+      ${std.note ? '<div style="background:var(--amber-bg);padding:10px 14px;border-radius:var(--radius);font-size:.85rem;color:var(--amber);margin-bottom:14px;border-left:3px solid var(--amber)">'+std.note+'</div>' : ''}`;
+
+    // Gaps
+    if (std.gaps.length > 0) {
+      html += `<div style="background:var(--red-bg);border-radius:var(--radius);padding:14px;margin-bottom:14px">
+        <div style="font-weight:600;color:var(--red);margin-bottom:8px">\u274C Policy Gaps</div>
+        <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+          <thead><tr style="border-bottom:1px solid #fca5a5"><th style="text-align:left;padding:4px 8px">Doc</th><th style="text-align:left;padding:4px 8px">Required Policy</th><th style="padding:4px 8px">Impact</th><th style="text-align:left;padding:4px 8px">Recommendation</th></tr></thead>
+          <tbody>${std.gaps.map(g => '<tr><td style="padding:4px 8px;font-weight:700">'+g.doc+'</td><td style="padding:4px 8px">'+g.desc+'</td><td style="padding:4px 8px;text-align:center;font-weight:700;color:var(--red)">'+g.impact+'</td><td style="padding:4px 8px;font-size:.8rem">'+g.suggestion+'</td></tr>').join('')}</tbody>
+        </table>
+      </div>`;
+    }
+
+    // Policies
+    if (std.policies.length > 0) {
+      html += `<div style="margin-bottom:14px">
+        <div style="font-weight:600;color:var(--green);margin-bottom:6px">\u2705 Verified Policies (${std.policies.length})</div>
+        <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px">AECT Doc</th><th style="text-align:left;padding:6px 10px">Description</th><th style="text-align:left;padding:6px 10px">TC Policies</th><th style="text-align:left;padding:6px 10px">Verification</th></tr></thead>
+          <tbody>${std.policies.map(p => {
+            return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px;font-weight:700">Doc '+p.doc+'</td><td style="padding:6px 10px">'+p.desc+'</td><td style="padding:6px 10px;font-weight:500">'+p.tc.join(', ')+'</td><td style="padding:6px 10px">'+p.tc.map(c => getSourceBadges(c)).join(' ')+'</td></tr>';
+          }).join('')}</tbody>
+        </table>
+      </div>`;
+    }
+
+    // Projects
+    if (std.projects.length > 0) {
+      html += `<div style="margin-bottom:14px">
+        <div style="font-weight:600;color:var(--blue);margin-bottom:6px">\uD83D\uDCC1 Supporting Linear Projects (${std.projects.length})</div>
+        <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px">Project</th><th style="padding:6px 10px">Status</th><th style="text-align:left;padding:6px 10px">How it Supports this Standard</th></tr></thead>
+          <tbody>${std.projects.map(p => {
+            const link = p.url ? '<a href="'+p.url+'" target="_blank" style="color:var(--blue);font-weight:500">'+p.id+'</a>' : '<span style="font-weight:500">'+p.id+'</span>';
+            return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px">'+link+'</td><td style="padding:6px 10px;text-align:center">'+statusBadge(p.status)+'</td><td style="padding:6px 10px;font-size:.82rem">'+p.why+'</td></tr>';
+          }).join('')}</tbody>
+        </table>
+      </div>`;
+    }
+
+    // Issues
+    if (std.issues.length > 0) {
+      html += `<div style="margin-bottom:14px">
+        <div style="font-weight:600;color:var(--navy);margin-bottom:6px">\uD83D\uDD27 Active Linear Issues (${std.issues.length})</div>
+        <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+          <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px">Issue</th><th style="text-align:left;padding:6px 10px">Title</th><th style="padding:6px 10px">Status</th><th style="text-align:left;padding:6px 10px">Relevance</th></tr></thead>
+          <tbody>${std.issues.map(i => {
+            const link = i.url ? '<a href="'+i.url+'" target="_blank" style="color:var(--blue);font-weight:600">'+i.id+'</a>' : '<span style="font-weight:600">'+i.id+'</span>';
+            return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px">'+link+'</td><td style="padding:6px 10px">'+i.title+'</td><td style="padding:6px 10px;text-align:center">'+statusBadge(i.status)+'</td><td style="padding:6px 10px;font-size:.82rem">'+i.why+'</td></tr>';
+          }).join('')}</tbody>
+        </table>
+      </div>`;
+    }
+
+    // Evidence
+    if (std.evidence && std.evidence.length > 0) {
+      const evDocs = verifiedDocs.filter(d => std.evidence.includes(d.num));
+      html += `<div style="margin-bottom:8px">
+        <div style="font-weight:600;color:var(--amber);margin-bottom:6px">\uD83D\uDCCB Evidence to Collect (${evDocs.length})</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${evDocs.map(d => {
+          const oc = d.outcomes.split(',').length;
+          return '<span style="background:var(--amber-bg);border:1px solid var(--amber);padding:4px 10px;border-radius:var(--radius);font-size:.8rem">Doc '+d.num+': '+d.desc.substring(0,50)+(d.desc.length>50?'...':'')+'<span style="font-weight:700;margin-left:4px">('+oc+')</span></span>';
+        }).join('')}</div>
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  gv.innerHTML = html;
+}
+
+// ============ VERIFIED EVIDENCE VIEW ============
+function renderEvidence() {
+  const ev = document.getElementById('evidenceView');
+
+  // Verified TC policies from 2023 Master Policy Register (submitted to ACQSC)
+  const masterRegister = {
+    "CO-001":"Governance","CO-002":"Conflict of Interest","CO-003":"Strategic and Operational Planning",
+    "CO-004":"Continuous Improvement","CO-005":"Compliance","CO-006":"Financial Management",
+    "CO-007":"Risk Management","CO-008":"Privacy and Confidentiality","CO-009":"Records and Information Management",
+    "CO-010":"Workplace Health and Safety","CO-011":"Workplace Incident Management",
+    "CO-012":"COVID19 Response and Business Continuity Plan","CO-013":"Emergency Planning",
+    "CO-014":"Physical Accessibility","CO-015":"Safety and Security",
+    "TC-001":"Client Rights and Responsibilities","TC-002":"Culturally Safe Care and Services",
+    "TC-003":"Decision Making, Dignity and Choice","TC-004":"Elder Abuse and Neglect",
+    "TC-005":"Clinical Governance Framework","TC-006":"Open Disclosure",
+    "SM-001":"Providing Information Advice and Referrals","SM-002":"Service Access and Intake",
+    "SM-003":"Subcontract Brokerage","SM-004":"Home Care Agreement",
+    "CM-001":"Initial Assessment","CM-002":"Care Planning","CM-003":"Service Delivery and Participation",
+    "CM-004":"Care Plan and Evaluation","CM-005":"End of Life Care Planning","CM-006":"Client Case Notes",
+    "CM-007":"Clients that do not respond to a scheduled visit","CM-008":"Client Incident",
+    "CM-009":"High Impact and High Prevalence Risks","CM-010":"Feedback and Complaints",
+    "CM-011":"Personal Care","CM-012":"Medication Management","CM-013":"Infection Control",
+    "CM-014":"Waste Management","CM-015":"Food Safety","CM-016":"Emergency Planning",
+    "CM-019":"Dementia Care","CM-020":"Antimicrobial Stewardship",
+    "CM-021":"Inclusions and Exclusions","CM-022":"Recognition and Response to Deterioration",
+    "CM-023":"Home Risk Assessment","CM-024":"Balancing Duty of Care with Dignity of Risk",
+    "CM-025":"Consumer Risk Assessment",
+    "PM-001":"Client HCP Budget Management","PM-002":"Client Money and Property","PM-003":"Service Exit",
+    "HR-002":"EEO, Discrimination, Harassment and Workplace Bullying","HR-003":"Recruitment and Selection",
+    "HR-004":"Disputes and Grievances","HR-005":"Remote Work and Working From Home",
+    "AU-COC":"Code of Conduct","AU-WB":"Whistleblower"
+  };
+
+  const onDisk = {
+    "CM-013A":"Clinical IPC Home Care Policy (AECT-Policies/)",
+    "CM-013B":"Home Care Outbreak Management Plan (AECT-Policies/)",
+    "CM-027":"Restrictive Practices Minimisation Policy (AECT-Policies/)",
+    "CM-028":"End of Life Palliative Care Policy (AECT-Policies/)"
+  };
+
+  const inArchive = {
+    "CM-001":"2024 ACQSC Clinical Compliance Audit",
+    "CM-002":"2024 ACQSC Clinical Compliance Audit",
+    "CM-008":"2024 ACQSC Clinical Compliance Audit",
+    "TC-004":"2024 ACQSC Clinical Compliance Audit (PDF)",
+    "CO-004":"2022 ACQSC Quality Audit (CI Register)"
+  };
+
+  const inQdrant = ["CM-001","CM-002","CM-003","CM-004","CM-005","CM-008","CM-009","CM-010","CM-019","CM-024",
+    "CO-004","CO-005","CO-007","CO-008","CO-009","CO-010","CO-011","CO-014",
+    "HR-002","HR-003","HR-004","HR-005","PM-003","SM-001","SM-002","SM-003",
+    "TC-001","TC-002","TC-003","TC-004","TC-005","TC-006"];
+
+  const aectMapping = [
+    {num:1, desc:"Person Centred Care Policy", outcomes:"1.1, 2.1, 3.1, 5.4, 6.2, 7.1", tc:["TC-003","CM-003"], cat:"policy"},
+    {num:2, desc:"Communication, Consultation and Partnering Policy", outcomes:"1.1, 1.3, 2.1, 2.6a, 2.6b, 3.1, 3.2, 3.3, 3.4, 5.3, 5.4, 6.1, 6.2, 6.3, 7.2", tc:["TC-003","CM-001","CM-002"], cat:"policy"},
+    {num:3, desc:"Violence, Abuse, Racism, Neglect, Exploitation and Discrimination Policy", outcomes:"1.2, 2.2a, 2.2b, 3.2", tc:["TC-004"], cat:"policy"},
+    {num:4, desc:"Choice, Independence and Quality of Life Policy", outcomes:"1.3, 3.1, 3.2, 5.4, 5.5, 5.7, 6.3, 6.4, 7.1", tc:["TC-003","CM-024"], cat:"policy"},
+    {num:5, desc:"Agreements, Fees, Pricing, Invoicing and Statements Policy", outcomes:"1.4, 3.3", tc:["PM-001"], cat:"policy"},
+    {num:6, desc:"Corporate Governance Framework", outcomes:"2.1, 2.2a, 2.2b, 2.3, 5.1", tc:["CO-001","TC-005"], cat:"policy"},
+    {num:7, desc:"Continuous Improvement Policy", outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.4, 2.6a, 2.6b, 5.1, 6.1", tc:["CO-004"], cat:"policy"},
+    {num:8, desc:"Quality Assurance and Monitoring Policy", outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.9, 3.2, 5.1, 5.3, 5.5, 6.1", tc:[], cat:"policy"},
+    {num:9, desc:"Quality and Safety Management Policy", outcomes:"1.1, 2.2a, 2.2b, 2.3, 2.4, 2.10, 3.3, 4.1a, 4.1b, 5.1, 5.3, 5.5", tc:[], cat:"policy"},
+    {num:10, desc:"Risk Management Policy", outcomes:"1.3, 2.4, 2.10, 3.1, 3.2, 3.3, 4.1a, 4.1b, 4.2, 5.2, 5.3, 5.5", tc:["CO-007","CM-023","CM-025"], cat:"policy"},
+    {num:11, desc:"Incident Management Policy", outcomes:"1.2, 2.3, 2.5, 3.1, 3.3", tc:["CM-008"], cat:"policy"},
+    {num:12, desc:"Feedback and Complaints Management Policy", outcomes:"2.3, 2.6a, 2.6b, 6.1", tc:["CM-010"], cat:"policy"},
+    {num:13, desc:"Information Management Policy (incl privacy)", outcomes:"1.3, 1.4, 2.2a, 2.2b, 2.7, 3.1, 3.3, 5.1, 5.3, 7.2", tc:["CO-008","CO-009"], cat:"policy"},
+    {num:14, desc:"Workforce Planning Policy", outcomes:"2.2a, 2.3, 2.6a, 2.8, 2.9, 6.4", tc:[], cat:"policy"},
+    {num:15, desc:"Workforce Competency/Training Policy", outcomes:"2.2a, 2.3, 2.6a, 2.8, 2.9, 5.1", tc:[], cat:"policy"},
+    {num:16, desc:"Police Checks, Vulnerable People, Banning Order checks Policy", outcomes:"2.9", tc:["HR-003"], cat:"policy"},
+    {num:17, desc:"Emergency and Disaster Management Policy", outcomes:"2.1, 2.10", tc:["CM-016","CO-012"], cat:"policy"},
+    {num:18, desc:"Assessment and Planning Policy", outcomes:"1.1, 2.4, 2.7, 3.1, 5.4, 5.6, 5.7, 6.2, 6.3, 7.1, 7.2", tc:["CM-001","CM-002"], cat:"policy"},
+    {num:19, desc:"Delivery of Non-clinical Care Policy", outcomes:"3.2, 6.2", tc:["CM-003","CM-011"], cat:"policy"},
+    {num:20, desc:"Cognitive Impairment Policy", outcomes:"3.1, 3.2, 4.1b, 5.3, 5.4, 5.5, 5.6", tc:["CM-019"], cat:"policy"},
+    {num:21, desc:"Transitions and Coordination of Care Policy", outcomes:"2.7, 3.1, 3.3, 3.4, 5.3, 5.4, 7.2", tc:[], cat:"policy"},
+    {num:22, desc:"Cleanliness, Maintenance and Safety of Equipment Policy", outcomes:"4.1a, 4.1b, 4.2, 5.2", tc:["CO-010"], cat:"policy"},
+    {num:23, desc:"Infection Prevention and Control + Outbreak Management Plan", outcomes:"4.2, 5.2", tc:["CM-013","CM-013A","CM-013B"], cat:"policy"},
+    {num:24, desc:"Clinical Governance Framework", outcomes:"2.3, 5.1, 5.4, 5.6", tc:["TC-005"], cat:"policy"},
+    {num:25, desc:"Medication Policy \u2013 Safe Administration and Review", outcomes:"5.2, 5.3", tc:["CM-012"], cat:"policy"},
+    {num:26, desc:"Clinical Care Policy (falls, choking, hydration, mental health)", outcomes:"5.4, 5.5, 5.6, 6.2", tc:["CM-022","CM-009"], cat:"policy"},
+    {num:27, desc:"Advance Care Planning and End Of Life Care Policy", outcomes:"3.1, 5.7", tc:["CM-005","CM-028"], cat:"policy"},
+    {num:28, desc:"Food and Nutrition Policy (Cat 6 only)", outcomes:"5.5, 6.1, 6.2, 6.3, 6.4", tc:["CM-015"], cat:"policy-cat6"},
+    {num:29, desc:"Activities for Daily Living Policy (Cat 6 only)", outcomes:"3.1, 3.2, 7.1", tc:[], cat:"policy-cat6"},
+    {num:30, desc:"Minimising the Use of Restrictive Practices Policy", outcomes:"3.2, 4.1b, 5.3, 5.5, 5.6", tc:["CM-027"], cat:"policy"},
+    {num:31, desc:"Provider Partnering meetings with older people (last 4 meetings)", outcomes:"1.1, 2.1, 2.6b, 2.10, 6.1", tc:[], cat:"evidence"},
+    {num:32, desc:"Older persons experience survey results (latest)", outcomes:"2.1, 2.6b, 4.1a, 4.1b, 6.1", tc:[], cat:"evidence"},
+    {num:33, desc:"Organisational Structure (current)", outcomes:"2.1", tc:[], cat:"evidence"},
+    {num:34, desc:"Governing body meeting reports/minutes (last 4 meetings)", outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.5, 2.6a, 2.6b, 4.2, 5.1", tc:[], cat:"evidence"},
+    {num:35, desc:"Mandatory Quality Committee meeting reports/minutes (last 4 meetings)", outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b, 7.2", tc:[], cat:"evidence"},
+    {num:36, desc:"Quality Care Advisory Committee meeting reports/minutes (last 4 meetings)", outcomes:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b", tc:[], cat:"evidence"},
+    {num:37, desc:"Continuous Improvement Plan (current)", outcomes:"2.1, 2.2a, 2.2b, 2.3, 2.4, 2.6a, 2.6b, 5.1, 6.1", tc:["CO-004"], cat:"evidence"},
+    {num:38, desc:"Results of clinical systems audits/reviews (past 12 months)", outcomes:"2.3, 4.2, 5.1, 5.2, 5.3, 5.4, 5.5, 6.2", tc:[], cat:"evidence"},
+    {num:39, desc:"Enterprise Risk Register", outcomes:"2.2a, 2.2b, 2.4, 5.3, 5.5", tc:["CO-007"], cat:"evidence"},
+    {num:40, desc:"Incident trend analysis (last 12 months)", outcomes:"1.2, 2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b, 2.8, 5.5", tc:[], cat:"evidence"},
+    {num:41, desc:"Complaint trend analysis incl unresolved >3 months (past 12 months)", outcomes:"1.2, 2.3, 2.6a, 2.6b, 5.4, 6.1", tc:[], cat:"evidence"},
+    {num:42, desc:"Results of other authority audits/reviews (past 12 months)", outcomes:"2.3, 2.7", tc:[], cat:"evidence"},
+    {num:43, desc:"Management meeting minutes (last 4 meetings)", outcomes:"2.3, 2.7", tc:[], cat:"evidence"},
+    {num:44, desc:"Position descriptions for key management (current)", outcomes:"2.8, 2.9", tc:[], cat:"evidence"},
+    {num:45, desc:"Worker qualifications/training/competency audit results", outcomes:"2.8, 2.9", tc:[], cat:"evidence"},
+    {num:46, desc:"Register of adverse police/vulnerable people/banning order checks", outcomes:"2.8, 2.9", tc:[], cat:"evidence"},
+    {num:47, desc:"Clinical Governance meeting minutes (last 4 meetings)", outcomes:"2.2b, 2.3, 5.1, 5.5", tc:[], cat:"evidence"},
+    {num:48, desc:"Results of other care/service delivery audits/reviews (past 12 months)", outcomes:"2.1, 2.3, 2.6a, 2.6b, 6.4", tc:[], cat:"evidence"}
+  ];
+
+  function getBadges(code) {
+    const badges = [];
+    if (masterRegister[code]) badges.push(`<span class="ev-badge master" title="2023 Master Policy Register">\u2713 Master Register</span>`);
+    if (onDisk[code]) badges.push(`<span class="ev-badge disk" title="${onDisk[code]}">\u2713 On Disk</span>`);
+    if (inArchive[code]) badges.push(`<span class="ev-badge archive" title="${inArchive[code]}">\u2713 Archive</span>`);
+    if (inQdrant.includes(code)) badges.push(`<span class="ev-badge qdrant" title="Found in Qdrant Knowledge Base">\u2713 Qdrant KB</span>`);
+    if (badges.length === 0) badges.push(`<span class="ev-badge gap">\u26A0 Not verified</span>`);
+    return badges.join(' ');
+  }
+
+  function getOutcomeChips(outcomes) {
+    return outcomes.split(',').map(o => o.trim()).filter(Boolean).map(o => `<span class="ev-outcome-chip">${o}</span>`).join('');
+  }
+
+  const policies = aectMapping.filter(d => d.cat === 'policy');
+  const policiesCat6 = aectMapping.filter(d => d.cat === 'policy-cat6');
+  const evidenceDocs = aectMapping.filter(d => d.cat === 'evidence');
+  const mapped = policies.filter(d => d.tc.length > 0 && d.tc.some(c => masterRegister[c] || onDisk[c]));
+  const gaps = policies.filter(d => d.tc.length === 0);
+  const evidenceGaps = evidenceDocs.filter(d => d.tc.length === 0);
+
+  let html = `
+  <div class="ev-header">
+    <h2>Verified Evidence — Policy-to-AECT Mapping</h2>
+    <p>Cross-referenced against: 2023 Master Policy Register \u2022 2024 ACQSC Audit Submission \u2022 AECT-Policies folder \u2022 Qdrant Knowledge Base</p>
+  </div>
+
+  <div class="ev-summary">
+    <div class="ev-stat mapped"><div class="num" style="color:var(--green)">${mapped.length}</div><div class="label">Policies Verified</div></div>
+    <div class="ev-stat gap"><div class="num" style="color:var(--red)">${gaps.length}</div><div class="label">Policy Gaps</div></div>
+    <div class="ev-stat evidence"><div class="num" style="color:var(--amber)">${evidenceGaps.length}</div><div class="label">Evidence to Collect</div></div>
+    <div class="ev-stat na"><div class="num" style="color:var(--gray-400)">${policiesCat6.length}</div><div class="label">Cat 6 Only</div></div>
+  </div>`;
+
+  // GAPS SECTION FIRST
+  if (gaps.length > 0) {
+    html += `<div class="ev-section-title"><span class="icon">\u274C</span> Policy Gaps \u2014 No TC Policy Identified (${gaps.length})</div>
+    <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Required AECT Policy</th><th>Outcomes Affected</th><th style="width:60px">Impact</th><th>Action Needed</th></tr></thead><tbody>`;
+    for (const d of gaps) {
+      const oc = d.outcomes.split(',').map(o=>o.trim()).filter(Boolean);
+      html += `<tr class="gap-row">
+        <td style="font-weight:700">${d.num}</td>
+        <td><strong>${d.desc}</strong></td>
+        <td><div class="ev-outcomes">${getOutcomeChips(d.outcomes)}</div></td>
+        <td style="text-align:center;font-weight:700;color:var(--red)">${oc.length}</td>
+        <td style="font-size:.8rem;color:var(--red)">Identify existing TC policy or create new policy</td>
+      </tr>`;
+    }
+    html += `</tbody></table>`;
+  }
+
+  // MAPPED POLICIES
+  html += `<div class="ev-section-title"><span class="icon">\u2705</span> Verified Policy Mappings (${mapped.length}/30)</div>
+  <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Required AECT Policy</th><th>TC Policy Mapping</th><th>Verification Sources</th><th>Outcomes</th></tr></thead><tbody>`;
+  for (const d of mapped) {
+    const policyRows = d.tc.map(code => {
+      const name = masterRegister[code] || onDisk[code] || code;
+      return `<div style="margin-bottom:4px"><strong>${code}</strong> <span style="color:var(--gray-500)">${name}</span><br>${getBadges(code)}</div>`;
+    }).join('');
+    const sources = new Set();
+    d.tc.forEach(code => {
+      if (masterRegister[code]) sources.add('Master Register');
+      if (onDisk[code]) sources.add('On Disk');
+      if (inArchive[code]) sources.add('2024 Archive');
+      if (inQdrant.includes(code)) sources.add('Qdrant KB');
+    });
+    html += `<tr>
+      <td style="font-weight:700">${d.num}</td>
+      <td>${d.desc}</td>
+      <td>${policyRows}</td>
+      <td>${[...sources].map(s => `<span class="ev-badge ${s.includes('Master')?'master':s.includes('Disk')?'disk':s.includes('Archive')?'archive':'qdrant'}">${s}</span>`).join(' ')}</td>
+      <td><div class="ev-outcomes">${getOutcomeChips(d.outcomes)}</div></td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+
+  // EVIDENCE TO COLLECT
+  html += `<div class="ev-section-title"><span class="icon">\uD83D\uDCCB</span> Evidence Documents to Collect (${evidenceDocs.length})</div>
+  <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Required Evidence</th><th>Outcomes Affected</th><th style="width:60px">Impact</th><th>Status</th></tr></thead><tbody>`;
+  for (const d of evidenceDocs) {
+    const oc = d.outcomes.split(',').map(o=>o.trim()).filter(Boolean);
+    const hasTc = d.tc.length > 0;
+    html += `<tr>
+      <td style="font-weight:700">${d.num}</td>
+      <td>${d.desc}${hasTc ? '<br><span style="font-size:.75rem;color:var(--green)">Partial: '+d.tc.join(', ')+'</span>' : ''}</td>
+      <td><div class="ev-outcomes">${getOutcomeChips(d.outcomes)}</div></td>
+      <td style="text-align:center;font-weight:700;color:${oc.length>=6?'var(--red)':oc.length>=3?'var(--amber)':'var(--gray-500)'}">${oc.length}</td>
+      <td><span class="ev-badge ${hasTc?'master':'gap'}">${hasTc?'Partial':'To Collect'}</span></td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+
+  // CAT 6 ONLY
+  if (policiesCat6.length > 0) {
+    html += `<div class="ev-section-title"><span class="icon">\u2B1C</span> Category 6 Only (${policiesCat6.length})</div>
+    <table class="ev-table"><thead><tr><th style="width:50px">Doc</th><th>Policy</th><th>TC Mapping</th><th>Outcomes</th><th>Note</th></tr></thead><tbody>`;
+    for (const d of policiesCat6) {
+      html += `<tr>
+        <td style="font-weight:700">${d.num}</td>
+        <td>${d.desc}</td>
+        <td>${d.tc.length ? d.tc.map(c => `<strong>${c}</strong> ${masterRegister[c]||''}`).join('<br>') : '<span class="ev-badge gap">No mapping</span>'}</td>
+        <td><div class="ev-outcomes">${getOutcomeChips(d.outcomes)}</div></td>
+        <td style="font-size:.8rem;color:var(--gray-500)">Only required if registered as Category 6</td>
+      </tr>`;
+    }
+    html += `</tbody></table>`;
+  }
+
+  // DATA SOURCES LEGEND
+  html += `
+  <div style="margin-top:32px;padding:16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)">
+    <div style="font-weight:600;color:var(--navy);margin-bottom:10px">Verification Sources</div>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;font-size:.85rem">
+      <div><span class="ev-badge master">\u2713 Master Register</span> 2023 Policy Register submitted to ACQSC (${Object.keys(masterRegister).length} policies)</div>
+      <div><span class="ev-badge archive">\u2713 Archive</span> OneDrive ACQSC Audit archive — actual files submitted to Commission</div>
+      <div><span class="ev-badge disk">\u2713 On Disk</span> Policy files on local disk (AECT-Policies/ folder)</div>
+      <div><span class="ev-badge qdrant">\u2713 Qdrant KB</span> Indexed in Qdrant semantic search knowledge base</div>
+      <div><span class="ev-badge gap">\u26A0 Not verified</span> Referenced in generate_aect.py but not found in any verified source</div>
+    </div>
+  </div>`;
+
+  ev.innerHTML = html;
+}
+
+// ============ WORKSHOP ACTIONS VIEW ============
+function renderWorkshop() {
+  const wv = document.getElementById('workshopView');
+
+  const actions = [
+    {id:1, action:"Restart Consumer Advisory Body meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Not Started",
+     detail:"Schedule first meeting next week. Temp check on Support at Home. Contact Fran for previous agendas, documents, member contacts. Need 4 meetings documented before audit.",
+     standard:"2.1, 2.6b", doc:"Doc 31 (last 4 partnering meetings), Doc 32 (consumer survey)"},
+    {id:2, action:"Start fortnightly Management meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Not Started",
+     detail:"New agenda based on gap analysis findings. Need 4 meetings documented. Structure agenda around Standards gaps identified by Ash.",
+     standard:"2.3, 2.7", doc:"Doc 43 (last 4 management minutes)"},
+    {id:3, action:"Zoe: Complete QA/Compliance gap analysis before leave", owner:"Zoe", due:"Before leave (~2 weeks)", priority:"HIGH", status:"In Progress",
+     detail:"Document all QA policies. Identify specific standard sections for QA/Compliance. Hand off to Sophie and Meags with clear brief to draft processes while Zoe is away.",
+     standard:"All", doc:"All policy docs"},
+    {id:4, action:"Send consumer experience surveys", owner:"Joan / Candice", due:"ASAP", priority:"HIGH", status:"Not Started",
+     detail:"Surveys haven't been sent in a long time. Shawna ran last one before she left. Joan knows it's her remit. Ceon asked about status today. Need latest results for audit.",
+     standard:"2.1, 2.6b", doc:"Doc 32 (older persons experience survey)"},
+    {id:5, action:"Backfill CI Plan from Confluence activity", owner:"Ash / Team", due:"2 weeks", priority:"HIGH", status:"Not Started",
+     detail:"Map last 12 months of Confluence uplift work to Strengthened Quality Standards. Show CI initiatives driven by Support at Home transition. Current CI Register has items in progress since 2022.",
+     standard:"2.1, 2.2a, 2.2b, 2.3, 2.4", doc:"Doc 37 (CI Plan), Doc 7 (CI Policy)"},
+    {id:6, action:"Share AI-generated AECT and gap analysis tools", owner:"Ash", due:"Today / Tomorrow", priority:"HIGH", status:"In Progress",
+     detail:"Send policy mapper HTML tool, gap analysis results, and generate_aect.py output to the team. Demo in Friday session.",
+     standard:"All", doc:"All"},
+    {id:7, action:"Create policy writing skill/template for consistent output", owner:"Ash", due:"1 week", priority:"MEDIUM", status:"Not Started",
+     detail:"AI skill that generates policies in consistent format with evidence-base section showing how to demonstrate the policy is implemented. Include QA evidence mapping.",
+     standard:"All", doc:"All policy docs"},
+    {id:8, action:"Plug Category 5 clinical monitoring gap", owner:"Maryanne / Team", due:"Start immediately", priority:"HIGH", status:"Not Started",
+     detail:"Isaac flagged huge gap in monitoring Category 5 service outcomes and due diligence on Category 5 workforce. Need to show 3 months of monitoring by audit time. Start gathering outcomes NOW, backfill with policy later.",
+     standard:"5.1, 5.4, 5.5", doc:"Doc 24, Doc 38"},
+    {id:9, action:"Review and update all policies for Strengthened Standards", owner:"Maryanne (clinical) / Zoe (QA)", due:"Ongoing", priority:"HIGH", status:"In Progress",
+     detail:"Maryanne has started clinical policy rewrites and shared access. First round review done. Project Overlord policies from 2023 need updating — were paused due to Support at Home transition.",
+     standard:"All", doc:"Docs 1-30"},
+    {id:10, action:"Build staff prep program — terminology, role-play, gamified learning", owner:"Celeste / Ash", due:"Before audit", priority:"MEDIUM", status:"Not Started",
+     detail:"Commission will interview staff individually. Staff need: consistent terminology, understanding of how they deliver against Standards, confidence in Q&A. Build interactive quiz ('Cat Hoot'). Voice agent role-play for practice.",
+     standard:"All", doc:"N/A — staff readiness"},
+    {id:11, action:"Set up audit-ready SharePoint/document repository", owner:"Team", due:"Before audit", priority:"MEDIUM", status:"Not Started",
+     detail:"Central location for all policies and evidence. Commission previously had TC set up a shared folder. Make easily navigable. Consider setting as Chrome homepage for staff.",
+     standard:"All", doc:"All 48 docs"},
+    {id:12, action:"Organise Clinical Governance meetings", owner:"Maryanne / Isaac", due:"Start next week", priority:"HIGH", status:"Not Started",
+     detail:"Need last 4 meeting minutes for Doc 47. If fortnightly, need to start immediately to have 4 meetings before audit.",
+     standard:"2.2b, 2.3, 5.1, 5.5", doc:"Doc 47 (Clinical Governance minutes)"},
+    {id:13, action:"Organise Quality Committee meetings", owner:"Isaac / Team", due:"Start next week", priority:"HIGH", status:"Not Started",
+     detail:"Need last 4 meeting minutes for Docs 35 and 36. Mandatory Quality Committee + Quality Care Advisory Committee.",
+     standard:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b", doc:"Doc 35, Doc 36"},
+    {id:14, action:"Address Associated Provider Register non-compliance", owner:"Isaac", due:"Before audit", priority:"LOW", status:"Known Issue",
+     detail:"Isaac has openly refused to maintain APDF forms with Commission — they accepted it. Need a policy documenting this agreement. 'Compliant despite non-compliance.' Low risk but should have paper trail.",
+     standard:"2.3", doc:"N/A — regulatory"},
+    {id:15, action:"Meals QA — nutritional monitoring for meal providers", owner:"Zoe / Team", due:"Before audit", priority:"MEDIUM", status:"Not Started",
+     detail:"Not finalised yet. Kookaburra/NIE have on-staff nutritionists for annual reviews. Arguable that annual review not yet due since SaH started 1 July 2025. Plug with random client feedback on meal quality in the meantime.",
+     standard:"5.5, 6.2", doc:"Doc 26, Doc 28"},
+  ];
+
+  const decisions = [
+    {decision:"TC is Category 5", detail:"Standards 1-5 only. Standards 6 (Food) and 7 (Residential) are N/A.", who:"Isaac"},
+    {decision:"QA & Compliance team drives the audit prep", detail:"Not clinical governance down — ground up. Pat/Maryanne/Romy told to stand down from independent gap analysis. Systematic approach led by this team.", who:"Isaac"},
+    {decision:"Focus on quick wins first", detail:"Identify cheap wins (policy tweaks, merges) before tackling bigger gaps. 80/20 rule. Get artifacts into circulation NOW to show 3 months of evidence.", who:"Isaac"},
+    {decision:"Create evidence mapping for each policy", detail:"Each policy should document the QA evidence that proves it's being implemented. Controls how much room the Commission has to critique.", who:"Isaac"},
+    {decision:"Staff prep is critical", detail:"Commission will interview staff individually — they select who. Staff cannot say too much. Need controlled narrative, shared terminology, and practice.", who:"Isaac"},
+    {decision:"Friday session tomorrow — Ash demos tools", detail:"1-hour session. Ash to present AI tools, MCP access, and gap analysis. Desk beers after.", who:"Isaac"},
+    {decision:"Kylie (Clinical Director, ex-Commission auditor) to join future workshops", detail:"Not in first session deliberately — team needed to get heads screwed on first and control the narrative.", who:"Isaac"},
+    {decision:"Zoe limited to 5 hrs/week during leave", detail:"Still available but capped. Sophie and Meags to continue drafting processes during her absence.", who:"Zoe"},
+  ];
+
+  const docLocations = [
+    {doc:"Docs 1-30 (Policies)", location:"SharePoint (to be set up)", current:"Scattered — Zoho, SharePoint, local drives", action:"Consolidate into audit-ready repository"},
+    {doc:"Doc 31 — Consumer partnering minutes", location:"To be created", current:"Consumer Advisory Body meetings lapsed", action:"Celeste restarting next week"},
+    {doc:"Doc 32 — Consumer survey results", location:"Unknown — Joan/Candice", current:"Not sent recently", action:"Chase Joan for last results + send new survey"},
+    {doc:"Doc 33 — Org structure", location:"HR / SharePoint", current:"Likely exists but may need updating", action:"Confirm current version exists"},
+    {doc:"Doc 34 — Board minutes (last 4)", location:"Board Secretary / SharePoint", current:"Should exist", action:"Collect and verify currency"},
+    {doc:"Doc 35 — Quality Committee minutes", location:"To be created", current:"Meetings may not be happening regularly", action:"Start fortnightly — need 4 meetings"},
+    {doc:"Doc 36 — Quality Care Advisory minutes", location:"To be created", current:"Meetings may not be happening regularly", action:"Start fortnightly — need 4 meetings"},
+    {doc:"Doc 37 — CI Plan", location:"CO-004_1 Register + Confluence", current:"Register has stale items since 2022", action:"Backfill from Confluence SaH uplift work"},
+    {doc:"Doc 38 — Clinical audit results", location:"Clinical Team / Maryanne", current:"Unknown", action:"Maryanne to confirm what clinical audits have been done in last 12 months"},
+    {doc:"Doc 39 — Risk Register", location:"Confluence (page 822116723)", current:"Exists in Confluence", action:"Verify current and complete"},
+    {doc:"Doc 40 — Incident trend analysis", location:"AECT-Policies/Incident_Trend_Analysis_12months.md", current:"Draft exists locally", action:"Finalise and validate with live MCP data"},
+    {doc:"Doc 41 — Complaint trend analysis", location:"AECT-Policies/Complaint_Trend_Analysis_12months.md", current:"Draft exists locally", action:"Finalise — must include unresolved >3 months"},
+    {doc:"Doc 42 — Other authority audit results", location:"OneDrive ACQSC Audits archive", current:"2024 DOH Assurance Review, 2024 Clinical Compliance Audit, 2026 DOH Review", action:"Compile summary of last 12 months"},
+    {doc:"Doc 43 — Management meeting minutes", location:"To be created", current:"Not happening regularly", action:"Celeste starting fortnightly — need 4 meetings"},
+    {doc:"Doc 44 — Key management position descriptions", location:"HR / Employment Hero", current:"Should exist", action:"Pull from Employment Hero via MCP"},
+    {doc:"Doc 45 — Worker qualification audits", location:"Employment Hero / Supplier Portal", current:"TMC-81 (banning list) released, SPO2 in progress", action:"Pull from Employment Hero + Supplier Portal"},
+    {doc:"Doc 46 — Adverse check register", location:"HR / Employment Hero", current:"Should exist", action:"Pull from Employment Hero via MCP"},
+    {doc:"Doc 47 — Clinical Governance minutes", location:"To be created", current:"Meetings need to start/restart", action:"Maryanne to organise — need 4 meetings"},
+    {doc:"Doc 48 — Other care/service delivery audits", location:"Various — Confluence, Zoho", current:"Check-in reports (CHK project), Hypercare sampling", action:"Compile from project outputs"},
+  ];
+
+  function prBadge(p) {
+    const colors = {URGENT:'var(--red)',HIGH:'#c05621',MEDIUM:'var(--amber)',LOW:'var(--gray-400)'};
+    return `<span style="background:${colors[p]||'var(--gray-400)'};color:#fff;padding:2px 10px;border-radius:10px;font-size:.72rem;font-weight:600">${p}</span>`;
+  }
+  function stBadge(s) {
+    const colors = {'Not Started':'var(--gray-400)','In Progress':'var(--blue)','Known Issue':'var(--amber)','Done':'var(--green)'};
+    return `<span style="background:${colors[s]||'var(--gray-400)'};color:#fff;padding:2px 10px;border-radius:10px;font-size:.72rem;font-weight:600">${s}</span>`;
+  }
+
+  let html = `
+  <div class="ev-header">
+    <h2>Workshop Actions — Registration Renewal</h2>
+    <p>Extracted from <strong>Weekly Workshop: Registration Renewal</strong> — 26 March 2026, 2:00 PM AEST<br>
+    Attendees: Erin H, Ash W, Isaac B, Leslie N, Celeste D, Zoe J<br>
+    <a href="https://app.fireflies.ai/view/01KMM53SY13VXYQ7TFMH4D009X" target="_blank" style="color:var(--blue)">View full transcript on Fireflies</a></p>
+  </div>
+
+  <div class="ev-summary">
+    <div class="ev-stat gap"><div class="num" style="color:var(--red)">${actions.filter(a=>a.priority==='URGENT').length}</div><div class="label">Urgent Actions</div></div>
+    <div class="ev-stat mapped"><div class="num" style="color:#c05621">${actions.filter(a=>a.priority==='HIGH').length}</div><div class="label">High Priority</div></div>
+    <div class="ev-stat evidence"><div class="num" style="color:var(--amber)">${actions.filter(a=>a.priority==='MEDIUM').length}</div><div class="label">Medium Priority</div></div>
+    <div class="ev-stat na"><div class="num" style="color:var(--gray-400)">${decisions.length}</div><div class="label">Key Decisions</div></div>
+  </div>
+
+  <div class="ev-section-title"><span class="icon">\u26A1</span> Action Items (${actions.length})</div>
+  <table class="ev-table">
+    <thead><tr><th style="width:30px">#</th><th>Action</th><th style="width:90px">Owner</th><th style="width:100px">Due</th><th style="width:70px">Priority</th><th style="width:80px">Status</th><th>Standards</th><th>Supporting Docs</th></tr></thead>
+    <tbody>
+      ${actions.map(a => `<tr${a.priority==='URGENT'?' class="gap-row"':''}>
+        <td style="font-weight:700">${a.id}</td>
+        <td><strong>${a.action}</strong><br><span style="font-size:.8rem;color:var(--gray-500)">${a.detail}</span></td>
+        <td style="font-weight:500">${a.owner}</td>
+        <td style="font-size:.82rem">${a.due}</td>
+        <td>${prBadge(a.priority)}</td>
+        <td>${stBadge(a.status)}</td>
+        <td><div class="ev-outcomes">${a.standard.split(',').map(s => '<span class="ev-outcome-chip">'+s.trim()+'</span>').join('')}</div></td>
+        <td style="font-size:.8rem">${a.doc}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+
+  <div class="ev-section-title"><span class="icon">\u2705</span> Key Decisions from Workshop (${decisions.length})</div>
+  <table class="ev-table">
+    <thead><tr><th>Decision</th><th>Detail</th><th style="width:80px">By</th></tr></thead>
+    <tbody>
+      ${decisions.map(d => `<tr>
+        <td style="font-weight:600">${d.decision}</td>
+        <td style="font-size:.85rem">${d.detail}</td>
+        <td style="font-weight:500">${d.who}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+
+  <div class="ev-section-title"><span class="icon">\uD83D\uDCC2</span> Where to Find Supporting Documents (${docLocations.length})</div>
+  <table class="ev-table">
+    <thead><tr><th style="width:160px">Document</th><th>Current Location</th><th>Status</th><th>Action Required</th></tr></thead>
+    <tbody>
+      ${docLocations.map(d => {
+        const isGap = d.current.includes('lapsed') || d.current.includes('Not sent') || d.current.includes('not be happening') || d.current.includes('To be created') || d.current.includes('need to start');
+        return `<tr${isGap?' class="gap-row"':''}>
+          <td style="font-weight:600;font-size:.82rem">${d.doc}</td>
+          <td style="font-size:.85rem">${d.location}</td>
+          <td style="font-size:.85rem">${d.current}</td>
+          <td style="font-size:.85rem">${d.action}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>
+
+  <div style="margin-top:24px;padding:16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);border-left:4px solid var(--navy)">
+    <div style="font-weight:600;color:var(--navy);margin-bottom:8px">Next Steps</div>
+    <ul style="font-size:.9rem;color:var(--gray-700);padding-left:20px;line-height:1.8">
+      <li><strong>Tomorrow (Friday):</strong> 1-hour session — Ash demos AI tools, MCP access, gap analysis</li>
+      <li><strong>Next week:</strong> First Consumer Advisory Body meeting (Celeste). First Management meeting (Celeste). First Clinical Governance meeting (Maryanne).</li>
+      <li><strong>Next 2 weeks:</strong> Zoe completes QA gap analysis before leave. CI Plan backfilled from Confluence. Consumer surveys sent.</li>
+      <li><strong>Ongoing:</strong> Policy rewrites (Maryanne clinical, Zoe QA). Staff prep program designed. Evidence collection tracking.</li>
+      <li><strong>Before audit:</strong> All 48 docs in SharePoint repository. Staff trained. Mock audit conducted.</li>
+    </ul>
+  </div>`;
+
+  wv.innerHTML = html;
+}
+
+// ============ EXPORT VIEW ============
+function renderExport() {
+  const ev = document.getElementById('exportView');
+  ev.innerHTML = `
+    <div class="content-header">
+      <h2>Export / Import</h2>
+      <p>Export your mappings for reporting, or import a previously saved configuration.</p>
+    </div>
+    <div class="export-card">
+      <h3>Export as CSV</h3>
+      <p>Export the full action mapping table as a CSV file suitable for Excel or audit reporting.</p>
+      <button class="btn btn-primary" id="exportCsvBtn">Download CSV</button>
+    </div>
+    <div class="export-card">
+      <h3>Export as JSON</h3>
+      <p>Export the complete application state (all mappings, statuses, notes, document data) as a JSON file for backup or sharing.</p>
+      <button class="btn btn-primary" id="exportJsonBtn">Download JSON</button>
+    </div>
+    <div class="export-card">
+      <h3>Import JSON</h3>
+      <p>Restore a previously exported JSON backup. This will replace all current mappings.</p>
+      <div class="import-area" id="importArea">
+        <input type="file" accept=".json" id="importFile">
+        Click to select a JSON file, or drag and drop here.
+      </div>
+    </div>
+    <div class="export-card">
+      <h3>Print-Friendly View</h3>
+      <p>Open a print dialog for the current view. Use your browser's print function for a full report.</p>
+      <button class="btn btn-outline" id="printBtn">Print</button>
+    </div>
+    <div class="export-card" style="border-color:var(--red)">
+      <h3 style="color:var(--red)">Reset All Data</h3>
+      <p>Clear all mappings and reset to default pre-populated state. This cannot be undone.</p>
+      <button class="btn btn-danger" id="resetBtn">Reset to Defaults</button>
+    </div>`;
+
+  document.getElementById('exportCsvBtn').addEventListener('click', exportCsv);
+  document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('Are you sure you want to reset ALL data to defaults? This cannot be undone.')) {
+      state = defaultState();
+      saveState();
+      renderSidebar();
+      showToast('Data reset to defaults');
+    }
+  });
+
+  const importArea = document.getElementById('importArea');
+  const importFile = document.getElementById('importFile');
+  importArea.addEventListener('click', () => importFile.click());
+  importArea.addEventListener('dragover', e => { e.preventDefault(); importArea.style.borderColor = 'var(--blue)'; });
+  importArea.addEventListener('dragleave', () => { importArea.style.borderColor = ''; });
+  importArea.addEventListener('drop', e => {
+    e.preventDefault();
+    importArea.style.borderColor = '';
+    if (e.dataTransfer.files.length) handleImport(e.dataTransfer.files[0]);
+  });
+  importFile.addEventListener('change', () => {
+    if (importFile.files.length) handleImport(importFile.files[0]);
+  });
+}
+
+function handleImport(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (imported.actions && imported.docs) {
+        state = imported;
+        saveState();
+        renderSidebar();
+        showToast('Data imported successfully');
+      } else {
+        showToast('Invalid file format', 'error');
+      }
+    } catch(err) {
+      showToast('Failed to parse JSON file', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function exportCsv() {
+  let rows = [['Standard','Outcome','Action ID','Action Description','Mapped Policies','Status','Notes']];
+  STANDARDS.forEach(s => s.outcomes.forEach(o => o.actions.forEach(a => {
+    const as = state.actions[a.id] || {};
+    rows.push([
+      `Standard ${s.id}: ${s.name}`,
+      `${o.id}: ${o.name}`,
+      a.id,
+      `"${a.desc.replace(/"/g,'""')}"`,
+      `"${(as.policies||[]).join('; ')}"`,
+      (as.status||'not_started').replace(/_/g,' '),
+      `"${(as.notes||'').replace(/"/g,'""')}"`
+    ]);
+  })));
+  const csv = rows.map(r => r.join(',')).join('\n');
+  downloadFile(csv, 'aect-policy-mapping.csv', 'text/csv');
+}
+
+function exportJson() {
+  const json = JSON.stringify(state, null, 2);
+  downloadFile(json, 'aect-policy-mapping.json', 'application/json');
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast(`Downloaded ${filename}`);
+}
+
+// ============ INIT ============
+renderSidebar();
+renderGap();
+
+// Auto-expand first standard
+const firstStd = document.querySelector('.sidebar-standard');
+if (firstStd) firstStd.classList.add('expanded');
+</script>
+</body>
+</html>
