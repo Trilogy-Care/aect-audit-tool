@@ -1349,10 +1349,10 @@ function renderGap() {
   function isVerified(code) { return !!(masterRegister[code] || onDisk[code]); }
   function getSourceBadges(code) {
     const b = [];
-    if (masterRegister[code]) b.push('<span style="background:#e6fffa;color:#234e52;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">Register</span>');
-    if (onDisk[code]) b.push('<span style="background:#faf5ff;color:#553c9a;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">On Disk</span>');
-    if (inArchive[code]) b.push('<span style="background:#ebf8ff;color:#2a4365;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">Archive</span>');
-    if (inQdrant.includes(code)) b.push('<span style="background:#fefcbf;color:#744210;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600">Qdrant</span>');
+    if (masterRegister[code]) b.push('<span style="background:#e6fffa;color:#234e52;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600;cursor:help" data-tip="2023 Master Policy Register — official TC policy inventory submitted to ACQSC">Register</span>');
+    if (onDisk[code]) b.push('<span style="background:#faf5ff;color:#553c9a;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600;cursor:help" data-tip="Policy file exists locally in AECT-Policies folder">On Disk</span>');
+    if (inArchive[code]) b.push('<span style="background:#ebf8ff;color:#2a4365;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600;cursor:help" data-tip="Actual file submitted to Commission in a past ACQSC audit — strongest proof">Archive</span>');
+    if (inQdrant.includes(code)) b.push('<span style="background:#fefcbf;color:#744210;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600;cursor:help" data-tip="Full text indexed in TC Qdrant vector database — searchable via 328 MCP tools">Qdrant</span>');
     return b.join(' ');
   }
 
@@ -1983,6 +1983,50 @@ function renderPrep() {
   });
   html += '</tbody></table>';
 
+  // Glossary
+  html += '<div class="ev-section-title" style="margin-top:32px"><span class="icon">&#128214;</span> Glossary — Terms Used in This Tool</div>';
+  html += '<p style="font-size:.85rem;color:var(--gray-500);margin-bottom:16px">Definitions for acronyms, systems, and concepts referenced throughout this audit preparation tool.</p>';
+  html += '<table class="ev-table"><thead><tr><th style="width:200px">Term</th><th>What It Means</th></tr></thead><tbody>';
+
+  var glossary = [
+    {term:"ACQSC", def:"Aged Care Quality and Safety Commission \u2014 the regulator that audits aged care providers and manages registration renewal. They will conduct the audit."},
+    {term:"AECT", def:"Audit Evidence Collection Tool \u2014 the spreadsheet provided by the Commission that TC must fill out for each Quality Standard. It has columns for systems/processes, monitoring, practice examples, and innovation."},
+    {term:"Strengthened Quality Standards", def:"The 7 Quality Standards that replaced the old standards under the new Aged Care Act 2024. Standards 1-5 apply to TC (Category 5). Standards 6-7 are residential/food only."},
+    {term:"Category 5", def:"TC's registration category \u2014 covers clinical care services delivered in the home. Higher than Category 4 (non-clinical only), lower than Category 6 (residential care)."},
+    {term:"Outcomes", def:"Sub-sections within each Quality Standard (e.g. Outcome 1.1: Person-centred care). Each Outcome has multiple Actions that the Commission assesses."},
+    {term:"Actions", def:"Specific requirements under each Outcome that TC must demonstrate conformance with (e.g. Action 1.1.1). There are 154 actions across Standards 1-7."},
+    {term:"Conformance / Non-conformance", def:"The Commission's rating. Conformance = pass. Minor non-conformance = mostly there, some gaps. Major non-conformance = significant failures. Can result in Notice to Comply or sanctions."},
+    {term:"Notice to Comply", def:"A binding agreement from the Commission requiring TC to fix specific issues within a set timeframe. One step below sanctions."},
+    {term:"SIRS", def:"Serious Incident Response Scheme \u2014 mandatory reporting of Priority 1 and 2 incidents to the Commission within set timeframes."},
+    {term:"Support at Home (SaH)", def:"The new aged care program that replaced Home Care Packages (HCP) from 1 July 2025. TC's services are now delivered under SaH."},
+    {term:"HCA", def:"Home Care Agreement \u2014 the formal agreement between TC and each client outlining services, fees, rights, and responsibilities."},
+    {term:"EPOA", def:"Enduring Power of Attorney \u2014 a person legally authorised to make decisions on behalf of a client. Key for Outcome 1.3 (supported decision-making)."},
+    {term:"Consumer Advisory Body (CAB)", def:"A group of TC clients who provide feedback and input on service delivery. Their meeting minutes are required audit evidence (Doc 31)."},
+    {term:"CI Register", def:"Continuous Improvement Register \u2014 tracks improvement initiatives, their status, and outcomes. Required evidence for Outcome 2.3/2.4. TC's is CO-004_1."},
+    {term:"Qdrant KB", def:"Qdrant Knowledge Base \u2014 TC's vector database that stores all policies, procedures, and documents as searchable embeddings. When this tool shows 'Qdrant KB' as a verification source, it means the full policy text is indexed and retrievable through TC's 328 MCP tools. It's proof the policy exists with real content, not just a name on a list."},
+    {term:"Master Register", def:"The 2023 Master Policy Register \u2014 a spreadsheet listing all TC policy codes and names that was submitted to the Commission during the 2023 ACQSC Quality Audit. Used as the primary verification source for policy existence."},
+    {term:"Archive", def:"The OneDrive ACQSC Audits folder containing 5 years of audit submissions (2021-2026). When this tool shows 'Archive' as a source, the actual policy file was found in a past Commission submission \u2014 the strongest proof it exists."},
+    {term:"On Disk", def:"Policy documents found in the local AECT-Policies folder as markdown files (e.g. CM-013A, CM-027, CM-028). These have been converted from their original format but need formatting for official submission."},
+    {term:"MCP Tools", def:"Model Context Protocol tools \u2014 328 tools that connect to TC's systems (Zoho CRM, Portal, Employment Hero, Confluence, Jira, Aircall, MYOB, EzyCollect, Qdrant). Used to pull data for evidence collection."},
+    {term:"Linear", def:"TC's project management platform (linear.app/trilogycare). All digital team projects, issues, and sprints are tracked here. Linked throughout this tool as evidence of CI initiatives."},
+    {term:"Fireflies", def:"AI meeting transcription tool. TC's workshops and meetings are recorded and transcribed. The Workshop Actions tab was generated from the Fireflies transcript."},
+    {term:"Zoho CRM", def:"TC's Customer Relationship Management system \u2014 stores client records, care plans, complaints, incidents, DD forms, and provider data."},
+    {term:"Employment Hero", def:"TC's HR platform \u2014 stores employee records, qualifications, police checks, training records. Source for Docs 44-46."},
+    {term:"Portal", def:"TC's operations portal (portal.trilogycare.com.au) \u2014 where care partners manage packages, budgets, bills, statements, and client records."},
+    {term:"Ops App", def:"TC Operations Applications (ops.trilogycare.com.au) \u2014 the new internal platform with Databricks analytics, MCP tool access, LLM agents, games, and care management QA."},
+    {term:"Confluence", def:"TC's wiki/knowledge base (Atlassian) \u2014 stores project documentation, policies, meeting notes, and process guides."},
+    {term:"Databricks", def:"TC's data analytics platform \u2014 SQL warehouse querying Portal and Zoho data for reporting, compliance, and trend analysis."},
+    {term:"PRODA", def:"Provider Digital Access \u2014 the government system for aged care provider authentication and data exchange. Used for claims, client status updates, and contribution payer reconciliation."},
+    {term:"EzyCollect", def:"TC's payment collection platform for Direct Debit and credit card processing. Handles client payment onboarding and recurring billing."},
+    {term:"MYOB", def:"TC's accounting software \u2014 handles invoicing, client sub-accounts, and financial reconciliation. Syncs with Portal."},
+    {term:"TC Policy Codes", def:"Internal policy numbering: CO = Corporate/Organisational, TC = Trilogy Care (client-facing), CM = Care Management, PM = Package Management, SM = Service Management, HR = Human Resources, AU = Australian (workplace)."},
+  ];
+
+  glossary.forEach(function(g) {
+    html += '<tr><td style="font-weight:600;color:var(--navy)">' + g.term + '</td><td style="font-size:.85rem">' + g.def + '</td></tr>';
+  });
+  html += '</tbody></table>';
+
   pv.innerHTML = html;
 
   // Attach collapsible handlers
@@ -2380,11 +2424,11 @@ function renderEvidence() {
 
   function getBadges(code) {
     const badges = [];
-    if (masterRegister[code]) badges.push(`<span class="ev-badge master" title="2023 Master Policy Register">\u2713 Master Register</span>`);
-    if (onDisk[code]) badges.push(`<span class="ev-badge disk" title="${onDisk[code]}">\u2713 On Disk</span>`);
-    if (inArchive[code]) badges.push(`<span class="ev-badge archive" title="${inArchive[code]}">\u2713 Archive</span>`);
-    if (inQdrant.includes(code)) badges.push(`<span class="ev-badge qdrant" title="Found in Qdrant Knowledge Base">\u2713 Qdrant KB</span>`);
-    if (badges.length === 0) badges.push(`<span class="ev-badge gap">\u26A0 Not verified</span>`);
+    if (masterRegister[code]) badges.push(`<span class="ev-badge master" data-tip="Listed in the 2023 Master Policy Register submitted to the Commission — confirms this policy code exists in TC's official inventory">\u2713 Master Register</span>`);
+    if (onDisk[code]) badges.push(`<span class="ev-badge disk" data-tip="Full policy document found on local disk in the AECT-Policies folder as a markdown file — needs formatting for official submission">\u2713 On Disk</span>`);
+    if (inArchive[code]) badges.push(`<span class="ev-badge archive" data-tip="Actual policy file found in OneDrive ACQSC Audits archive — this was physically submitted to the Commission in a past audit (strongest proof)">\u2713 Archive</span>`);
+    if (inQdrant.includes(code)) badges.push(`<span class="ev-badge qdrant" data-tip="Full policy text is indexed in TC's Qdrant vector database (knowledge base) — searchable via MCP tools and LLM service. Proves the policy has real content, not just a name">\u2713 Qdrant KB</span>`);
+    if (badges.length === 0) badges.push(`<span class="ev-badge gap" data-tip="This policy was referenced in the AECT generator script but could not be found in any verified source — needs locating or creating">\u26A0 Not verified</span>`);
     return badges.join(' ');
   }
 
