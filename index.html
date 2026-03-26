@@ -226,6 +226,7 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 <div class="tabs" id="tabBar">
   <div class="tab active" data-tab="gap">Gap Analysis</div>
   <div class="tab" data-tab="workshop">Workshop Actions</div>
+  <div class="tab" data-tab="ci">Continuous Improvement</div>
   <div class="tab" data-tab="standards">Standards View</div>
   <div class="tab" data-tab="documents">Documents View</div>
   <div class="tab" data-tab="evidence">Verified Evidence</div>
@@ -256,6 +257,9 @@ input,select,textarea{font-family:inherit;font-size:inherit}
   </div>
   <div class="panel" id="panel-workshop">
     <div class="evidence-view" id="workshopView"></div>
+  </div>
+  <div class="panel" id="panel-ci">
+    <div class="evidence-view" id="ciView"></div>
   </div>
   <div class="panel" id="panel-export">
     <div class="export-view" id="exportView"></div>
@@ -713,6 +717,7 @@ document.getElementById('tabBar').addEventListener('click', e => {
   document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
   if (tab.dataset.tab === 'gap') renderGap();
   if (tab.dataset.tab === 'documents') renderDocuments();
+  if (tab.dataset.tab === 'ci') renderCI();
   if (tab.dataset.tab === 'evidence') renderEvidence();
   if (tab.dataset.tab === 'workshop') renderWorkshop();
   if (tab.dataset.tab === 'export') renderExport();
@@ -1640,6 +1645,275 @@ function renderGap() {
   html += `</div>`;
 
   gv.innerHTML = html;
+}
+
+// ============ CONTINUOUS IMPROVEMENT VIEW ============
+function renderCI() {
+  const cv = document.getElementById('ciView');
+
+  const ciItems = [
+    {id:"CI-001", initiative:"Consumer Mobile App V1", desc:"Building mobile app for clients to access care plans, budgets, and services directly — enhancing autonomy and information access", standard:"1.3, 1.4", category:"Technology", status:"In Progress", date:"2026-02", owner:"Vishal Asai / Parallel Universe", evidence:"Linear: MOB1 project, 12+ tickets completed", url:"https://linear.app/trilogycare/project/mob1-consumer-mobile-v1"},
+    {id:"CI-002", initiative:"Home Care Agreement (HCA) Digital Workflow", desc:"Digitising the HCA process — draft, send, sign, terminate — ensuring transparent agreements with clients", standard:"1.4", category:"Process", status:"In Progress", date:"2026-03", owner:"Design + DUC team", evidence:"Linear: HCA project, DES-398 termination wizard in progress", url:"https://linear.app/trilogycare/project/hca-client-hca"},
+    {id:"CI-003", initiative:"Care Partner Check-Ins System", desc:"Systematic check-in module for care partners to regularly assess client wellbeing, capturing structured data on QoL changes", standard:"1.1, 1.3, 3.1, 3.2, 5.4", category:"System", status:"QA", date:"2026-03", owner:"Tim - Duck Duck Deploy", evidence:"Linear: CHK project, 11 user stories, in QA testing", url:"https://linear.app/trilogycare/project/chk-care-partner-check-ins-7cb3902aa404"},
+    {id:"CI-004", initiative:"Relationship Intelligence Module", desc:"Building understanding of client relationships, supporters, and representatives to improve person-centred care", standard:"1.1, 1.2", category:"Technology", status:"Dev", date:"2026-03", owner:"Planning + DUC", evidence:"Linear: RIN project", url:"https://linear.app/trilogycare/project/rin-relationship-intelligence-7e83e45e74c9"},
+    {id:"CI-005", initiative:"Email Care Plan and Budget Directly from Portal", desc:"Eliminated manual download/attach/send workflow — care partners can now email care plans and budgets directly to clients from Portal", standard:"1.3, 1.4", category:"Process", status:"Done", date:"2026-03", owner:"Matthew Allan", evidence:"FUE-4 released", url:"https://linear.app/trilogycare/issue/FUE-4"},
+    {id:"CI-006", initiative:"Commission Complaints Process Re-Engineering", desc:"Complete re-engineering of how TC handles ACQSC Commission complaints — process mapping, historical analysis, response templates, CI framework", standard:"2.3, 2.5, 2.6a, 2.6b", category:"Process", status:"In Progress", date:"2026-02", owner:"Leslie Nelson / Operations", evidence:"OPE-47 (process map done), OPE-48 (historical analysis done), OPE-112 (CI register reactivated)", url:"https://linear.app/trilogycare/project/commission-complaints-process-re-engineering-a41c33d1aa6d"},
+    {id:"CI-007", initiative:"Complaints Management Platform (PRD Complete)", desc:"Product requirements document completed for building a complaints management module into the operations platform", standard:"2.6a, 2.6b", category:"System", status:"Design", date:"2026-03", owner:"Naveen Rodrigo / Planning", evidence:"PLA-1445 PRD completed", url:"https://linear.app/trilogycare/project/com-complaints-management-eeffdcc4e0cc"},
+    {id:"CI-008", initiative:"Incident Management Module", desc:"Discovery and requirements completed for building incident management into the platform — clinical governance alignment confirmed", standard:"2.5, 5.5", category:"System", status:"Dev", date:"2026-02", owner:"Will Whitelaw / Planning", evidence:"PLA-1316 discovery done, ICM project in dev", url:"https://linear.app/trilogycare/project/icm-incident-management-b30dd804abdb"},
+    {id:"CI-009", initiative:"NDIS Compliance Banning List Monitoring", desc:"Automated upload, ABN matching, and monitoring of NDIS Commission banning orders against TC's supplier network", standard:"2.9", category:"Compliance", status:"Done", date:"2026-03", owner:"Nate Nguyen / Khoa", evidence:"TMC-81 released to production", url:"https://linear.app/trilogycare/issue/TMC-81"},
+    {id:"CI-010", initiative:"Supplier Onboarding V2", desc:"Complete overhaul of supplier onboarding — compliance documents, police checks, qualification verification, pricing approval", standard:"2.8, 2.9", category:"System", status:"In Progress", date:"2025-12", owner:"Rudy Chartier / Khoa", evidence:"SPO project, 20+ tickets completed including document permissions, pricing policies, termination policies", url:""},
+    {id:"CI-011", initiative:"Budget Allocation Alignment", desc:"Fixed budget allocation logic to match bill processing rules — eliminated inconsistency between budgeting and billing under Support at Home", standard:"2.3, 2.4", category:"Finance", status:"Done", date:"2026-03", owner:"Matthew Allan / Fuelled", evidence:"BAA project completed", url:"https://linear.app/trilogycare/project/baa-budget-allocation-alignment-27bc71a31ec3"},
+    {id:"CI-012", initiative:"Intercom Customer Support Platform", desc:"Deployed AI-powered customer support with knowledge base, routing, and analytics — replacing manual email-based support", standard:"2.6b, 2.7", category:"Technology", status:"Done", date:"2026-03", owner:"Planning", evidence:"ITC project completed, Intercom live with AI bot", url:"https://linear.app/trilogycare/project/itc-intercom-9d205f43d98d"},
+    {id:"CI-013", initiative:"Monthly KPI Reporting Framework", desc:"Designing systematic performance monitoring and reporting for operational accountability", standard:"2.3", category:"Process", status:"Design", date:"2026-03", owner:"Operations", evidence:"Linear: Monthly KPI Reporting project", url:"https://linear.app/trilogycare/project/monthly-kpi-reporting-2cd20024e399"},
+    {id:"CI-014", initiative:"Roles & Permissions Refactor", desc:"Making permission policies declarative and auditable across the platform", standard:"2.2a, 2.2b", category:"Governance", status:"Backlog", date:"2026-02", owner:"Tim Maier / Planning", evidence:"PLA-1251 backlogged, RAP project", url:""},
+    {id:"CI-015", initiative:"Linear Ways of Working Audit", desc:"Audited and standardised how the digital team uses Linear for project tracking — tags, projects, cycles, notifications", standard:"2.3", category:"Process", status:"Done", date:"2026-03", owner:"Naveen Rodrigo", evidence:"PLA-1381 completed", url:"https://linear.app/trilogycare/issue/PLA-1381"},
+    {id:"CI-016", initiative:"CI Register Reactivation", desc:"Reviewed and reactivated the Continuous Improvement Register as part of Commission complaints re-engineering", standard:"2.3, 2.4", category:"Compliance", status:"Done", date:"2026-03", owner:"Leslie Nelson", evidence:"OPE-112 completed", url:"https://linear.app/trilogycare/issue/OPE-112"},
+    {id:"CI-017", initiative:"Notes Uplift — Rich Text Editor", desc:"Replaced plain text notes with rich text editor, @mentions, draft persistence — improving care documentation quality", standard:"3.1, 3.3", category:"System", status:"Done", date:"2026-03", owner:"Stuart Collinson / DUC", evidence:"DUC-222 released, NUL project", url:"https://linear.app/trilogycare/issue/DUC-222"},
+    {id:"CI-018", initiative:"Package Navigation Redesign", desc:"Redesigned package top bar and sidebar for clearer navigation — reducing missed features and improving care partner efficiency", standard:"3.1, 3.2", category:"UX", status:"Done", date:"2026-03", owner:"Stuart Collinson / DUC", evidence:"DUC-211, DUC-220 released", url:"https://linear.app/trilogycare/issue/DUC-211"},
+    {id:"CI-019", initiative:"Support at Home Inclusions Redesign", desc:"Redesigning service inclusions framework to align with SaH program requirements — ensuring clear communication of what services clients can access", standard:"3.3", category:"Process", status:"Design", date:"2026-03", owner:"Operations", evidence:"SaH Inclusions Redesign project", url:"https://linear.app/trilogycare/project/sah-inclusions-redesign-be74cae54baf"},
+    {id:"CI-020", initiative:"Coordinator Uplift", desc:"Improving care coordination workflows and tools for better service planning and delivery", standard:"3.1, 3.4", category:"Process", status:"Start", date:"2026-03", owner:"Planning", evidence:"COU project started", url:"https://linear.app/trilogycare/project/cou-coordinator-uplift-fe52b0be42a3"},
+    {id:"CI-021", initiative:"Supplier Double-Registration Fix", desc:"Investigated and resolved issue where suppliers had to register twice — reducing onboarding friction for care service providers", standard:"3.2, 3.4", category:"Process", status:"Done", date:"2026-03", owner:"Naveen Rodrigo", evidence:"PLA-1294 completed", url:"https://linear.app/trilogycare/issue/PLA-1294"},
+    {id:"CI-022", initiative:"Superior Home Health Client Transfer", desc:"Coordinating bulk transfer of ~150 clients from Superior Home Health — assessment, care planning, billing continuity", standard:"3.1, 3.4", category:"Operations", status:"Backlog", date:"2026-03", owner:"FUE + DUC teams", evidence:"Superior Home Health Transfer project", url:"https://linear.app/trilogycare/project/superior-home-health-transfer-340724390141"},
+    {id:"CI-023", initiative:"Home Modifications Supplier Flow", desc:"Building structured workflow for home modification suppliers — ensuring safe home environments for clients", standard:"4.1a", category:"System", status:"Start", date:"2026-03", owner:"Design + Planning", evidence:"SR7 and HMF projects", url:""},
+    {id:"CI-024", initiative:"Documents Module Overhaul", desc:"Complete overhaul of document management — enabling proper storage, versioning, and retrieval of compliance and care documents", standard:"4.1a, 4.1b", category:"System", status:"Done", date:"2026-03", owner:"Tim Maier / DUC", evidence:"DOC project completed", url:"https://linear.app/trilogycare/project/doc-documents-d064352d7efd"},
+    {id:"CI-025", initiative:"Automated Care Management Billing", desc:"Automated bill creation for End of Life and Restorative Care pathways — TC was delivering clinical care management without capturing revenue", standard:"5.4, 5.7", category:"Finance", status:"Done", date:"2026-02", owner:"Dibash Sribastav / Fuelled", evidence:"FUE-23, FUE-24 released", url:"https://linear.app/trilogycare/issue/FUE-23"},
+    {id:"CI-026", initiative:"Client Statement Redesign", desc:"Complete redesign of client statements — removing incorrect IDs, fixing contribution calculations, improving clarity and accuracy", standard:"5.4, 1.4", category:"UX", status:"Done", date:"2026-02", owner:"Tim Maier / DUC", evidence:"DUC-169, DUC-240 released", url:"https://linear.app/trilogycare/issue/DUC-169"},
+    {id:"CI-027", initiative:"Fee Calculation Correction", desc:"Identified and fixed TC loading fee miscalculation that had been running since Nov 2025 — financial accuracy and client trust", standard:"5.4, 1.4", category:"Finance", status:"Done", date:"2026-02", owner:"Matthew Allan", evidence:"TRI-84 fixed", url:"https://linear.app/trilogycare/issue/TRI-84"},
+    {id:"CI-028", initiative:"Bill Processing Optimisation", desc:"Multiple improvements to bill processing workflow — on-hold bill actions, batch processing, validation error transparency", standard:"5.4, 2.3", category:"System", status:"Done", date:"2026-03", owner:"Multiple teams", evidence:"OPT, OHB projects, TRI-79, FUE-84, PLA-1287, PLA-1329", url:""},
+    {id:"CI-029", initiative:"Supplier Price Cap Validation", desc:"Implemented price cap validation for suppliers — ensuring clients aren't overcharged and pricing compliance under SaH", standard:"5.4, 3.3", category:"Compliance", status:"In Progress", date:"2026-03", owner:"Khoa + Planning", evidence:"PRI project, PLA-1371 UI updates done", url:""},
+    {id:"CI-030", initiative:"QR Code Service Confirmation Research", desc:"Competitor analysis and research for QR-based service delivery confirmation — evidence that services were actually delivered", standard:"5.4, 3.2", category:"Research", status:"Done", date:"2026-02", owner:"Naveen Rodrigo", evidence:"PLA-1373 competitor analysis completed", url:"https://linear.app/trilogycare/issue/PLA-1373"},
+    {id:"CI-031", initiative:"Recipient Permission System", desc:"Introduced scoped API permissions for recipient users — fixing security flaw where clients had staff-level access", standard:"5.1, 2.7", category:"Security", status:"Done", date:"2026-03", owner:"Vishal Asai", evidence:"MOB-74 released", url:"https://linear.app/trilogycare/issue/MOB-74"},
+    {id:"CI-032", initiative:"Project One Source — Contact Data Quality", desc:"Validated 400 no-contact clients against Portal, cross-referencing data integrity for care coordination", standard:"5.4, 3.1", category:"Data Quality", status:"In Progress", date:"2026-03", owner:"Leslie Nelson / Operations", evidence:"OPE-59, OPE-61 completed, project ongoing", url:"https://linear.app/trilogycare/project/project-one-source-9e6d18679e6c"},
+    {id:"CI-033", initiative:"Deceased Client Process Investigation", desc:"Documented and analysed current process for managing deceased clients — identified gaps in structured intake and CRM workflow", standard:"5.7, 3.1", category:"Process", status:"Done", date:"2026-03", owner:"Naveen Rodrigo", evidence:"PLA-1480 completed", url:"https://linear.app/trilogycare/issue/PLA-1480"},
+    {id:"CI-034", initiative:"AECT Audit Preparation Tooling", desc:"Built AI-powered AECT Policy Mapper with gap analysis, verified evidence mapping, workshop action tracking — systematic audit preparation", standard:"2.3, 2.4", category:"Technology", status:"Done", date:"2026-03", owner:"Ash Williams", evidence:"aect-audit-tool repo deployed to GitHub Pages", url:"https://trilogy-care.github.io/aect-audit-tool/"},
+    {id:"CI-035", initiative:"Hypercare Sampling Training", desc:"Training program for hypercare statement sampling and quality assurance", standard:"2.8, 2.9", category:"Training", status:"Done", date:"2026-03", owner:"Operations", evidence:"Hypercare Sampling Training project completed", url:"https://linear.app/trilogycare/project/hypercare-sampling-training-7b40e5e7b7d9"},
+  ];
+
+  const standardNames = {
+    '1':'Standard 1: The Individual',
+    '2':'Standard 2: The Organisation',
+    '3':'Standard 3: Care and Services',
+    '4':'Standard 4: The Environment',
+    '5':'Standard 5: Clinical Care'
+  };
+
+  // Compute stats
+  const total = ciItems.length;
+  const doneCount = ciItems.filter(i => i.status === 'Done').length;
+  const inProgCount = ciItems.filter(i => ['In Progress','Dev','QA','Start'].includes(i.status)).length;
+  const designCount = ciItems.filter(i => i.status === 'Design').length;
+  const backlogCount = ciItems.filter(i => i.status === 'Backlog').length;
+
+  // Per-standard counts
+  const stdCounts = {};
+  for (let s = 1; s <= 5; s++) stdCounts[s] = 0;
+  ciItems.forEach(item => {
+    const stds = item.standard.split(',').map(s => s.trim());
+    const seen = new Set();
+    stds.forEach(s => {
+      const num = s.match(/^(\d)/);
+      if (num && !seen.has(num[1])) { stdCounts[num[1]]++; seen.add(num[1]); }
+    });
+  });
+
+  // Collect unique categories
+  const categories = [...new Set(ciItems.map(i => i.category))].sort();
+
+  // Filter state
+  let filterStd = null;
+  let filterStatus = null;
+  let filterCat = null;
+  let filterSearch = '';
+
+  function statusBadge(s) {
+    const colors = {'Done':'var(--green)','In Progress':'var(--blue)','Dev':'var(--blue-light)','QA':'#805ad5','Design':'var(--amber)','Start':'#dd6b20','Backlog':'var(--gray-400)','Research':'var(--gray-500)'};
+    return '<span style="display:inline-block;background:' + (colors[s]||'var(--gray-400)') + ';color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap;text-align:center;min-width:75px">' + s + '</span>';
+  }
+
+  function catBadge(c) {
+    const colors = {'Technology':'#3182ce','Process':'#38a169','System':'#805ad5','Compliance':'#d69e2e','Finance':'#dd6b20','Governance':'#2d3748','UX':'#d53f8c','Operations':'#718096','Security':'#e53e3e','Research':'#4a5568','Data Quality':'#2b6cb0','Training':'#38a169'};
+    return '<span class="ev-badge" style="background:' + (colors[c]||'var(--gray-100)') + '22;color:' + (colors[c]||'var(--gray-600)') + ';border:1px solid ' + (colors[c]||'var(--gray-300)') + '44">' + c + '</span>';
+  }
+
+  function stdChips(stdStr) {
+    return stdStr.split(',').map(function(s) { return '<span class="ev-outcome-chip">' + s.trim() + '</span>'; }).join(' ');
+  }
+
+  function rowBg(status) {
+    if (status === 'Done') return 'background:var(--green-bg)';
+    if (status === 'In Progress' || status === 'Dev' || status === 'QA') return 'background:var(--blue-pale)';
+    if (status === 'Design') return 'background:var(--amber-bg)';
+    if (status === 'Backlog') return 'background:var(--gray-50)';
+    return '';
+  }
+
+  function getFiltered() {
+    return ciItems.filter(function(item) {
+      if (filterStd) {
+        var stds = item.standard.split(',').map(function(s) { return s.trim(); });
+        var match = stds.some(function(s) { return s.startsWith(filterStd + '.') || s === filterStd; });
+        if (!match) return false;
+      }
+      if (filterStatus) {
+        if (filterStatus === 'In Progress') {
+          if (!['In Progress','Dev','QA','Start'].includes(item.status)) return false;
+        } else {
+          if (item.status !== filterStatus) return false;
+        }
+      }
+      if (filterCat && item.category !== filterCat) return false;
+      if (filterSearch) {
+        var q = filterSearch.toLowerCase();
+        if (item.initiative.toLowerCase().indexOf(q) === -1 && item.desc.toLowerCase().indexOf(q) === -1 && item.owner.toLowerCase().indexOf(q) === -1 && item.id.toLowerCase().indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+  }
+
+  function render() {
+    var filtered = getFiltered();
+
+    var html = '<div class="ev-header">' +
+      '<h2>Continuous Improvement Register — Last 12 Months</h2>' +
+      '<p>Demonstrating ongoing improvement mapped to Strengthened Quality Standards 1-5. Evidence sourced from Linear, Confluence, and operational records.</p>' +
+    '</div>';
+
+    // Summary stats
+    html += '<div class="ev-summary">' +
+      '<div class="ev-stat mapped"><div class="num">' + total + '</div><div class="label">Total Initiatives</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--green)"><div class="num">' + doneCount + '</div><div class="label">Completed</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--blue)"><div class="num">' + inProgCount + '</div><div class="label">In Progress / Dev / QA</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--amber)"><div class="num">' + designCount + '</div><div class="label">Design</div></div>' +
+      '<div class="ev-stat" style="border-top-color:var(--gray-400)"><div class="num">' + backlogCount + '</div><div class="label">Backlog</div></div>';
+    for (var s = 1; s <= 5; s++) {
+      html += '<div class="ev-stat" style="border-top-color:var(--navy)"><div class="num">' + stdCounts[s] + '</div><div class="label">Std ' + s + '</div></div>';
+    }
+    html += '</div>';
+
+    // Filter bar
+    html += '<div class="doc-filter-bar" style="margin-bottom:20px">';
+    // Standard filter buttons
+    html += '<div style="display:flex;gap:4px;align-items:center"><span style="font-size:.82rem;font-weight:600;color:var(--gray-500);margin-right:4px">Standard:</span>';
+    for (var s = 1; s <= 5; s++) {
+      var active = filterStd === String(s);
+      html += '<button class="btn ' + (active ? 'btn-primary' : 'btn-outline') + '" style="padding:4px 12px;font-size:.78rem" data-ci-std="' + s + '">Std ' + s + '</button>';
+    }
+    if (filterStd) html += '<button class="btn btn-outline" style="padding:4px 8px;font-size:.72rem" data-ci-std="clear">Clear</button>';
+    html += '</div>';
+
+    // Status filter
+    html += '<div style="display:flex;gap:4px;align-items:center"><span style="font-size:.82rem;font-weight:600;color:var(--gray-500);margin-right:4px">Status:</span>';
+    ['Done','In Progress','Design','Backlog'].forEach(function(st) {
+      var active = filterStatus === st;
+      html += '<button class="btn ' + (active ? 'btn-primary' : 'btn-outline') + '" style="padding:4px 12px;font-size:.78rem" data-ci-status="' + st + '">' + st + '</button>';
+    });
+    if (filterStatus) html += '<button class="btn btn-outline" style="padding:4px 8px;font-size:.72rem" data-ci-status="clear">Clear</button>';
+    html += '</div>';
+
+    // Category dropdown
+    html += '<select class="field-select" style="width:auto;min-width:140px;font-size:.82rem" id="ciCatFilter"><option value="">All Categories</option>';
+    categories.forEach(function(c) {
+      html += '<option value="' + c + '"' + (filterCat === c ? ' selected' : '') + '>' + c + '</option>';
+    });
+    html += '</select>';
+
+    // Search
+    html += '<input class="field-input" type="text" placeholder="Search initiatives..." style="flex:1;min-width:180px;font-size:.82rem" id="ciSearch" value="' + filterSearch + '">';
+    html += '</div>';
+
+    // Results count
+    html += '<div style="font-size:.82rem;color:var(--gray-500);margin-bottom:12px">Showing ' + filtered.length + ' of ' + total + ' initiatives</div>';
+
+    // Table
+    html += '<table class="ev-table"><thead><tr>' +
+      '<th style="width:70px">ID</th>' +
+      '<th>Initiative</th>' +
+      '<th style="width:120px">Standards</th>' +
+      '<th style="width:100px">Category</th>' +
+      '<th style="width:95px">Status</th>' +
+      '<th style="width:75px">Date</th>' +
+      '<th style="width:150px">Owner</th>' +
+      '<th>Evidence & Link</th>' +
+    '</tr></thead><tbody>';
+
+    filtered.forEach(function(item) {
+      var bg = rowBg(item.status);
+      html += '<tr style="' + bg + '">' +
+        '<td><strong style="color:var(--blue)">' + item.id + '</strong></td>' +
+        '<td><strong>' + item.initiative + '</strong><br><span style="color:var(--gray-500);font-size:.8rem">' + item.desc + '</span></td>' +
+        '<td><div class="ev-outcomes">' + stdChips(item.standard) + '</div></td>' +
+        '<td>' + catBadge(item.category) + '</td>' +
+        '<td>' + statusBadge(item.status) + '</td>' +
+        '<td style="white-space:nowrap">' + item.date + '</td>' +
+        '<td style="font-size:.8rem">' + item.owner + '</td>' +
+        '<td style="font-size:.8rem">' + item.evidence + (item.url ? ' <a href="' + item.url + '" target="_blank" style="color:var(--blue);white-space:nowrap">View</a>' : '') + '</td>' +
+      '</tr>';
+    });
+
+    html += '</tbody></table>';
+
+    // Per-Standard Summary
+    html += '<div class="ev-section-title" style="margin-top:32px">Per-Standard Summary</div>';
+    for (var s = 1; s <= 5; s++) {
+      var stdItems = ciItems.filter(function(item) {
+        return item.standard.split(',').some(function(st) { return st.trim().startsWith(s + '.') || st.trim() === String(s); });
+      });
+      var doneItems = stdItems.filter(function(i) { return i.status === 'Done'; });
+
+      html += '<div class="gap-card" style="margin-bottom:16px">' +
+        '<h3>' + standardNames[s] + ' <span style="font-weight:400;color:var(--gray-500);font-size:.85rem">(' + stdItems.length + ' initiatives, ' + doneItems.length + ' completed)</span></h3>';
+
+      if (doneItems.length > 0) {
+        html += '<ul style="margin:0;padding-left:20px;font-size:.85rem;color:var(--gray-600)">';
+        doneItems.forEach(function(item) {
+          html += '<li style="margin-bottom:4px"><strong>' + item.id + '</strong> ' + item.initiative + '</li>';
+        });
+        html += '</ul>';
+      } else {
+        html += '<p style="font-size:.85rem;color:var(--gray-400);font-style:italic">No completed items yet — all in progress or planned</p>';
+      }
+      html += '</div>';
+    }
+
+    cv.innerHTML = html;
+
+    // Attach filter event handlers
+    cv.querySelectorAll('[data-ci-std]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var val = btn.dataset.ciStd;
+        if (val === 'clear') { filterStd = null; } else { filterStd = filterStd === val ? null : val; }
+        render();
+      });
+    });
+
+    cv.querySelectorAll('[data-ci-status]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var val = btn.dataset.ciStatus;
+        if (val === 'clear') { filterStatus = null; } else { filterStatus = filterStatus === val ? null : val; }
+        render();
+      });
+    });
+
+    var catSel = document.getElementById('ciCatFilter');
+    if (catSel) {
+      catSel.addEventListener('change', function() {
+        filterCat = catSel.value || null;
+        render();
+      });
+    }
+
+    var searchInput = document.getElementById('ciSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        filterSearch = searchInput.value;
+        render();
+      });
+      searchInput.focus();
+      searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+    }
+  }
+
+  render();
 }
 
 // ============ VERIFIED EVIDENCE VIEW ============
