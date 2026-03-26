@@ -1957,11 +1957,11 @@ function renderWorkshop() {
 
   function prBadge(p) {
     const colors = {URGENT:'var(--red)',HIGH:'#c05621',MEDIUM:'var(--amber)',LOW:'var(--gray-400)'};
-    return `<span style="background:${colors[p]||'var(--gray-400)'};color:#fff;padding:2px 10px;border-radius:10px;font-size:.72rem;font-weight:600">${p}</span>`;
+    return `<span style="display:inline-block;background:${colors[p]||'var(--gray-400)'};color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap;text-align:center;min-width:65px">${p}</span>`;
   }
   function stBadge(s) {
     const colors = {'Not Started':'var(--gray-400)','In Progress':'var(--blue)','Known Issue':'var(--amber)','Done':'var(--green)'};
-    return `<span style="background:${colors[s]||'var(--gray-400)'};color:#fff;padding:2px 10px;border-radius:10px;font-size:.72rem;font-weight:600">${s}</span>`;
+    return `<span style="display:inline-block;background:${colors[s]||'var(--gray-400)'};color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap;text-align:center;min-width:80px">${s}</span>`;
   }
 
   let html = `
@@ -1981,15 +1981,15 @@ function renderWorkshop() {
 
   <div class="ev-section-title"><span class="icon">\u26A1</span> Action Items (${actions.length})</div>
   <table class="ev-table">
-    <thead><tr><th style="width:30px">#</th><th>Action</th><th style="width:90px">Owner</th><th style="width:100px">Due</th><th style="width:70px">Priority</th><th style="width:80px">Status</th><th>Standards</th><th>Supporting Docs</th></tr></thead>
+    <thead><tr><th style="width:30px">#</th><th style="min-width:300px">Action</th><th style="width:90px">Owner</th><th style="width:100px">Due</th><th style="width:85px;text-align:center">Priority</th><th style="width:100px;text-align:center">Status</th><th style="width:120px">Standards</th><th style="min-width:160px">Supporting Docs</th></tr></thead>
     <tbody>
       ${actions.map(a => `<tr${a.priority==='URGENT'?' class="gap-row"':''}>
         <td style="font-weight:700">${a.id}</td>
         <td><strong>${a.action}</strong><br><span style="font-size:.8rem;color:var(--gray-500)">${a.detail}</span></td>
         <td style="font-weight:500">${a.owner}</td>
         <td style="font-size:.82rem">${a.due}</td>
-        <td>${prBadge(a.priority)}</td>
-        <td>${stBadge(a.status)}</td>
+        <td style="text-align:center">${prBadge(a.priority)}</td>
+        <td style="text-align:center">${stBadge(a.status)}</td>
         <td><div class="ev-outcomes">${a.standard.split(',').map(s => '<span class="ev-outcome-chip">'+s.trim()+'</span>').join('')}</div></td>
         <td style="font-size:.8rem">${a.doc}</td>
       </tr>`).join('')}
