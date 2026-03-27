@@ -304,6 +304,53 @@ a.linear-link:hover{color:var(--navy);border-bottom-color:var(--navy)}
 <div class="toast" id="toast"></div>
 
 <script>
+// ============ POLICY SHAREPOINT URLS ============
+const POLICY_URLS = {
+  "CM-001": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B8DDE2965-5479-4138-86D0-CF39EB40BF6A%7D&file=CM-001%20Initial%20Assessment%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-002": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BCC1F51A5-B433-47B9-9121-0172A6939D04%7D&file=CM-002%20Care%20Planning%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-003": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B1FE41AAD-69DB-4312-B3C0-9A8647D8606E%7D&file=CM-003%20Service%20Delivery%20and%20Participation%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-004": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B45872FB1-0B4F-467E-BBBD-0B954AB8CC8E%7D&file=CM-004%20Care%20Plan%20and%20Evaluation%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-005": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B900C04A7-F9E3-4C45-BFEA-FBE61EE4270B%7D&file=CM-005%20End%20of%20Life%20Care%20Planning%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-007": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B66D91650-2B79-4DB7-8E47-A47F5A6F11F9%7D&file=CM-007%20Clients%20that%20do%20not%20Respond%20to%20a%20Scheduled%20Visit%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-008": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B482B26F1-B962-4732-A0A8-F1319F994E93%7D&file=CM-008%20Client%20Incident%20Management%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-009": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B85421832-5D63-404E-AEBA-0C9F3CF76F60%7D&file=CM-009%20Managing%20Client%20Risk%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-010": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BF4F92AC5-703E-41B2-9080-DDE4E2C5C35D%7D&file=CM-010%20Feedback%20and%20Complaints%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-011": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BD34DC0F4-101D-4C96-BF0C-584C053D7EF9%7D&file=CM-011%20Personal%20Care%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-012": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B1B856CF3-25FD-4887-A279-216381C5D13C%7D&file=CM-012%20Medication%20Management%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-013": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BECE2E285-DB8F-436B-9E1F-982E9E0B085B%7D&file=CM-013%20Infection%20Control%20Policy%20and%20Procedure%20(1).docx&action=default&mobileredirect=true",
+  "CM-014": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BF8CB8085-101A-4500-9A1A-2A8C493A930C%7D&file=CM-014%20Waste%20Management%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-015": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B76C31966-338B-44AA-A162-DC5A36FBBA17%7D&file=CM-015%20Food%20Safety%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-016": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B54F07B33-8A53-4DA8-95BD-15F7634B4F18%7D&file=CM-016%20Emergency%20Planning%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-019": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B3815AA5A-4683-45FA-B33E-833B5E30F855%7D&file=CM-019%20Dementia%20Care%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-022": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B90F7C899-E7DA-4FCC-8CCB-27C7F4CDEAB7%7D&file=CM-022%20Recognition%20and%20Response%20to%20Deterioration.docx&action=default&mobileredirect=true",
+  "CM-023": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B41E64511-7DC6-4950-B969-78D52AD3053B%7D&file=CM-023%20Home%20Risk%20Assessment%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-024": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BF274F922-4913-4193-9782-A6FE3810ED77%7D&file=CM-024%20Balancing%20Duty%20of%20Care%20with%20Dignity%20of%20Risk%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-025": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B9A798B8A-131D-446C-930B-8048B471F70B%7D&file=CM-025%20Consumer%20Risk%20Assessment%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-026": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BAAD638ED-E085-4847-B3BB-817123F81191%7D&file=CM-026%20Internal%20Clinical%20Escalation%20Pathway%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CM-028": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BC8D2DD57-8800-4410-AF28-8222F73BC9AB%7D&file=CM-028%20Acute%20Respiratory%20Infection%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CO-002": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BE7B6F278-42F6-4355-8049-AA61A518F8F2%7D&file=CO-002%20Conflict%20of%20Interest%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CO-003": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B86615BC0-6BDA-41A0-8A4B-39B9A40DF90B%7D&file=CO-003%20Strategic%20and%20Operational%20Planning%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CO-004": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B1BF1D6D1-92FF-4C36-8AF6-07D2EBC089B7%7D&file=CO-004%20Continuous%20Improvement%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CO-006": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BDBD80D55-0AF2-4B3B-B32C-89D230CB1731%7D&file=CO-006%20Financial%20Management%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CO-007": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B1EFB6FCC-251E-428D-9A59-5BCD257A19F6%7D&file=CO-007%20Risk%20Management%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "CO-008": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B3D0456AA-27B2-4FDB-9B1F-A7679BD22E4C%7D&file=CO-008%201%20Privacy%20Statement.docx&action=default&mobileredirect=true",
+  "PM-001": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B305489AE-B3BC-4974-BC5D-8FF72455108D%7D&file=PM-001%20Client%20Home%20Care%20Package%20Budget%20Management%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "PM-002": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BBE7B9A66-8D4F-4E9C-81A2-FB61B7348E50%7D&file=PM-002%20Client%20Money%20and%20Property%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "PM-003": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B1DD3EC9E-4072-434C-AB0B-F2ACAAE91F86%7D&file=PM-003%20Service%20Exit%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "SM-002": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BD2C19416-6E39-4738-9B07-5E02C96EB2C0%7D&file=SM-002%20Service%20Access%20and%20Intake%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "SM-003": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B43990EB6-685B-4D0D-A053-DB137C2BB30D%7D&file=SM-003%20Subcontract%20Brokerage%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "TC-002": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BE5C25527-F35D-4F79-8747-AF954064BB0C%7D&file=TC-002%20Culturally%20Safe%20Care%20and%20Services%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "TC-003": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BD6FBCC87-3A9B-46F9-AF2E-0E982A3021C8%7D&file=TC-003%20Decision%20Making,%20Dignity%20and%20Choice%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "TC-004": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B8220ACFF-5C97-47C6-8208-FCF9AFAE16A7%7D&file=TC-004%20Elder%20Abuse%20and%20Neglect%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+  "TC-005": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7BA013FCA3-E9BB-4488-AA2B-69CEFB6953EF%7D&file=TC-005%20201106%20Trilogy%20Care%20PTY%20LTD%20Clinical%20Governance%20Framework%20Version%20001.docx&action=default&mobileredirect=true",
+  "TC-006": "https://trilogycare.sharepoint.com/sites/ProjectsHQ/_layouts/15/Doc.aspx?sourcedoc=%7B6392105E-1E24-4A24-9514-1CFEED92CE78%7D&file=TC-006%20Open%20Disclosure%20Policy%20and%20Procedure.docx&action=default&mobileredirect=true",
+};
+
+// Helper: get SharePoint URL for a policy code
+function getPolicyUrl(code) {
+  return POLICY_URLS[code] || null;
+}
+
 // ============ DATA ============
 const TC_POLICIES = [
   "CM-001: Initial Assessment Policy",
@@ -741,8 +788,12 @@ function linearLink(id, title) {
   const display = title ? id + ': ' + title : id;
   return '<a href="https://linear.app/trilogycare/issue/' + slug + '" target="_blank" class="linear-link" data-tip="Open in Linear">' + display + '</a>';
 }
-// Helper: make policy codes clickable (search in docs tab)
+// Helper: make policy codes clickable — opens SharePoint doc if available, else searches in docs tab
 function policyLink(code) {
+  var url = getPolicyUrl(code);
+  if (url) {
+    return '<a class="policy-link" href="' + url + '" target="_blank" rel="noopener" data-tip="Open policy in SharePoint">' + code + '</a>';
+  }
   return '<span class="policy-link" onclick="switchToDoc(\'' + code + '\')" data-tip="Click to find this policy in Documents View">' + code + '</span>';
 }
 // Helper: switch to documents tab and search
@@ -1538,7 +1589,7 @@ function renderGap() {
     const name = masterRegister[code] || onDisk[code] || code;
     const heatClass = 'heat-' + Math.min(6, Math.ceil(data.outcomes.size / 3));
     html += `<tr>
-      <td style="font-weight:600"><a class="policy-link">${code}</a></td>
+      <td style="font-weight:600">${getPolicyUrl(code) ? '<a class="policy-link" href="'+getPolicyUrl(code)+'" target="_blank" rel="noopener" data-tip="Open in SharePoint">'+code+'</a>' : '<a class="policy-link" onclick="switchToDoc(\''+code+'\')" data-tip="Find in Documents View">'+code+'</a>'}</td>
       <td style="font-size:.82rem">${name}</td>
       <td>${getSourceBadges(code)}</td>
       <td style="font-size:.75rem">${[...data.docs].sort((a,b)=>a-b).map(n=>'<a style="cursor:pointer;color:var(--blue);text-decoration:underline" onclick="switchToDocumentsTab(\''+n+'\')">Doc '+n+'</a>').join(', ')}</td>
@@ -1716,7 +1767,7 @@ function renderGap() {
         <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
           <thead><tr style="background:var(--gray-100)"><th style="text-align:left;padding:6px 10px" data-tip="AECT audit evidence document number">AECT Doc</th><th style="text-align:left;padding:6px 10px" data-tip="Brief description of the required policy">Description</th><th style="text-align:left;padding:6px 10px" data-tip="Matching Trilogy Care internal policy codes">TC Policies</th><th style="text-align:left;padding:6px 10px" data-tip="Where the policy was found: Register, Archive, Disk, or Qdrant">Verification</th></tr></thead>
           <tbody>${std.policies.map(p => {
-            return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px;font-weight:700"><a style="cursor:pointer;color:var(--blue);text-decoration:underline" onclick="switchToDocumentsTab(\''+p.doc+'\')">Doc '+p.doc+'</a></td><td style="padding:6px 10px">'+p.desc+'</td><td style="padding:6px 10px;font-weight:500">'+p.tc.map(c => '<a class="policy-link">'+c+'</a>').join(' ')+'</td><td style="padding:6px 10px">'+p.tc.map(c => getSourceBadges(c)).join(' ')+'</td></tr>';
+            return '<tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 10px;font-weight:700"><a style="cursor:pointer;color:var(--blue);text-decoration:underline" onclick="switchToDocumentsTab(\''+p.doc+'\')">Doc '+p.doc+'</a></td><td style="padding:6px 10px">'+p.desc+'</td><td style="padding:6px 10px;font-weight:500">'+p.tc.map(c => { var u=getPolicyUrl(c); return u ? '<a class="policy-link" href="'+u+'" target="_blank" rel="noopener" data-tip="Open in SharePoint">'+c+'</a>' : '<a class="policy-link" onclick="switchToDoc(\''+c+'\')" data-tip="Find in Documents View">'+c+'</a>'; }).join(' ')+'</td><td style="padding:6px 10px">'+p.tc.map(c => getSourceBadges(c)).join(' ')+'</td></tr>';
           }).join('')}</tbody>
         </table>
       </div>`;
@@ -2479,7 +2530,11 @@ function renderEvidence() {
   for (const d of mapped) {
     const policyRows = d.tc.map(code => {
       const name = masterRegister[code] || onDisk[code] || code;
-      return `<div style="margin-bottom:4px"><a class="policy-link">${code}</a> <span style="color:var(--gray-500)">${name}</span><br>${getBadges(code)}</div>`;
+      const pUrl = getPolicyUrl(code);
+      const pTag = pUrl
+        ? `<a class="policy-link" href="${pUrl}" target="_blank" rel="noopener" data-tip="Open in SharePoint">${code}</a>`
+        : `<a class="policy-link" onclick="switchToDoc('${code}')" data-tip="Find in Documents View">${code}</a>`;
+      return `<div style="margin-bottom:4px">${pTag} <span style="color:var(--gray-500)">${name}</span><br>${getBadges(code)}</div>`;
     }).join('');
     const sources = new Set();
     d.tc.forEach(code => {
@@ -2861,7 +2916,11 @@ function makeLinearIssueLink(id) {
 
 function makePolicyCodeClickable(code) {
   if (!code) return code;
-  return '<a class="policy-link" title="' + code + '">' + code + '</a>';
+  var url = getPolicyUrl(code);
+  if (url) {
+    return '<a class="policy-link" href="' + url + '" target="_blank" rel="noopener" title="Open ' + code + ' in SharePoint">' + code + '</a>';
+  }
+  return '<a class="policy-link" onclick="switchToDoc(\'' + code + '\')" title="' + code + '">' + code + '</a>';
 }
 
 function makeDocLink(docNum, label) {
