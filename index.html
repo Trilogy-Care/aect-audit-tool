@@ -256,8 +256,8 @@ a.linear-link:hover{color:var(--navy);border-bottom-color:var(--navy)}
 
 <div class="tabs" id="tabBar">
   <div class="tab active" data-tab="gap" data-tip="Policy gaps, coverage scores, and per-standard breakdown with Linear projects">Gap Analysis</div>
-  <div class="tab" data-tab="workshop" data-tip="Action items and decisions from the registration renewal workshop">Workshop Actions</div>
-  <div class="tab" data-tab="ci" data-tip="35 continuous improvement initiatives mapped to Quality Standards">Continuous Improvement</div>
+  <div class="tab" data-tab="workshop" data-tip="Action items and decisions from Workshop 1 (26 Mar) and Workshop 3 (14 Apr)">Workshop Actions</div>
+  <div class="tab" data-tab="ci" data-tip="41 continuous improvement initiatives mapped to Quality Standards 1-5">Continuous Improvement</div>
   <div class="tab" data-tab="prep" data-tip="Golden rules, likely questions, and terminology for staff audit interviews">Staff Prep</div>
   <div class="tab" data-tab="standards" data-tip="Map TC policies to individual Standard outcomes and actions">Standards View</div>
   <div class="tab" data-tab="documents" data-tip="All 48 AECT required supporting documents with policy mappings">Documents View</div>
@@ -1819,6 +1819,47 @@ function renderGap() {
 
   html += `</div>`;
 
+  // ---- KEY RISKS FROM WORKSHOP 3 (14 Apr 2026) ----
+  html += `<div class="gap-card" style="margin-top:24px;border-left:4px solid var(--red)">
+    <h3 style="color:var(--red)">Key Risks Identified — Workshop 3 (14 April 2026)</h3>
+    <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:12px">Systemic risks surfaced in the Registration Renewal workshop that affect audit readiness.</p>
+    <table class="heatmap-table" style="width:100%">
+      <thead><tr><th style="text-align:left;min-width:200px">Risk</th><th style="text-align:left">Detail</th><th style="width:100px;text-align:center">Impact</th><th style="text-align:left;min-width:200px">Mitigation</th></tr></thead>
+      <tbody>
+        <tr style="background:var(--red-bg)">
+          <td style="font-weight:600">Four systems are siloed</td>
+          <td style="font-size:.85rem">CRM (Zoho), Confluence, Linear, and the Policy Mapper contain CI data but aren't connected. No clear hierarchy from Standard → CI Item → Evidence.</td>
+          <td style="text-align:center"><span style="background:var(--red);color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600">HIGH</span></td>
+          <td style="font-size:.85rem">Design integration interface (W3-4). Add source field to CRM (W3-5). Weekly unmapped review (W3-8).</td>
+        </tr>
+        <tr style="background:var(--red-bg)">
+          <td style="font-weight:600">CRM CI module not reconciled for Supported Home</td>
+          <td style="font-size:.85rem">Standards exist in CRM but CI items haven't been remapped to new Supported Home standards. Stale items since 2022.</td>
+          <td style="text-align:center"><span style="background:var(--red);color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600">HIGH</span></td>
+          <td style="font-size:.85rem">Celeste/Fran to reconcile CRM CI module (W3-5). Backfill complete but mapping needed.</td>
+        </tr>
+        <tr style="background:var(--amber-bg)">
+          <td style="font-weight:600">L&D focused on onboarding, not ongoing competency</td>
+          <td style="font-size:.85rem">Brent (new L&D) wasn't aware of the five-week training program and is focused on Go1 onboarding. Audit requires evidence of ongoing competency gap closure. New care partners leaving at higher rate than existing staff.</td>
+          <td style="text-align:center"><span style="background:var(--amber);color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600">MED</span></td>
+          <td style="font-size:.85rem">Isaac attending Thursday L&D meeting (W3-6). Celeste redirecting L&D focus to ongoing training.</td>
+        </tr>
+        <tr style="background:var(--amber-bg)">
+          <td style="font-weight:600">Policy review source of truth unclear</td>
+          <td style="font-size:.85rem">Catherine built a policy tracker, Maryanne ran a gap analysis version. Last major review was Feb 2024, 2025 skipped. Need to confirm which tracker is current. Maryanne on leave until Friday.</td>
+          <td style="text-align:center"><span style="background:var(--amber);color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600">MED</span></td>
+          <td style="font-size:.85rem">Friday debrief with Maryanne (W3-7). Locate and reconcile trackers.</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">Commission will deep-dive cherry-picked evidence</td>
+          <td style="font-size:.85rem">Auditors will select random threads and follow them end-to-end. Team must be able to trace any CI item from CRM to supporting Confluence/Linear work to the actual policy.</td>
+          <td style="text-align:center"><span style="background:var(--amber);color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600">MED</span></td>
+          <td style="font-size:.85rem">AI agent evidence gathering with stage gates (W3-3). Human-in-the-loop verification (W3-9).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>`;
+
   gv.innerHTML = html;
 }
 
@@ -2061,7 +2102,10 @@ function renderPrep() {
     {term:"On Disk", def:"Policy documents found in the local AECT-Policies folder as markdown files (e.g. CM-013A, CM-027, CM-028). These have been converted from their original format but need formatting for official submission."},
     {term:"MCP Tools", def:"Model Context Protocol tools \u2014 328 tools that connect to TC's systems (Zoho CRM, Portal, Employment Hero, Confluence, Jira, Aircall, MYOB, EzyCollect, Qdrant). Used to pull data for evidence collection."},
     {term:"Linear", def:"TC's project management platform (linear.app/trilogycare). All digital team projects, issues, and sprints are tracked here. Linked throughout this tool as evidence of CI initiatives."},
-    {term:"Fireflies", def:"AI meeting transcription tool. TC's workshops and meetings are recorded and transcribed. The Workshop Actions tab was generated from the Fireflies transcript."},
+    {term:"Fireflies", def:"AI meeting transcription tool. TC's workshops and meetings are recorded and transcribed. Workshop Actions generated from Fireflies transcripts of Workshop 1 (26 Mar) and Workshop 3 (14 Apr)."},
+    {term:"Swiss Cheese Model", def:"Verification approach discussed in Workshop 3 — multiple overlapping layers of review (AI agents gather \u2192 QA agent verifies \u2192 human reviews flagged items) so no single point of failure can let bad data through."},
+    {term:"Stage Gate", def:"Review checkpoint in the AI evidence-gathering process. Each stage must pass before the next proceeds. Ensures human oversight of agent outputs before they're treated as verified evidence."},
+    {term:"Microsoft Planner", def:"Project management tool Romy is sharing from Port Support. Being evaluated for use alongside Linear for non-tech team task management."},
     {term:"Zoho CRM", def:"TC's Customer Relationship Management system \u2014 stores client records, care plans, complaints, incidents, DD forms, and provider data."},
     {term:"Employment Hero", def:"TC's HR platform \u2014 stores employee records, qualifications, police checks, training records. Source for Docs 44-46."},
     {term:"Portal", def:"TC's operations portal (portal.trilogycare.com.au) \u2014 where care partners manage packages, budgets, bills, statements, and client records."},
@@ -2140,6 +2184,12 @@ function renderCI() {
     {id:"CI-033", initiative:"Deceased Client Process Investigation", desc:"Documented and analysed current process for managing deceased clients — identified gaps in structured intake and CRM workflow", standard:"5.7, 3.1", category:"Process", status:"Done", date:"2026-03", owner:"Naveen Rodrigo", evidence:"PLA-1480 completed", url:"https://linear.app/trilogycare/issue/PLA-1480"},
     {id:"CI-034", initiative:"AECT Audit Preparation Tooling", desc:"Built AI-powered AECT Policy Mapper with gap analysis, verified evidence mapping, workshop action tracking — systematic audit preparation", standard:"2.3, 2.4", category:"Technology", status:"Done", date:"2026-03", owner:"Ash Williams", evidence:"aect-audit-tool repo deployed to GitHub Pages", url:"https://trilogy-care.github.io/aect-audit-tool/"},
     {id:"CI-035", initiative:"Hypercare Sampling Training", desc:"Training program for hypercare statement sampling and quality assurance", standard:"2.8, 2.9", category:"Training", status:"Done", date:"2026-03", owner:"Operations", evidence:"Hypercare Sampling Training project completed", url:"https://linear.app/trilogycare/project/hypercare-sampling-training-7b40e5e7b7d9"},
+    {id:"CI-036", initiative:"CRM CI Module — Supported Home Standards Reconciliation", desc:"Reconciling Continuous Improvement module in CRM (Zoho) with new Supported Home quality standards. Standards created in system but CI items not yet remapped. Adding 'source' field to link CI items to Linear/Confluence evidence.", standard:"2.1, 2.3, 2.4", category:"Compliance", status:"Not Started", date:"2026-04", owner:"Celeste / Fran", evidence:"CRM CI module, Workshop 3 action item W3-5", url:""},
+    {id:"CI-037", initiative:"AI-Powered CI Evidence Gathering", desc:"Deploying Claude agents across 300+ MCP tools to scan CRM, Confluence, and Linear for CI evidence with quantitative confidence scoring and stage-gate human review. Swiss cheese verification model.", standard:"2.1, 2.3, 2.4", category:"Technology", status:"Not Started", date:"2026-04", owner:"Ash Williams", evidence:"Workshop 3 action item W3-3", url:""},
+    {id:"CI-038", initiative:"Systems Integration Interface — CRM to Confluence/Linear", desc:"Designing unified view joining CRM CI items (header) to Confluence/Linear evidence (child items), mapped to quality standards. Includes weekly 'unmapped items' review. Architecture aligned with future Portal CI module.", standard:"2.1, 2.3, 2.4, 2.7", category:"Technology", status:"Not Started", date:"2026-04", owner:"Ash / Isaac", evidence:"Workshop 3 action item W3-4", url:""},
+    {id:"CI-039", initiative:"L&D Ongoing Training Program Realignment", desc:"Redirecting L&D focus from onboarding-only to ongoing competency gap closure. Five-week training program review. Addressing higher attrition rate among new care partners vs existing.", standard:"2.8, 2.9", category:"Training", status:"In Progress", date:"2026-04", owner:"Celeste / Dina / Brent", evidence:"Workshop 3 discussion, Thursday L&D meeting", url:""},
+    {id:"CI-040", initiative:"Fortnightly Management Meetings — Risk Forum", desc:"Established fortnightly management meetings as strategic risk forum covering org-level risks, client recontracting, staff competency updates. Sophie and Megs stepping in for coverage.", standard:"2.1, 2.3, 2.7", category:"Governance", status:"Done", date:"2026-04", owner:"Celeste", evidence:"Meeting minutes, Fireflies transcripts", url:""},
+    {id:"CI-041", initiative:"TC Operations Platform — AI Chat & Investigation Agent", desc:"Built centralised AI platform (TC Assistant) with secure role-based access, 328 MCP tools, autonomous investigation agents for ACQSC complaints. Server-side execution with session-based auth.", standard:"2.3, 2.6a, 2.6b, 2.7", category:"Technology", status:"In Progress", date:"2026-04", owner:"Ash Williams", evidence:"Innovation catch-up discussion 14 Apr, ops app deployed", url:""},
   ];
 
   const standardNames = {
@@ -2607,44 +2657,44 @@ function renderWorkshop() {
   const wv = document.getElementById('workshopView');
 
   const actions = [
-    {id:1, action:"Restart Consumer Advisory Body meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Not Started",
-     detail:"Schedule first meeting next week. Temp check on Support at Home. Contact Fran for previous agendas, documents, member contacts. Need 4 meetings documented before audit.",
+    {id:1, action:"Restart Consumer Advisory Body meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Done",
+     detail:"Consumer Advisory Body meetings restarted. First meeting held. Ongoing fortnightly cadence established.",
      standard:"2.1, 2.6b", doc:"Doc 31 (last 4 partnering meetings), Doc 32 (consumer survey)"},
-    {id:2, action:"Start fortnightly Management meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Not Started",
-     detail:"New agenda based on gap analysis findings. Need 4 meetings documented. Structure agenda around Standards gaps identified by Ash.",
+    {id:2, action:"Start fortnightly Management meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Done",
+     detail:"Fortnightly management meetings now running. Strategic risk forum — not operational. Agenda covers org-level risks, client recontracting, staff competency updates. Sophie and Megs stepping in for coverage.",
      standard:"2.3, 2.7", doc:"Doc 43 (last 4 management minutes)"},
     {id:3, action:"Zoe: Complete QA/Compliance gap analysis before leave", owner:"Zoe", due:"Before leave (~2 weeks)", priority:"HIGH", status:"In Progress",
-     detail:"Document all QA policies. Identify specific standard sections for QA/Compliance. Hand off to Sophie and Meags with clear brief to draft processes while Zoe is away.",
+     detail:"Status unknown as of Workshop 3 (14 Apr). Needs a check-in. Sophie and Meags continuing drafting processes during Zoe's absence.",
      standard:"All", doc:"All policy docs"},
-    {id:4, action:"Send consumer experience surveys", owner:"Joan / Candice", due:"ASAP", priority:"HIGH", status:"Not Started",
-     detail:"Surveys haven't been sent in a long time. Shawna ran last one before she left. Joan knows it's her remit. Ceon asked about status today. Need latest results for audit.",
+    {id:4, action:"Send consumer experience surveys", owner:"Joan / Candice", due:"ASAP", priority:"HIGH", status:"In Progress",
+     detail:"Discussed again in Workshop 3. Status unclear — needs follow-up.",
      standard:"2.1, 2.6b", doc:"Doc 32 (older persons experience survey)"},
-    {id:5, action:"Backfill CI Plan from Confluence activity", owner:"Ash / Team", due:"2 weeks", priority:"HIGH", status:"Not Started",
-     detail:"Map last 12 months of Confluence uplift work to Strengthened Quality Standards. Show CI initiatives driven by Support at Home transition. Current CI Register has items in progress since 2022.",
+    {id:5, action:"Backfill CI Plan from Confluence activity", owner:"Ash / Isaac", due:"2 weeks", priority:"HIGH", status:"Done",
+     detail:"Isaac completed CI plan backfill from Confluence and Linear activity using agents. 35 CI items now mapped in the Continuous Improvement tab. CRM reconciliation with Supported Home standards still needed.",
      standard:"2.1, 2.2a, 2.2b, 2.3, 2.4", doc:"Doc 37 (CI Plan), Doc 7 (CI Policy)"},
-    {id:6, action:"Share AI-generated AECT and gap analysis tools", owner:"Ash", due:"Today / Tomorrow", priority:"HIGH", status:"In Progress",
-     detail:"Send policy mapper HTML tool, gap analysis results, and generate_aect.py output to the team. Demo in Friday session.",
+    {id:6, action:"Share AI-generated AECT and gap analysis tools", owner:"Ash", due:"Today / Tomorrow", priority:"HIGH", status:"Done",
+     detail:"Policy mapper deployed to GitHub Pages and shared with team. Demo completed. Isaac now facilitating use of the tool for project management.",
      standard:"All", doc:"All"},
-    {id:7, action:"Create policy writing skill/template for consistent output", owner:"Ash", due:"1 week", priority:"MEDIUM", status:"Not Started",
-     detail:"AI skill that generates policies in consistent format with evidence-base section showing how to demonstrate the policy is implemented. Include QA evidence mapping.",
+    {id:7, action:"Create policy writing skill/template for consistent output", owner:"Ash", due:"1 week", priority:"MEDIUM", status:"In Progress",
+     detail:"Policy reference suite to be built as a Claude skill for policy intention and gap analysis. Blocked on Maryanne's input — debrief scheduled for Friday 18 Apr. Policy quizzes blocked until reference suite is done.",
      standard:"All", doc:"All policy docs"},
-    {id:8, action:"Plug Category 5 clinical monitoring gap", owner:"Maryanne / Team", due:"Start immediately", priority:"HIGH", status:"Not Started",
-     detail:"Isaac flagged huge gap in monitoring Category 5 service outcomes and due diligence on Category 5 workforce. Need to show 3 months of monitoring by audit time. Start gathering outcomes NOW, backfill with policy later.",
+    {id:8, action:"Plug Category 5 clinical monitoring gap", owner:"Maryanne / Team", due:"Start immediately", priority:"HIGH", status:"In Progress",
+     detail:"Isaac flagged huge gap in monitoring Category 5 service outcomes and due diligence on Category 5 workforce. Need to show 3 months of monitoring by audit time. L&D meeting Thursday to discuss staff competency plans.",
      standard:"5.1, 5.4, 5.5", doc:"Doc 24, Doc 38"},
     {id:9, action:"Review and update all policies for Strengthened Standards", owner:"Maryanne (clinical) / Zoe (QA)", due:"Ongoing", priority:"HIGH", status:"In Progress",
-     detail:"Maryanne has started clinical policy rewrites and shared access. First round review done. Project Overlord policies from 2023 need updating — were paused due to Support at Home transition.",
+     detail:"Maryanne on leave, returning Friday. Catherine's policy tracker maps all procedures against old and new standards. 48 required policies being mapped. Need to confirm which tracker is current source of truth. Last major review was Feb 2024 — 2025 review skipped due to SaH transition.",
      standard:"All", doc:"Docs 1-30"},
-    {id:10, action:"Build staff prep program — terminology, role-play, gamified learning", owner:"Celeste / Ash", due:"Before audit", priority:"MEDIUM", status:"Not Started",
-     detail:"Commission will interview staff individually. Staff need: consistent terminology, understanding of how they deliver against Standards, confidence in Q&A. Build interactive quiz ('Cat Hoot'). Voice agent role-play for practice.",
+    {id:10, action:"Build staff prep program — terminology, role-play, gamified learning", owner:"Celeste / Ash", due:"Before audit", priority:"MEDIUM", status:"In Progress",
+     detail:"Staff Prep tab added to AECT tool with Q&A per standard. Policy quizzes in progress (blocked on reference suite). L&D five-week training program discussed — Brent (new L&D) focused on onboarding not ongoing training; Celeste pushed back. Thursday meeting to align.",
      standard:"All", doc:"N/A — staff readiness"},
-    {id:11, action:"Set up audit-ready SharePoint/document repository", owner:"Team", due:"Before audit", priority:"MEDIUM", status:"Not Started",
-     detail:"Central location for all policies and evidence. Commission previously had TC set up a shared folder. Make easily navigable. Consider setting as Chrome homepage for staff.",
+    {id:11, action:"Set up audit-ready SharePoint/document repository", owner:"Isaac / Team", due:"Before audit", priority:"MEDIUM", status:"In Progress",
+     detail:"SharePoint archive folder identified with old policies from Feb 2024 review. Isaac to help set up central SharePoint library as audit-ready document repository. Romy sharing Microsoft Planner resource from Port Support.",
      standard:"All", doc:"All 48 docs"},
-    {id:12, action:"Organise Clinical Governance meetings", owner:"Maryanne / Isaac", due:"Start next week", priority:"HIGH", status:"Not Started",
-     detail:"Need last 4 meeting minutes for Doc 47. If fortnightly, need to start immediately to have 4 meetings before audit.",
+    {id:12, action:"Organise Clinical Governance meetings", owner:"Maryanne / Isaac", due:"Start next week", priority:"HIGH", status:"In Progress",
+     detail:"Need last 4 meeting minutes for Doc 47. Meetings have been running. Confirm cadence is fortnightly.",
      standard:"2.2b, 2.3, 5.1, 5.5", doc:"Doc 47 (Clinical Governance minutes)"},
-    {id:13, action:"Organise Quality Committee meetings", owner:"Isaac / Team", due:"Start next week", priority:"HIGH", status:"Not Started",
-     detail:"Need last 4 meeting minutes for Docs 35 and 36. Mandatory Quality Committee + Quality Care Advisory Committee.",
+    {id:13, action:"Organise Quality Committee meetings", owner:"Isaac / Team", due:"Start next week", priority:"HIGH", status:"In Progress",
+     detail:"Need last 4 meeting minutes for Docs 35 and 36. Mandatory Quality Committee + Quality Care Advisory Committee. Confirm cadence.",
      standard:"2.2a, 2.2b, 2.3, 2.4, 2.5, 2.6a, 2.6b", doc:"Doc 35, Doc 36"},
     {id:14, action:"Address Associated Provider Register non-compliance", owner:"Isaac", due:"Before audit", priority:"LOW", status:"Known Issue",
      detail:"Isaac has openly refused to maintain APDF forms with Commission — they accepted it. Need a policy documenting this agreement. 'Compliant despite non-compliance.' Low risk but should have paper trail.",
@@ -2652,6 +2702,40 @@ function renderWorkshop() {
     {id:15, action:"Meals QA — nutritional monitoring for meal providers", owner:"Zoe / Team", due:"Before audit", priority:"MEDIUM", status:"Not Started",
      detail:"Not finalised yet. Kookaburra/NIE have on-staff nutritionists for annual reviews. Arguable that annual review not yet due since SaH started 1 July 2025. Plug with random client feedback on meal quality in the meantime.",
      standard:"5.5, 6.2", doc:"Doc 26, Doc 28"},
+  ];
+
+  // ===== WORKSHOP 3 ACTIONS — 14 April 2026 =====
+  const workshop3Actions = [
+    {id:"W3-1", action:"Build policy reference suite (Claude skill)", owner:"Ash", due:"Before Maryanne debrief (Fri 18 Apr)", priority:"HIGH", status:"Not Started",
+     detail:"Create a reference suite usable as a Claude/AI skill for policy intention and gap analysis. Prepare architecture now; Maryanne's input needed for content. Policy quizzes blocked until this is done.",
+     standard:"All", doc:"All policy docs"},
+    {id:"W3-2", action:"Build policy quizzes for each policy", owner:"Ash", due:"After W3-1 complete", priority:"MEDIUM", status:"Not Started",
+     detail:"Interactive quizzes on each policy for staff prep. Blocked on the policy reference suite (W3-1).",
+     standard:"All", doc:"N/A — staff readiness"},
+    {id:"W3-3", action:"Deploy AI agents for CI data gathering", owner:"Ash", due:"Before next workshop", priority:"HIGH", status:"Not Started",
+     detail:"Deploy Claude agents to scan CRM, Confluence, and Linear and produce comprehensive CI summary. Must use quantitative confidence scores (show sources/working, not just 'high confidence'). Build stage gates: agents gather → QA agent verifies → human reviews flagged items. Swiss cheese verification model.",
+     standard:"2.1, 2.2a, 2.3, 2.4", doc:"Doc 37 (CI Plan)"},
+    {id:"W3-4", action:"Design integration interface — join CRM to Confluence/Linear", owner:"Ash / Isaac", due:"Before next workshop", priority:"HIGH", status:"Not Started",
+     detail:"Design a view/interface joining CRM CI items to Confluence/Linear as child evidence items, mapped to quality standards. Could be a new tab in the policy mapper. Include an 'unmapped' view reviewed weekly. Architecture must align with future Portal CI module. Hierarchy: Quality Standard → CI Item (CRM) → Supporting evidence/work (Confluence/Linear).",
+     standard:"2.1, 2.3, 2.4", doc:"Doc 37 (CI Plan)"},
+    {id:"W3-5", action:"Reconcile CRM CI module with Supported Home standards", owner:"Celeste / Fran", due:"Before next workshop", priority:"HIGH", status:"Not Started",
+     detail:"CRM CI module has not been updated for new Supported Home standards. Standards exist in system but CI items haven't been fully remapped. Add 'source' field to CRM CI items linking to corresponding Linear/Confluence pages as evidence.",
+     standard:"2.1, 2.3, 2.4", doc:"Doc 37 (CI Plan)"},
+    {id:"W3-6", action:"Attend Thursday L&D meeting", owner:"Isaac", due:"Thu 17 Apr", priority:"HIGH", status:"Not Started",
+     detail:"Celeste requested Isaac attend Thursday meeting with Dina and Brent to provide oversight on five-week training program, spot gaps from engagement perspective, and address new care partner retention issue. Brent is new and unfocused on ongoing training — needs direction toward competency gap closure, not just onboarding.",
+     standard:"2.8, 2.9", doc:"Doc 15 (Workforce Competency), Doc 45 (Worker qualifications)"},
+    {id:"W3-7", action:"Debrief with Maryanne on policy review status", owner:"Celeste / Maryanne", due:"Fri 18 Apr", priority:"HIGH", status:"Not Started",
+     detail:"Maryanne returns from leave. Need full debrief: where does the policy review stand in Supported Home transition? Which policies reviewed? Confirm which tracker (Catherine's original or Maryanne's gap analysis) is the current source of truth. Locate the policy-to-standard mapping tracker.",
+     standard:"All", doc:"Docs 1-30"},
+    {id:"W3-8", action:"Weekly unmapped CI items review", owner:"Fran / Celeste / Liz", due:"Weekly ongoing", priority:"MEDIUM", status:"Not Started",
+     detail:"Once integration interface is built (W3-4), review 'unmapped' CI items weekly. Map new items from Confluence/Linear to CRM CI entries and quality standards. Reconcile across CRM, Confluence, and Linear.",
+     standard:"2.1, 2.3, 2.4", doc:"Doc 37 (CI Plan)"},
+    {id:"W3-9", action:"Define human-in-the-loop process for AI agent outputs", owner:"Isaac", due:"Before next workshop", priority:"MEDIUM", status:"Not Started",
+     detail:"Design the stage-gate review process for AI agent outputs: which items get flagged, who reviews, what sign-off looks like. Agents provide confidence metrics but humans must verify by clicking through to actual Confluence/Linear/CRM pages. Auditors will cherry-pick and dive deep — team must follow any thread with confidence.",
+     standard:"2.3, 2.4", doc:"N/A — process design"},
+    {id:"W3-10", action:"Set up SharePoint as central audit-ready document repository", owner:"Isaac", due:"Before audit", priority:"MEDIUM", status:"Not Started",
+     detail:"Consolidate all policies and evidence into SharePoint library. Old policy archive in SharePoint already exists (Feb 2024 review). Romy sharing Microsoft Planner resource from Port Support for uptake.",
+     standard:"All", doc:"All 48 docs"},
   ];
 
   const decisions = [
@@ -2665,21 +2749,31 @@ function renderWorkshop() {
     {decision:"Zoe limited to 5 hrs/week during leave", detail:"Still available but capped. Sophie and Meags to continue drafting processes during her absence.", who:"Zoe"},
   ];
 
+  // ===== WORKSHOP 3 DECISIONS — 14 April 2026 =====
+  const workshop3Decisions = [
+    {decision:"Four systems must be integrated before audit", detail:"CRM (Zoho), Confluence, Linear, and the Policy Mapper are siloed. Need a unified hierarchy: Quality Standard → CI Item (CRM) → Evidence (Confluence/Linear). This is the central challenge.", who:"Team"},
+    {decision:"AI agents for evidence gathering — with guardrails", detail:"Claude agents can scan 300+ tools but confidence scores must be quantitative (show sources/working), not qualitative. Stage gates: agents gather → QA agent verifies → human reviews. Swiss cheese model of verification.", who:"Isaac / Ash"},
+    {decision:"CRM is the header, Confluence/Linear are evidence", detail:"CI items in CRM are the identified gaps and remediation plans. Confluence/Linear contain the actual work/projects. CRM needs a 'source' field linking to evidence.", who:"Celeste"},
+    {decision:"L&D needs to focus on ongoing training, not just onboarding", detail:"Brent (new L&D) was only focused on new staff onboarding via Go1. Celeste pushed back — the audit requires evidence of ongoing competency gap closure. Thursday meeting to redirect.", who:"Celeste"},
+    {decision:"Architecture must align with future Portal CI module", detail:"Whatever integration design is built now should work when CI functionality moves into the Portal. Don't build throwaway architecture.", who:"Celeste"},
+    {decision:"Sophie and Megs stepping into management meetings", detail:"Celeste has asked them to attend fortnightly management meetings for a period — providing coverage and exposure.", who:"Celeste"},
+  ];
+
   const docLocations = [
     {doc:"Docs 1-30 (Policies)", location:"SharePoint (to be set up)", current:"Scattered — Zoho, SharePoint, local drives", action:"Consolidate into audit-ready repository"},
-    {doc:"Doc 31 — Consumer partnering minutes", location:"To be created", current:"Consumer Advisory Body meetings lapsed", action:"Celeste restarting next week"},
+    {doc:"Doc 31 — Consumer partnering minutes", location:"Meeting minutes", current:"Consumer Advisory Body meetings restarted (Done)", action:"Continue fortnightly — need 4 meetings documented by 28 June"},
     {doc:"Doc 32 — Consumer survey results", location:"Unknown — Joan/Candice", current:"Not sent recently", action:"Chase Joan for last results + send new survey"},
     {doc:"Doc 33 — Org structure", location:"HR / SharePoint", current:"Likely exists but may need updating", action:"Confirm current version exists"},
     {doc:"Doc 34 — Board minutes (last 4)", location:"Board Secretary / SharePoint", current:"Should exist", action:"Collect and verify currency"},
     {doc:"Doc 35 — Quality Committee minutes", location:"To be created", current:"Meetings may not be happening regularly", action:"Start fortnightly — need 4 meetings"},
     {doc:"Doc 36 — Quality Care Advisory minutes", location:"To be created", current:"Meetings may not be happening regularly", action:"Start fortnightly — need 4 meetings"},
-    {doc:"Doc 37 — CI Plan", location:"CO-004_1 Register + Confluence", current:"Register has stale items since 2022", action:"Backfill from Confluence SaH uplift work"},
+    {doc:"Doc 37 — CI Plan", location:"CO-004_1 Register + Confluence + AECT tool CI tab", current:"Backfill complete (41 items). CRM CI module needs reconciliation with Supported Home standards", action:"Reconcile CRM CI items (Celeste/Fran). Link CRM → Confluence/Linear evidence."},
     {doc:"Doc 38 — Clinical audit results", location:"Clinical Team / Maryanne", current:"Unknown", action:"Maryanne to confirm what clinical audits have been done in last 12 months"},
     {doc:"Doc 39 — Risk Register", location:"Confluence (page 822116723)", current:"Exists in Confluence", action:"Verify current and complete"},
     {doc:"Doc 40 — Incident trend analysis", location:"AECT-Policies/Incident_Trend_Analysis_12months.md", current:"Draft exists locally", action:"Finalise and validate with live MCP data"},
     {doc:"Doc 41 — Complaint trend analysis", location:"AECT-Policies/Complaint_Trend_Analysis_12months.md", current:"Draft exists locally", action:"Finalise — must include unresolved >3 months"},
     {doc:"Doc 42 — Other authority audit results", location:"OneDrive ACQSC Audits archive", current:"2024 DOH Assurance Review, 2024 Clinical Compliance Audit, 2026 DOH Review", action:"Compile summary of last 12 months"},
-    {doc:"Doc 43 — Management meeting minutes", location:"To be created", current:"Not happening regularly", action:"Celeste starting fortnightly — need 4 meetings"},
+    {doc:"Doc 43 — Management meeting minutes", location:"Fireflies transcripts + meeting notes", current:"Fortnightly management meetings now running (Done)", action:"Continue cadence — need 4 meetings documented by 28 June. Sophie and Megs stepping in."},
     {doc:"Doc 44 — Key management position descriptions", location:"HR / Employment Hero", current:"Should exist", action:"Pull from Employment Hero via MCP"},
     {doc:"Doc 45 — Worker qualification audits", location:"Employment Hero / Supplier Portal", current:"TMC-81 (banning list) released, SPO2 in progress", action:"Pull from Employment Hero + Supplier Portal"},
     {doc:"Doc 46 — Adverse check register", location:"HR / Employment Hero", current:"Should exist", action:"Pull from Employment Hero via MCP"},
@@ -2696,26 +2790,52 @@ function renderWorkshop() {
     return `<span style="display:inline-block;background:${colors[s]||'var(--gray-400)'};color:#fff;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap;text-align:center;min-width:80px">${s}</span>`;
   }
 
+  const allActions = actions.concat(workshop3Actions);
+  const allDecisions = decisions.concat(workshop3Decisions);
+  const doneCount = allActions.filter(a=>a.status==='Done').length;
+  const inProgCount = allActions.filter(a=>['In Progress','Known Issue'].includes(a.status)).length;
+  const notStartedCount = allActions.filter(a=>a.status==='Not Started').length;
+
   let html = `
   <div class="ev-header">
     <h2>Workshop Actions — Registration Renewal</h2>
-    <p>Extracted from <strong>Weekly Workshop: Registration Renewal</strong> — 26 March 2026, 2:00 PM AEST<br>
-    Attendees: Erin H, Ash W, Isaac B, Leslie N, Celeste D, Zoe J<br>
-    <a href="https://app.fireflies.ai/view/01KMM53SY13VXYQ7TFMH4D009X" target="_blank" style="color:var(--blue)">View full transcript on Fireflies</a></p>
+    <p style="margin-bottom:8px"><strong>Audit date: 28 June 2026</strong> (75 days)</p>
+    <p style="font-size:.82rem;color:var(--gray-500)">
+      Workshop 1: 26 March 2026 — <a href="https://app.fireflies.ai/view/01KMM53SY13VXYQ7TFMH4D009X" target="_blank" style="color:var(--blue)">Fireflies transcript</a><br>
+      Workshop 3: 14 April 2026 — <a href="https://app.fireflies.ai/view/01KP0314NWMP6SD3YNDKSRZ9VC" target="_blank" style="color:var(--blue)">Fireflies transcript</a> (Attendees: Erin H, Ash W, Isaac B, Leslie N, Celeste D, Zoe J, Fran D)
+    </p>
   </div>
 
   <div class="ev-summary">
-    <div class="ev-stat gap" data-tip="Actions requiring immediate attention this week - critical for audit timeline"><div class="num" style="color:var(--red)">${actions.filter(a=>a.priority==='URGENT').length}</div><div class="label">Urgent Actions</div></div>
-    <div class="ev-stat mapped" data-tip="Actions needed within 2 weeks to stay on track for audit preparation"><div class="num" style="color:#c05621">${actions.filter(a=>a.priority==='HIGH').length}</div><div class="label">High Priority</div></div>
-    <div class="ev-stat evidence" data-tip="Important but can be addressed over the coming weeks"><div class="num" style="color:var(--amber)">${actions.filter(a=>a.priority==='MEDIUM').length}</div><div class="label">Medium Priority</div></div>
-    <div class="ev-stat na" data-tip="Strategic decisions made during the workshop that guide audit preparation"><div class="num" style="color:var(--gray-400)">${decisions.length}</div><div class="label">Key Decisions</div></div>
+    <div class="ev-stat mapped" data-tip="All action items across all workshops"><div class="num">${allActions.length}</div><div class="label">Total Actions</div></div>
+    <div class="ev-stat" style="border-top-color:var(--green)" data-tip="Actions completed and available as evidence"><div class="num" style="color:var(--green)">${doneCount}</div><div class="label">Done</div></div>
+    <div class="ev-stat" style="border-top-color:var(--blue)" data-tip="Actions currently being worked on"><div class="num" style="color:var(--blue)">${inProgCount}</div><div class="label">In Progress</div></div>
+    <div class="ev-stat gap" data-tip="Actions not yet started — need attention"><div class="num" style="color:var(--red)">${notStartedCount}</div><div class="label">Not Started</div></div>
+    <div class="ev-stat na" data-tip="Strategic decisions across all workshops"><div class="num" style="color:var(--gray-400)">${allDecisions.length}</div><div class="label">Key Decisions</div></div>
   </div>
 
-  <div class="ev-section-title"><span class="icon">\u26A1</span> Action Items (${actions.length})</div>
+  <div class="ev-section-title"><span class="icon">\u26A1</span> Workshop 3 — New Actions (14 April 2026)</div>
   <table class="ev-table">
-    <thead><tr><th style="width:30px" data-tip="Action item number from the workshop">#</th><th style="min-width:300px" data-tip="What needs to be done and detailed context">Action</th><th style="width:90px" data-tip="Person responsible for completing this action">Owner</th><th style="width:100px" data-tip="Target completion date">Due</th><th style="width:85px;text-align:center" data-tip="URGENT = this week, HIGH = 2 weeks, MEDIUM = before audit, LOW = nice to have">Priority</th><th style="width:100px;text-align:center" data-tip="Current progress: Not Started, In Progress, Known Issue, Done">Status</th><th style="width:120px" data-tip="Which Strengthened Quality Standard outcomes this action supports">Standards</th><th style="min-width:160px" data-tip="AECT documents that depend on this action being completed">Supporting Docs</th></tr></thead>
+    <thead><tr><th style="width:50px" data-tip="Action ID">#</th><th style="min-width:300px" data-tip="What needs to be done and detailed context">Action</th><th style="width:90px" data-tip="Person responsible">Owner</th><th style="width:120px" data-tip="Target completion date">Due</th><th style="width:85px;text-align:center" data-tip="Priority level">Priority</th><th style="width:100px;text-align:center" data-tip="Current status">Status</th><th style="width:120px" data-tip="Quality Standards this supports">Standards</th><th style="min-width:160px" data-tip="Supporting documents">Docs</th></tr></thead>
     <tbody>
-      ${actions.map(a => `<tr${a.priority==='URGENT'?' class="gap-row"':''}>
+      ${workshop3Actions.map(a => `<tr${a.status==='Not Started'?' class="gap-row"':''}>
+        <td style="font-weight:700;font-size:.82rem">${a.id}</td>
+        <td><strong>${a.action}</strong><br><span style="font-size:.8rem;color:var(--gray-500)">${a.detail}</span></td>
+        <td style="font-weight:500">${a.owner}</td>
+        <td style="font-size:.82rem">${a.due}</td>
+        <td style="text-align:center">${prBadge(a.priority)}</td>
+        <td style="text-align:center">${stBadge(a.status)}</td>
+        <td><div class="ev-outcomes">${a.standard.split(',').map(s => '<span class="ev-outcome-chip">'+s.trim()+'</span>').join('')}</div></td>
+        <td style="font-size:.8rem">${a.doc.replace(/Doc (\d+)/g, (m, n) => '<a style="cursor:pointer;color:var(--blue);font-weight:600;text-decoration:underline" onclick="switchToDocumentsTab(\''+n+'\')">Doc '+n+'</a>')}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+
+  <div class="ev-section-title"><span class="icon">\uD83D\uDCCB</span> Workshop 1 — Original Actions (26 March 2026) — Updated</div>
+  <table class="ev-table">
+    <thead><tr><th style="width:30px" data-tip="Action item number from Workshop 1">#</th><th style="min-width:300px" data-tip="What needs to be done and detailed context">Action</th><th style="width:90px" data-tip="Person responsible for completing this action">Owner</th><th style="width:100px" data-tip="Target completion date">Due</th><th style="width:85px;text-align:center" data-tip="Priority level">Priority</th><th style="width:100px;text-align:center" data-tip="Current progress">Status</th><th style="width:120px" data-tip="Which Strengthened Quality Standard outcomes this action supports">Standards</th><th style="min-width:160px" data-tip="AECT documents that depend on this action being completed">Supporting Docs</th></tr></thead>
+    <tbody>
+      ${actions.map(a => `<tr${a.status==='Done'?' style="background:var(--green-bg)"':a.status==='Not Started'?' class="gap-row"':''}>
         <td style="font-weight:700">${a.id}</td>
         <td><strong>${a.action}</strong><br><span style="font-size:.8rem;color:var(--gray-500)">${a.detail}</span></td>
         <td style="font-weight:500">${a.owner}</td>
@@ -2728,9 +2848,21 @@ function renderWorkshop() {
     </tbody>
   </table>
 
-  <div class="ev-section-title"><span class="icon">\u2705</span> Key Decisions from Workshop (${decisions.length})</div>
+  <div class="ev-section-title"><span class="icon">\u2705</span> Workshop 3 Decisions (${workshop3Decisions.length})</div>
   <table class="ev-table">
-    <thead><tr><th data-tip="Strategic decision made during the workshop">Decision</th><th data-tip="Context and implications of the decision">Detail</th><th style="width:80px" data-tip="Who made or owns this decision">By</th></tr></thead>
+    <thead><tr><th data-tip="Strategic decision from Workshop 3">Decision</th><th data-tip="Context and implications">Detail</th><th style="width:100px" data-tip="Who made this decision">By</th></tr></thead>
+    <tbody>
+      ${workshop3Decisions.map(d => `<tr>
+        <td style="font-weight:600">${d.decision}</td>
+        <td style="font-size:.85rem">${d.detail}</td>
+        <td style="font-weight:500">${d.who}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+
+  <div class="ev-section-title"><span class="icon">\uD83D\uDCCC</span> Workshop 1 Decisions (${decisions.length})</div>
+  <table class="ev-table">
+    <thead><tr><th data-tip="Strategic decision made during Workshop 1">Decision</th><th data-tip="Context and implications of the decision">Detail</th><th style="width:80px" data-tip="Who made or owns this decision">By</th></tr></thead>
     <tbody>
       ${decisions.map(d => `<tr>
         <td style="font-weight:600">${d.decision}</td>
@@ -2757,13 +2889,14 @@ function renderWorkshop() {
   </table>
 
   <div style="margin-top:24px;padding:16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);border-left:4px solid var(--navy)">
-    <div style="font-weight:600;color:var(--navy);margin-bottom:8px">Next Steps</div>
+    <div style="font-weight:600;color:var(--navy);margin-bottom:8px">Next Steps — as of Workshop 3 (14 Apr 2026)</div>
     <ul style="font-size:.9rem;color:var(--gray-700);padding-left:20px;line-height:1.8">
-      <li><strong>Tomorrow (Friday):</strong> 1-hour session — Ash demos AI tools, MCP access, gap analysis</li>
-      <li><strong>Next week:</strong> First Consumer Advisory Body meeting (Celeste). First Management meeting (Celeste). First Clinical Governance meeting (Maryanne).</li>
-      <li><strong>Next 2 weeks:</strong> Zoe completes QA gap analysis before leave. CI Plan backfilled from Confluence. Consumer surveys sent.</li>
-      <li><strong>Ongoing:</strong> Policy rewrites (Maryanne clinical, Zoe QA). Staff prep program designed. Evidence collection tracking.</li>
-      <li><strong>Before audit:</strong> All 48 docs in SharePoint repository. Staff trained. Mock audit conducted.</li>
+      <li><strong>Thursday 17 Apr:</strong> L&D meeting (Dina/Brent) — Isaac to attend for oversight on five-week training program and staff competency gaps</li>
+      <li><strong>Friday 18 Apr:</strong> Maryanne returns from leave — debrief on policy review status and Catherine/Maryanne tracker. Confirm source of truth for policy-to-standard mapping.</li>
+      <li><strong>This week:</strong> Ash builds policy reference suite architecture. CRM CI module reconciliation begins (Celeste/Fran). Isaac defines human-in-the-loop AI review process.</li>
+      <li><strong>Next 2 weeks:</strong> AI agent CI data gathering deployed with confidence scoring. Integration interface designed (CRM → Confluence/Linear). Zoe QA gap analysis status check.</li>
+      <li><strong>Weekly ongoing:</strong> Unmapped CI items review by Fran/Celeste/Liz. Fortnightly management meetings running (Celeste). Clinical Governance and Quality Committee meetings continuing.</li>
+      <li><strong>Before audit (28 June):</strong> All 48 docs in SharePoint repository. Staff trained via quizzes and role-play. Policy review complete for Supported Home. CI register fully reconciled across CRM/Confluence/Linear. Mock audit conducted.</li>
     </ul>
   </div>`;
 
