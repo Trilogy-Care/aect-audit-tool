@@ -2930,6 +2930,91 @@ function renderEvidence() {
   const gaps = policies.filter(d => d.tc.length === 0);
   const evidenceGaps = evidenceDocs.filter(d => d.tc.length === 0);
 
+
+  // ===== PAST AUDITS & SHAREPOINT EVIDENCE PANEL (SCAN OF 15 APR) =====
+  function renderSPPanel() {
+    var html = '<div class="ev-section-title"><span class="icon">\u{1F5C2}\uFE0F</span> Past Audits & SharePoint Evidence (scanned 15 Apr 2026)</div>';
+
+    // Mgmt Meetings critical gap card
+    var mm = SP_MGMT_MEETINGS;
+    html += '<div class="gap-card" style="margin-bottom:16px;border-left:4px solid var(--red);background:linear-gradient(180deg,var(--red-bg) 0%,#fff 100%)">' +
+      '<h3 style="color:var(--red);display:flex;align-items:center;justify-content:space-between">' +
+        '<span>\u26A0\uFE0F CRITICAL: Doc 43 Management Meeting Minutes</span>' +
+        '<a href="' + mm.url + '" target="_blank" style="font-size:.78rem;font-weight:500;color:var(--blue);text-decoration:none">Open in SharePoint \u2197</a>' +
+      '</h3>' +
+      '<p style="font-size:.88rem;color:var(--gray-700);margin-bottom:14px"><strong>Have ' + mm.doc43_have + ' of ' + mm.doc43_required + ' required minutes</strong>. Doc 43 needs the last 4 management meetings — currently only March 2026 is documented. Jan/Feb/April 2026 folders are empty.</p>' +
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">';
+    mm['2026_status'].forEach(function(m) {
+      var color = m.risk === 'high' ? 'var(--red)' : 'var(--green)';
+      var bg = m.risk === 'high' ? 'var(--red-bg)' : 'var(--green-bg)';
+      html += '<div style="background:' + bg + ';border:1px solid ' + color + ';border-radius:8px;padding:10px 12px">' +
+        '<div style="font-size:.7rem;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px">' + m.month + '</div>' +
+        '<div style="font-size:.95rem;font-weight:700;color:' + color + ';margin-top:4px">' + m.status + '</div>' +
+        '<div style="font-size:.72rem;color:var(--gray-500);margin-top:2px">' + m.label + '</div>' +
+      '</div>';
+    });
+    html += '</div></div>';
+
+    // Past audits inventory
+    html += '<div class="gap-card" style="margin-bottom:16px">';
+    html += '<h3>\u{1F4E6} Past Audit Submissions \u2014 Reusable Evidence Templates</h3>';
+    html += '<p style="font-size:.85rem;color:var(--gray-500);margin-bottom:16px">14 historical audit folders in /sites/ManagementTeam/Shared Documents/ACQSC Audits/. Each previous submission contains templates and evidence patterns to reuse for the 28 June 2026 audit.</p>';
+
+    var typeColors = {
+      'Upcoming Audit': 'var(--red)',
+      'ACQSC Audit': 'var(--navy)',
+      'DOH Review': 'var(--blue)',
+      'ACQSC Contact': '#6366F1',
+      'NCN Response': '#F59E0B'
+    };
+
+    Object.entries(SP_AUDITS).forEach(function(entry) {
+      var name = entry[0];
+      var meta = entry[1];
+      var color = typeColors[meta.type] || 'var(--gray-400)';
+      html += '<div style="border:1px solid var(--border, var(--gray-200));border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#fff">' +
+        '<div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:8px">' +
+          '<div>' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">' +
+              '<span style="background:' + color + ';color:#fff;padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;letter-spacing:.3px">' + meta.type + '</span>' +
+              '<span style="font-size:.7rem;color:var(--gray-500);font-weight:600">' + meta.date + '</span>' +
+            '</div>' +
+            '<h4 style="font-size:.95rem;font-weight:700;color:var(--navy);margin:0">' + name + '</h4>' +
+          '</div>' +
+          '<a href="' + meta.url + '" target="_blank" style="flex-shrink:0;padding:6px 12px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:6px;font-size:.78rem;font-weight:600;color:var(--navy);text-decoration:none;white-space:nowrap">Open \u2197</a>' +
+        '</div>' +
+        '<p style="font-size:.82rem;color:var(--gray-600);margin:8px 0;line-height:1.5;font-style:italic">' + meta.note + '</p>' +
+        '<details style="margin-top:8px"><summary style="cursor:pointer;font-size:.78rem;font-weight:600;color:var(--blue)">' + meta.files.length + ' files \u2014 click to expand</summary>' +
+        '<ul style="margin:8px 0 0;padding-left:20px;font-size:.78rem;color:var(--gray-600);line-height:1.6">' +
+          meta.files.map(function(f){return '<li>' + f + '</li>';}).join('') +
+        '</ul></details>' +
+      '</div>';
+    });
+    html += '</div>';
+
+    // Key reusable assets summary
+    html += '<div class="gap-card" style="margin-bottom:16px;border-left:4px solid var(--green)">' +
+      '<h3 style="color:var(--green)">\u2728 Key Reusable Assets for 28 June Audit</h3>' +
+      '<table class="ev-table" style="margin-top:10px">' +
+        '<thead><tr><th>Asset</th><th>Source Folder</th><th>Why It Matters</th></tr></thead>' +
+        '<tbody>' +
+          '<tr><td><strong>Evidence_Index.xlsx</strong></td><td>2026 02 DOH Assurance Review</td><td>Most recent evidence-cataloguing template — direct model for June</td></tr>' +
+          '<tr><td><strong>Documentation Register</strong></td><td>2024 10 ACQSC Clinical Compliance Audit</td><td>Excel template ACQSC expects — proven format</td></tr>' +
+          '<tr><td><strong>CO-004_1 Continuous Improvement Register</strong></td><td>2022 01 ACQSC Quality Audit</td><td>Doc 37 source — 371 items in current CRM CI tab</td></tr>' +
+          '<tr><td><strong>ACQSC Quality Standards Self-Assessment</strong></td><td>2022 01 ACQSC Quality Audit</td><td>Doc 6 (Corporate Governance) — proven format</td></tr>' +
+          '<tr><td><strong>Policies and Procedures.xlsx</strong></td><td>2023 01 ACQSC Quality Audit</td><td>Last full Quality Audit policy index — comparable scope</td></tr>' +
+          '<tr><td><strong>Annexure A Home Care Academy Training</strong></td><td>2023 01 ACQSC Quality Audit</td><td>Doc 15 (Workforce Competency/Training)</td></tr>' +
+          '<tr><td><strong>Trilogy Staff Roles.xlsx</strong></td><td>2023 01 ACQSC Quality Audit</td><td>Doc 33 (Org Structure) + Doc 44 (Position Descriptions)</td></tr>' +
+          '<tr><td><strong>Risk rating matrix.xlsx</strong></td><td>2022 11 ACQSC Desktop Contact</td><td>Doc 39 (Enterprise Risk Register) base format</td></tr>' +
+          '<tr><td><strong>QCP-001 to QCP-004 Governance Policies</strong></td><td>2023 06 ACQSC Desktop Contact</td><td>Provider Governance, Monitoring & Evaluation, Audit Framework</td></tr>' +
+          '<tr><td><strong>Updated Plan for CI + Training Program</strong></td><td>2023 01 Non Compliance Notice</td><td>Proves remediation capability — reference if asked about NCN response</td></tr>' +
+        '</tbody>' +
+      '</table>' +
+    '</div>';
+
+    return html;
+  }
+
   let html = `
   <div class="ev-header">
     <h2>Verified Evidence — Policy-to-AECT Mapping</h2>
@@ -3045,8 +3130,8 @@ function renderWorkshop() {
     {id:1, action:"Restart Consumer Advisory Body meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Done",
      detail:"Consumer Advisory Body meetings restarted. First meeting held. Ongoing fortnightly cadence established.",
      standard:"2.1, 2.6b", doc:"Doc 31 (last 4 partnering meetings), Doc 32 (consumer survey)"},
-    {id:2, action:"Start fortnightly Management meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Done",
-     detail:"Fortnightly management meetings now running. Strategic risk forum — not operational. Agenda covers org-level risks, client recontracting, staff competency updates. Sophie and Megs stepping in for coverage.",
+    {id:2, action:"Start fortnightly Management meetings", owner:"Celeste", due:"Week of 31 March", priority:"URGENT", status:"Known Issue",
+     detail:"CRITICAL AUDIT GAP — verified via SharePoint scan (15 Apr 2026): Only 1 documented meeting minute exists for 2026 (Management_Meeting_31_March_2026.docx). Jan/Feb folders labelled 'HyperCare' are EMPTY. April folder EMPTY. Doc 43 requires LAST 4 meetings — currently have only 1. Need to either back-fill Jan/Feb/April minutes or document next 3 meetings before 28 June. ACTION: Celeste/Sophie/Megs to retrieve or recreate missing minutes urgently.",
      standard:"2.3, 2.7", doc:"Doc 43 (last 4 management minutes)"},
     {id:3, action:"Zoe: Complete QA/Compliance gap analysis before leave", owner:"Zoe", due:"Before leave (~2 weeks)", priority:"HIGH", status:"In Progress",
      detail:"Status unknown as of Workshop 3 (14 Apr). Needs a check-in. Sophie and Meags continuing drafting processes during Zoe's absence.",
@@ -3073,7 +3158,7 @@ function renderWorkshop() {
      detail:"Staff Prep tab added to AECT tool with Q&A per standard. Policy quizzes in progress (blocked on reference suite). L&D five-week training program discussed — Brent (new L&D) focused on onboarding not ongoing training; Celeste pushed back. Thursday meeting to align.",
      standard:"All", doc:"N/A — staff readiness"},
     {id:11, action:"Set up audit-ready SharePoint/document repository", owner:"Isaac / Team", due:"Before audit", priority:"MEDIUM", status:"In Progress",
-     detail:"SharePoint archive folder identified with old policies from Feb 2024 review. Isaac to help set up central SharePoint library as audit-ready document repository. Romy sharing Microsoft Planner resource from Port Support.",
+     detail:"VERIFIED via scan (15 Apr): SharePoint /sites/ManagementTeam/Shared Documents/ACQSC Audits exists with 14 historical audit folders going back to 2021. The 2026 06 28 Renewal of Registration folder has 8 ACQSC application templates (REN-001 through REN-012). Best evidence packages: 2026 02 DOH Assurance Review (Evidence_Index.xlsx, SAH_RFI_Tracker.xlsx, Submission.zip) and 2022 01 Quality Audit (CO-004_1 CI Register, Self-Assessment xlsx). Repository EXISTS — needs population for 2026 audit, not creation. See new Past Audits panel.",
      standard:"All", doc:"All 48 docs"},
     {id:12, action:"Organise Clinical Governance meetings", owner:"Maryanne / Isaac", due:"Start next week", priority:"HIGH", status:"In Progress",
      detail:"Need last 4 meeting minutes for Doc 47. Meetings have been running. Confirm cadence is fortnightly.",
@@ -3118,8 +3203,8 @@ function renderWorkshop() {
     {id:"W3-9", action:"Define human-in-the-loop process for AI agent outputs", owner:"Isaac", due:"Before next workshop", priority:"MEDIUM", status:"Not Started",
      detail:"Design the stage-gate review process for AI agent outputs: which items get flagged, who reviews, what sign-off looks like. Agents provide confidence metrics but humans must verify by clicking through to actual Confluence/Linear/CRM pages. Auditors will cherry-pick and dive deep — team must follow any thread with confidence.",
      standard:"2.3, 2.4", doc:"N/A — process design"},
-    {id:"W3-10", action:"Set up SharePoint as central audit-ready document repository", owner:"Isaac", due:"Before audit", priority:"MEDIUM", status:"Not Started",
-     detail:"Consolidate all policies and evidence into SharePoint library. Old policy archive in SharePoint already exists (Feb 2024 review). Romy sharing Microsoft Planner resource from Port Support for uptake.",
+    {id:"W3-10", action:"Populate 2026 Renewal SharePoint folder", owner:"Isaac", due:"Before audit", priority:"MEDIUM", status:"In Progress",
+     detail:"SharePoint repository ALREADY EXISTS — verified 15 Apr via SP scan. ACQSC Audits library has 14 historical audit folders. The 2026 06 28 Renewal folder has the 8 ACQSC application PDFs. Need to populate it with: filled Cat 5 Specific Requirements form (REN-009), 48 supporting documents per AECT, and a Documentation Register Excel (template available from 2024 Clinical Compliance Audit folder). See Past Audits panel for reusable templates.",
      standard:"All", doc:"All 48 docs"},
   ];
 
@@ -3180,6 +3265,91 @@ function renderWorkshop() {
   const doneCount = allActions.filter(a=>a.status==='Done').length;
   const inProgCount = allActions.filter(a=>['In Progress','Known Issue'].includes(a.status)).length;
   const notStartedCount = allActions.filter(a=>a.status==='Not Started').length;
+
+
+  // ===== PAST AUDITS & SHAREPOINT EVIDENCE PANEL (SCAN OF 15 APR) =====
+  function renderSPPanel() {
+    var html = '<div class="ev-section-title"><span class="icon">\u{1F5C2}\uFE0F</span> Past Audits & SharePoint Evidence (scanned 15 Apr 2026)</div>';
+
+    // Mgmt Meetings critical gap card
+    var mm = SP_MGMT_MEETINGS;
+    html += '<div class="gap-card" style="margin-bottom:16px;border-left:4px solid var(--red);background:linear-gradient(180deg,var(--red-bg) 0%,#fff 100%)">' +
+      '<h3 style="color:var(--red);display:flex;align-items:center;justify-content:space-between">' +
+        '<span>\u26A0\uFE0F CRITICAL: Doc 43 Management Meeting Minutes</span>' +
+        '<a href="' + mm.url + '" target="_blank" style="font-size:.78rem;font-weight:500;color:var(--blue);text-decoration:none">Open in SharePoint \u2197</a>' +
+      '</h3>' +
+      '<p style="font-size:.88rem;color:var(--gray-700);margin-bottom:14px"><strong>Have ' + mm.doc43_have + ' of ' + mm.doc43_required + ' required minutes</strong>. Doc 43 needs the last 4 management meetings — currently only March 2026 is documented. Jan/Feb/April 2026 folders are empty.</p>' +
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">';
+    mm['2026_status'].forEach(function(m) {
+      var color = m.risk === 'high' ? 'var(--red)' : 'var(--green)';
+      var bg = m.risk === 'high' ? 'var(--red-bg)' : 'var(--green-bg)';
+      html += '<div style="background:' + bg + ';border:1px solid ' + color + ';border-radius:8px;padding:10px 12px">' +
+        '<div style="font-size:.7rem;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px">' + m.month + '</div>' +
+        '<div style="font-size:.95rem;font-weight:700;color:' + color + ';margin-top:4px">' + m.status + '</div>' +
+        '<div style="font-size:.72rem;color:var(--gray-500);margin-top:2px">' + m.label + '</div>' +
+      '</div>';
+    });
+    html += '</div></div>';
+
+    // Past audits inventory
+    html += '<div class="gap-card" style="margin-bottom:16px">';
+    html += '<h3>\u{1F4E6} Past Audit Submissions \u2014 Reusable Evidence Templates</h3>';
+    html += '<p style="font-size:.85rem;color:var(--gray-500);margin-bottom:16px">14 historical audit folders in /sites/ManagementTeam/Shared Documents/ACQSC Audits/. Each previous submission contains templates and evidence patterns to reuse for the 28 June 2026 audit.</p>';
+
+    var typeColors = {
+      'Upcoming Audit': 'var(--red)',
+      'ACQSC Audit': 'var(--navy)',
+      'DOH Review': 'var(--blue)',
+      'ACQSC Contact': '#6366F1',
+      'NCN Response': '#F59E0B'
+    };
+
+    Object.entries(SP_AUDITS).forEach(function(entry) {
+      var name = entry[0];
+      var meta = entry[1];
+      var color = typeColors[meta.type] || 'var(--gray-400)';
+      html += '<div style="border:1px solid var(--border, var(--gray-200));border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#fff">' +
+        '<div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:8px">' +
+          '<div>' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">' +
+              '<span style="background:' + color + ';color:#fff;padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;letter-spacing:.3px">' + meta.type + '</span>' +
+              '<span style="font-size:.7rem;color:var(--gray-500);font-weight:600">' + meta.date + '</span>' +
+            '</div>' +
+            '<h4 style="font-size:.95rem;font-weight:700;color:var(--navy);margin:0">' + name + '</h4>' +
+          '</div>' +
+          '<a href="' + meta.url + '" target="_blank" style="flex-shrink:0;padding:6px 12px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:6px;font-size:.78rem;font-weight:600;color:var(--navy);text-decoration:none;white-space:nowrap">Open \u2197</a>' +
+        '</div>' +
+        '<p style="font-size:.82rem;color:var(--gray-600);margin:8px 0;line-height:1.5;font-style:italic">' + meta.note + '</p>' +
+        '<details style="margin-top:8px"><summary style="cursor:pointer;font-size:.78rem;font-weight:600;color:var(--blue)">' + meta.files.length + ' files \u2014 click to expand</summary>' +
+        '<ul style="margin:8px 0 0;padding-left:20px;font-size:.78rem;color:var(--gray-600);line-height:1.6">' +
+          meta.files.map(function(f){return '<li>' + f + '</li>';}).join('') +
+        '</ul></details>' +
+      '</div>';
+    });
+    html += '</div>';
+
+    // Key reusable assets summary
+    html += '<div class="gap-card" style="margin-bottom:16px;border-left:4px solid var(--green)">' +
+      '<h3 style="color:var(--green)">\u2728 Key Reusable Assets for 28 June Audit</h3>' +
+      '<table class="ev-table" style="margin-top:10px">' +
+        '<thead><tr><th>Asset</th><th>Source Folder</th><th>Why It Matters</th></tr></thead>' +
+        '<tbody>' +
+          '<tr><td><strong>Evidence_Index.xlsx</strong></td><td>2026 02 DOH Assurance Review</td><td>Most recent evidence-cataloguing template — direct model for June</td></tr>' +
+          '<tr><td><strong>Documentation Register</strong></td><td>2024 10 ACQSC Clinical Compliance Audit</td><td>Excel template ACQSC expects — proven format</td></tr>' +
+          '<tr><td><strong>CO-004_1 Continuous Improvement Register</strong></td><td>2022 01 ACQSC Quality Audit</td><td>Doc 37 source — 371 items in current CRM CI tab</td></tr>' +
+          '<tr><td><strong>ACQSC Quality Standards Self-Assessment</strong></td><td>2022 01 ACQSC Quality Audit</td><td>Doc 6 (Corporate Governance) — proven format</td></tr>' +
+          '<tr><td><strong>Policies and Procedures.xlsx</strong></td><td>2023 01 ACQSC Quality Audit</td><td>Last full Quality Audit policy index — comparable scope</td></tr>' +
+          '<tr><td><strong>Annexure A Home Care Academy Training</strong></td><td>2023 01 ACQSC Quality Audit</td><td>Doc 15 (Workforce Competency/Training)</td></tr>' +
+          '<tr><td><strong>Trilogy Staff Roles.xlsx</strong></td><td>2023 01 ACQSC Quality Audit</td><td>Doc 33 (Org Structure) + Doc 44 (Position Descriptions)</td></tr>' +
+          '<tr><td><strong>Risk rating matrix.xlsx</strong></td><td>2022 11 ACQSC Desktop Contact</td><td>Doc 39 (Enterprise Risk Register) base format</td></tr>' +
+          '<tr><td><strong>QCP-001 to QCP-004 Governance Policies</strong></td><td>2023 06 ACQSC Desktop Contact</td><td>Provider Governance, Monitoring & Evaluation, Audit Framework</td></tr>' +
+          '<tr><td><strong>Updated Plan for CI + Training Program</strong></td><td>2023 01 Non Compliance Notice</td><td>Proves remediation capability — reference if asked about NCN response</td></tr>' +
+        '</tbody>' +
+      '</table>' +
+    '</div>';
+
+    return html;
+  }
 
   let html = `
   <div class="ev-header">
@@ -3272,6 +3442,8 @@ function renderWorkshop() {
       }).join('')}
     </tbody>
   </table>
+
+  ${renderSPPanel()}
 
   <div style="margin-top:24px;padding:16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);border-left:4px solid var(--navy)">
     <div style="font-weight:600;color:var(--navy);margin-bottom:8px">Next Steps — as of Workshop 3 (14 Apr 2026)</div>
@@ -3445,6 +3617,10 @@ function makePolicyCodeClickable(code) {
 function makeDocLink(docNum, label) {
   return '<a style="cursor:pointer;color:var(--blue);font-weight:700;text-decoration:underline" onclick="switchToDocumentsTab(\'' + docNum + '\')" title="View in Documents tab">' + (label || 'Doc ' + docNum) + '</a>';
 }
+
+// ============ SHAREPOINT AUDIT INVENTORY (15 Apr scan) ============
+const SP_AUDITS={"2026 06 28 Renewal of Registration":{"date":"Apr 2026","type":"Upcoming Audit","status":"current","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2026%2006%2028%20Renewal%20of%20Registration","files":["REN-001-Application-For-Renewal-Of-Registration.pdf","REN-002-Renewal-Of-Registration-Add-An-Associated-Provider.pdf","REN-005-Renewal-Category-1-Specific-Requirements.pdf","REN-006-Renewal-Category-2-Specific-Requirements.pdf","REN-007-Renewal-Category-3-Specific-Requirements.pdf","REN-008-Renewal-Category-4-Specific-Requirements.pdf","REN-009-Renewal-Category-5-Specific-Requirements.pdf","REN-012-Renewal-Of-Registration-Add-A-Care-Delivery-Location.pdf"],"note":"ACQSC application templates only — no submission yet. REN-009 is the Cat 5 form TC needs to fill."},"2026 02 DOH Assurance Review":{"date":"Feb 2026","type":"DOH Review","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2026%2002%20DOH%20Assurance%20Review","files":["Monthly Statements","Service Delivery Evidence","Transactions","Attachment A - Required Information and documentation.pdf","Attachment B - Privacy Notice - Support at Home Assurance Review.pdf","Evidence_Index.xlsx","For action_ Selection for SaH Payment Integrity Rolling Review – Trilogy Care Pty Ltd (GPMS ID 7069) _SEC_OFFICIAL_.msg","SAH_RFI_Tracker.xlsx","Service Delivery Evidence.zip","Submission.zip","Support at Home Request for Information letter.pdf"],"note":"MOST RECENT submission. Has Evidence_Index.xlsx + SAH_RFI_Tracker.xlsx (excellent templates to reuse for June audit). Submission.zip is full evidence package."},"2024 10 ACQSC Clinical Compliance Audit":{"date":"Oct 2024","type":"ACQSC Audit","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2024%2010%20ACQSC%20Clinical%20Compliance%20Audit","files":["ACQSC Request for Information","Assessment team report HS ACT-24-0006580 2024 Nov 5.pdf","Clinical Compliance_Commission Audit_Documentation Register.xlsx","Draft Commission Response_further questions.docx","Performance_report_HS_ACT-24-0006580 2024 Nov 18 (1).pdf","Response to Assessment Team Report - ACT-24-0006580.docx","Response to Assessment Team Report - ACT-24-0006580.pdf","Trilogy Care Model Review.pptx"],"note":"Documentation Register xlsx is a TEMPLATE — same format ACQSC will want for June. Trilogy Care Model Review pptx is reusable for staff prep."},"2024 09 DOH Assurance Review":{"date":"Sep 2024","type":"DOH Review","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2024%2009%20DOH%20Assurance%20Review","files":["Report","Submission","Trilogy Care Pty Ltd - GPMS ID 7069 - Draft Provider Report - Payment Validation Review.docx","Trilogy Care Pty Ltd - GPMS ID 7069 - Individual Provider Report - Payment Validation Review.pdf","Trilogy Care Pty Ltd - GPMS ID 7069 - Payment Validation Review - Notice.pdf"],"note":"Payment Validation Review — financial governance evidence."},"2023 09 DOH Assurance Review":{"date":"Sep 2023","type":"DOH Review","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2023%2009%20DOH%20Assurance%20Review","files":["NAPS ID 7069 - Trilogy Care - Monthly Statements","ACTION_ Trilogy Care Pty Ltd - NAPS ID 7069 - Clarification required - HCP Program Assurance Review - Excluded Items _SEC_OFFICIAL_.msg","Assurance Review Queries.xlsx","Health Data Portal - User Guide for Providers 2023.docx","Notice of Review - ${LookupName.Consumer Name}.msg","Overview - working file.xlsx","Privacy Notice - Review 4 - Excluded Items.pdf","Response to Draft Report.docx","Summary Report.pdf","Trilogy Care Pty Ltd - NAPS ID 7069 - Excluded Items Review - Notice.pdf","Trilogy Care Pty Ltd - NAPS ID 7069 - Excluded Items Review - Resposne to Draft Provider Report.docx"],"note":"Has Assurance Review Queries.xlsx and Overview working file — useful templates."},"2023 06 ACQSC Desktop Contact":{"date":"Jun 2023","type":"ACQSC Contact","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2023%2006%20ACQSC%20Desktop%20Contact","files":["documented","2023-02 - Board Meeting Agenda.pdf","2023-02 - Board Report.pdf","Assessment_team_report_701080_04-07-2023.pdf","FINAL Performance_Report_701080_12092023.pdf","QCP-001 Provider Governance Policy.docx","QCP-002 Monitoring and Evaluation Plan.docx","QCP-003 Auditing and Performance Management Procedure.docx","QCP-004 Audit Framework.docx","Screenshot - April 2023 Board Meeting Minutes.PNG"],"note":"QCP-001 to QCP-004 governance policies — Provider Governance, Monitoring/Evaluation, Audit Framework. Strong foundational evidence."},"2023 01 ACQSC Quality Audit":{"date":"Jan 2023","type":"ACQSC Audit","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2023%2001%20ACQSC%20Quality%20Audit","files":["Preliminary Info - Due 11 Jan","2023-03 Response to Assessment Team Report.docx","Annexure A - Home Care Academy Training.xlsx","Assessment_team_report_701080_20-01-2023.pdf","Copy of Contact Requests.xlsx","Letters of access for your records _SEC_OFFICIAL_.msg","Performance_report_701080_20-01-2023.docx","Policies and Procedures.xlsx","Response to Assessment Team Report.docx","Response to Assessment Team Report.pdf","Trilogy Staff - Roles.xlsx"],"note":"Last full Quality Audit. Has Policies and Procedures.xlsx, Annexure A Home Care Academy Training, Trilogy Staff Roles. Most directly comparable to upcoming June audit."},"2023 01 Non Compliance Notice":{"date":"Jan 2023","type":"NCN Response","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2023%2001%20Non%20Compliance%20Notice","files":["FW_ Non-Compliance Notice - Trilogy Care Pty Ltd _SEC_OFFICIAL_.msg","NCN - Trilogy Care Pty Ltd - 16 January 2023.pdf","Response to Non-Compliance Notice.docx","Response to Non-Compliance Notice.pdf","Updated Plan for Continuous Improvement.xlsx","Updated Trilogy Care Training Program.xlsx"],"note":"Has Updated Plan for CI xlsx + Updated Training Program xlsx — proves remediation capability. Reference if Commission asks about responding to non-compliance."},"2022 11 ACQSC Desktop Contact":{"date":"Nov 2022","type":"ACQSC Contact","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2022%2011%20ACQSC%20Desktop%20Contact","files":["Attachment 1 - BT Resume.pdf","Attachment 11 - SWAN, Nancie (2021-07-07) Health Summary.pdf","Attachment 12 - Consumer Progress Notes on ICM - Nan Swan.pdf","Attachment 13 - Case Notes Nan Swan.pdf","Attachment 14 - Extensive Case Review Dianne Boland.pdf","Attachment 15 - Digital Care Plan.docx","Attachment 15 - Digital Care Plan.pdf","Attachment 4 – Risk Identification Module.pdf","Attachment 5 - Consumer Notification – Care Plan Update .docx","Attachment 5 - Consumer Notification – Care Plan Update .pdf","Attachment 6 - Recognition and Response to Deterioration.docx","Attachment 6 - Recognition and Response to Deterioration.pdf","Attachment 8 - Risk rating matrix.xlsx"],"note":"Has Risk Identification Module, Risk rating matrix, Recognition and Response to Deterioration, Digital Care Plan, Case Notes — comprehensive clinical evidence package."},"2022 01 ACQSC Quality Audit":{"date":"Jan 2022","type":"ACQSC Audit","status":"complete","url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FACQSC%20Audits%2F2022%2001%20ACQSC%20Quality%20Audit","files":["FINAL DOCS TO SUBMIT","Samara documents for audit","Templates","Attachment A - 701080.docx","Attachment B - 701080 - DRAFT.docx","Audit Prep - schedule.xlsx","CO-004_1 Continuous Improvement Register.xlsx","Copy of ACQSC Quality Standards- Self-Assessment Trilogy Care Pty Ltd.xlsx","Trilogy Care - Description.docx","Trilogy Care - Quality_audit_service_details_form_701080.docx","Trilogy Care - Staff Servicing Model.docx","Trilogy Care - xConsumer list - care last month.xls"],"note":"First Quality Audit. CO-004_1 Continuous Improvement Register.xlsx — DIRECTLY referenced by current AECT tool. ACQSC Quality Standards Self-Assessment xlsx is gold for Doc 6 reuse."}};
+const SP_MGMT_MEETINGS={"url":"https://trilogycare.sharepoint.com/sites/ManagementTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FManagementTeam%2FShared%20Documents%2FManagement%20Meetings","2026_status":[{"month":"Jan 2026","files":0,"label":"HyperCare","status":"EMPTY","risk":"high"},{"month":"Feb 2026","files":0,"label":"HyperCare","status":"EMPTY","risk":"high"},{"month":"Mar 2026","files":1,"label":"Management_Meeting_31_March_2026.docx","status":"1 minute","risk":"ok"},{"month":"Apr 2026","files":0,"label":"(empty)","status":"EMPTY","risk":"high"}],"doc43_required":4,"doc43_have":1,"doc43_gap":3};
 
 // ============ TRIAGE VIEW (Priority 2) ============
 const TRIAGE_KEY = 'aect_triage_v1';
