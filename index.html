@@ -55,6 +55,66 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .cd-unit{font-size:.78rem;opacity:.85;font-weight:500;margin-left:-4px}
 .cd-date{font-size:.7rem;opacity:.55;font-weight:400;border-left:1px solid rgba(255,255,255,.2);padding-left:8px;margin-left:2px}
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes tabPulse { 0%,100%{box-shadow:0 0 0 0 rgba(224,75,81,.5)} 50%{box-shadow:0 0 0 6px rgba(224,75,81,0)} }
+
+/* Live Task List */
+.live-tasks{background:#fff;border:1px solid var(--gray-100);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:28px;overflow:hidden}
+.live-tasks-header{padding:18px 22px;border-bottom:1px solid var(--gray-100);background:linear-gradient(180deg,#fafbfc 0%,#fff 100%)}
+.live-tasks-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:14px;flex-wrap:wrap}
+.live-tasks-title{font-size:1.1rem;font-weight:700;color:var(--navy);margin:0 0 4px;letter-spacing:-.3px}
+.live-tasks-sub{font-size:.8rem;color:var(--gray-500);max-width:680px;line-height:1.5}
+.live-tasks-editor{display:inline-block;margin-left:8px;padding:2px 8px;background:#E3F6F5;border-radius:12px;font-size:.72rem;color:#007F7E}
+.live-tasks-editor a{color:#007F7E;text-decoration:underline;font-weight:500;margin-left:4px}
+.live-tasks-progress-wrap{min-width:200px}
+.live-tasks-progress-label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--gray-500);font-weight:500;margin-bottom:4px}
+.live-tasks-progress-pct{color:var(--green);font-weight:700}
+.live-tasks-progress-bar{height:8px;background:var(--gray-100);border-radius:4px;overflow:hidden}
+.live-tasks-progress-fill{height:100%;background:linear-gradient(90deg,#43C0BE,#10B981);transition:width .4s ease}
+.live-tasks-filters{display:flex;gap:6px;flex-wrap:wrap}
+.live-tasks-filter{padding:5px 12px;font-size:.78rem;font-weight:500;background:#fff;border:1px solid var(--gray-200);border-radius:14px;cursor:pointer;color:var(--gray-600);transition:all .15s;font-family:inherit}
+.live-tasks-filter:hover{border-color:var(--gray-400)}
+.live-tasks-filter.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.live-tasks-filter-n{opacity:.7;font-size:.7rem;margin-left:3px;padding:1px 5px;background:rgba(255,255,255,.15);border-radius:6px}
+.live-tasks-filter:not(.active) .live-tasks-filter-n{background:var(--gray-100);color:var(--gray-500)}
+
+.live-tasks-list{max-height:620px;overflow-y:auto}
+.live-tasks-empty{padding:40px 22px;text-align:center;color:var(--gray-400);font-size:.9rem}
+
+.live-task-row{display:flex;gap:14px;padding:14px 22px;border-bottom:1px solid var(--gray-100);transition:background .12s}
+.live-task-row:last-child{border-bottom:none}
+.live-task-row:hover{background:#fafbfc}
+.live-task-row.done{opacity:.55}
+.live-task-row.done .live-task-action{text-decoration:line-through;color:var(--gray-500)}
+
+.live-task-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--gray-300);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px;transition:all .15s;font-family:inherit}
+.live-task-check:hover{border-color:var(--green)}
+.live-task-check.checked{background:var(--green);border-color:var(--green)}
+
+.live-task-body{flex:1;min-width:0}
+.live-task-top{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.live-task-id{font-weight:700;color:var(--blue);font-size:.78rem;font-family:monospace}
+.live-task-workshop{font-size:.68rem;font-weight:700;background:var(--gray-100);color:var(--gray-600);padding:2px 6px;border-radius:4px;letter-spacing:.3px}
+.live-task-field{font-family:inherit;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:10px;border:1px solid transparent;cursor:pointer;outline:none;transition:all .15s}
+.live-task-field:hover{filter:brightness(1.1)}
+.live-task-pr-sel{-webkit-appearance:none;appearance:none;padding-right:18px;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 2l3 3 3-3" stroke="white" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 6px center}
+.live-task-status-sel{background:#fff;border:1px solid;-webkit-appearance:none;appearance:none;padding-right:18px;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 2l3 3 3-3" stroke="%235373A3" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 6px center}
+.live-task-edited{font-size:.7rem;color:var(--gray-400);margin-left:auto;font-style:italic}
+
+.live-task-action{font-size:.92rem;font-weight:600;color:var(--foreground, var(--gray-800));line-height:1.45;margin-bottom:4px;padding:2px 4px;border-radius:4px;cursor:text;outline:none;border:1px solid transparent;transition:all .15s}
+.live-task-action:hover{background:var(--gray-50)}
+.live-task-action:focus{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.live-task-detail{font-size:.8rem;color:var(--gray-500);line-height:1.5;margin-bottom:8px;padding:4px;border-radius:4px;cursor:text;outline:none;border:1px solid transparent;transition:all .15s}
+.live-task-detail:hover{background:var(--gray-50)}
+.live-task-detail:focus{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.live-task-detail:empty::before{content:'Click to add detail...';color:var(--gray-300);font-style:italic}
+
+.live-task-meta{display:flex;gap:14px;font-size:.75rem;color:var(--gray-500);align-items:center;flex-wrap:wrap}
+.live-task-owner-input,.live-task-due-input{background:transparent;border:1px solid transparent;padding:2px 6px;border-radius:4px;font-size:.75rem;color:var(--gray-700);width:auto;min-width:80px;cursor:text}
+.live-task-owner-input:hover,.live-task-due-input:hover{border-color:var(--gray-200);background:#fff}
+.live-task-owner-input:focus,.live-task-due-input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+
+/* Pulse on Workshops tab when urgent */
+.tab[data-tab="workshop"].urgent-pulse{animation:tabPulse 2s infinite}
 
 /* Quick search button */
 .quick-search-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s;font-family:inherit}
@@ -3370,6 +3430,161 @@ function renderWorkshop() {
     return html;
   }
 
+  // ===== LIVE TASK LIST WITH INLINE EDITING + EDIT TRACKING =====
+  const TASK_EDITS_KEY = 'aect_task_edits_v1';
+  const EDITOR_NAME_KEY = 'aect_editor_name';
+
+  function loadTaskEdits(){ try { return JSON.parse(localStorage.getItem(TASK_EDITS_KEY)) || {}; } catch(e){ return {}; } }
+  function saveTaskEdits(o){ localStorage.setItem(TASK_EDITS_KEY, JSON.stringify(o)); }
+  function getEditorName(askIfMissing){
+    var name = localStorage.getItem(EDITOR_NAME_KEY);
+    if (name) return name;
+    if (askIfMissing) {
+      name = prompt('Your name (so others can see who updated what):') || 'Anonymous';
+      localStorage.setItem(EDITOR_NAME_KEY, name);
+      return name;
+    }
+    return '';
+  }
+  function changeEditorName(){
+    var current = localStorage.getItem(EDITOR_NAME_KEY) || '';
+    var next = prompt('Your name:', current);
+    if (next !== null && next.trim()) {
+      localStorage.setItem(EDITOR_NAME_KEY, next.trim());
+      renderWorkshop();
+    }
+  }
+  window.changeEditorName = changeEditorName;
+
+  function taskKey(a) { return typeof a.id === 'number' ? 'W1-'+a.id : a.id; }
+
+  function applyEdits(action) {
+    var edits = loadTaskEdits();
+    var k = taskKey(action);
+    var e = edits[k] || {};
+    return Object.assign({}, action, e.fields || {}, {
+      _key: k,
+      _editedBy: e.editedBy || null,
+      _editedAt: e.editedAt || null,
+      _workshop: typeof action.id === 'number' ? 'W1' : 'W3'
+    });
+  }
+
+  function editTask(key, field, value) {
+    // Guard: if value matches current effective value, skip
+    var edits = loadTaskEdits();
+    var original = allActions.find(function(a){return taskKey(a) === key;});
+    if (original) {
+      var effective = applyEdits(original);
+      if (String(effective[field] || '').trim() === String(value || '').trim()) return;
+    }
+    if (!edits[key]) edits[key] = { fields: {} };
+    if (!edits[key].fields) edits[key].fields = {};
+    edits[key].fields[field] = value;
+    edits[key].editedBy = getEditorName(true); // prompt only on actual edit
+    edits[key].editedAt = new Date().toISOString();
+    saveTaskEdits(edits);
+    renderWorkshop();
+  }
+  window.editTask = editTask;
+
+  function renderLiveTaskList() {
+    var editorName = localStorage.getItem(EDITOR_NAME_KEY) || '(not set)';
+    var allTasks = allActions.map(applyEdits);
+
+    var filter = window._taskFilter || 'open';
+    var filtered;
+    if (filter === 'all') filtered = allTasks;
+    else if (filter === 'open') filtered = allTasks.filter(function(t){return t.status !== 'Done';});
+    else if (filter === 'notstarted') filtered = allTasks.filter(function(t){return t.status === 'Not Started';});
+    else if (filter === 'inprogress') filtered = allTasks.filter(function(t){return t.status === 'In Progress' || t.status === 'Known Issue';});
+    else if (filter === 'done') filtered = allTasks.filter(function(t){return t.status === 'Done';});
+    else if (filter === 'mine') {
+      var me = (localStorage.getItem(EDITOR_NAME_KEY) || '').toLowerCase();
+      filtered = allTasks.filter(function(t){return (t.owner||'').toLowerCase().includes(me.split(' ')[0] || 'nonematch');});
+    }
+    else filtered = allTasks;
+
+    var prOrder = {URGENT:0,HIGH:1,MEDIUM:2,LOW:3};
+    var stOrder = {'Not Started':0,'Known Issue':1,'In Progress':2,'Done':3};
+    filtered.sort(function(a,b){
+      var sd = (stOrder[a.status]||9) - (stOrder[b.status]||9);
+      if (sd !== 0) return sd;
+      return (prOrder[a.priority]||9) - (prOrder[b.priority]||9);
+    });
+
+    var totalOpen = allTasks.filter(function(t){return t.status !== 'Done';}).length;
+    var totalDone = allTasks.filter(function(t){return t.status === 'Done';}).length;
+    var pct = allTasks.length > 0 ? Math.round(totalDone / allTasks.length * 100) : 0;
+
+    var html = '<div class="live-tasks">' +
+      '<div class="live-tasks-header">' +
+        '<div class="live-tasks-title-row">' +
+          '<div><h3 class="live-tasks-title">\u{1F4CB} Live Task List</h3>' +
+          '<div class="live-tasks-sub">Consolidated W1 + W3 actions. Click any field to edit \u2014 saves automatically and tracks who made the change. <span class="live-tasks-editor">Editing as: <strong>' + editorName + '</strong> <a href="#" onclick="changeEditorName();return false;">change</a></span></div></div>' +
+          '<div class="live-tasks-progress-wrap">' +
+            '<div class="live-tasks-progress-label"><span>' + totalDone + ' of ' + allTasks.length + ' done</span><span class="live-tasks-progress-pct">' + pct + '%</span></div>' +
+            '<div class="live-tasks-progress-bar"><div class="live-tasks-progress-fill" style="width:' + pct + '%"></div></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="live-tasks-filters">';
+    var filters = [
+      {id:'open', label:'Open', n:totalOpen},
+      {id:'notstarted', label:'Not Started', n:allTasks.filter(function(t){return t.status==='Not Started';}).length},
+      {id:'inprogress', label:'In Progress', n:allTasks.filter(function(t){return t.status==='In Progress'||t.status==='Known Issue';}).length},
+      {id:'done', label:'Done', n:totalDone},
+      {id:'mine', label:'My Tasks', n:null},
+      {id:'all', label:'All', n:allTasks.length}
+    ];
+    filters.forEach(function(f) {
+      html += '<button class="live-tasks-filter' + (filter===f.id?' active':'') + '" data-task-filter="' + f.id + '">' + f.label + (f.n !== null ? ' <span class="live-tasks-filter-n">' + f.n + '</span>' : '') + '</button>';
+    });
+    html += '</div></div>';
+
+    if (filtered.length === 0) {
+      html += '<div class="live-tasks-empty">\u{1F389} Nothing matches this filter. Try another.</div>';
+    } else {
+      html += '<div class="live-tasks-list">';
+      filtered.forEach(function(t) {
+        var isDone = t.status === 'Done';
+        var statusColors = {'Done':'var(--green)','In Progress':'var(--blue)','Not Started':'var(--red)','Known Issue':'var(--amber)'};
+        var statusColor = statusColors[t.status] || 'var(--gray-400)';
+        var prColors = {URGENT:'var(--red)',HIGH:'#c05621',MEDIUM:'var(--amber)',LOW:'var(--gray-400)'};
+        var idStr = typeof t.id === 'number' ? 'W1-'+t.id : t.id;
+        var k = t._key;
+        var editedBadge = t._editedBy ? '<span class="live-task-edited" title="Last edited ' + new Date(t._editedAt).toLocaleString() + '">\u270F\uFE0F ' + t._editedBy + '</span>' : '';
+
+        html += '<div class="live-task-row' + (isDone?' done':'') + '" data-task-key="' + k + '">' +
+          '<button class="live-task-check' + (isDone?' checked':'') + '" onclick="editTask(\'' + k + '\',\'status\',\'' + (isDone?'Not Started':'Done') + '\')" title="Toggle done">' + (isDone?'\u2713':'') + '</button>' +
+          '<div class="live-task-body">' +
+            '<div class="live-task-top">' +
+              '<span class="live-task-id">' + idStr + '</span>' +
+              '<span class="live-task-workshop">' + t._workshop + '</span>' +
+              '<select class="live-task-field live-task-pr-sel" onchange="editTask(\'' + k + '\',\'priority\',this.value)" style="background:' + (prColors[t.priority]||'var(--gray-400)') + ';color:#fff">' +
+                ['URGENT','HIGH','MEDIUM','LOW'].map(function(p){return '<option' + (t.priority===p?' selected':'') + '>' + p + '</option>';}).join('') +
+              '</select>' +
+              '<select class="live-task-field live-task-status-sel" onchange="editTask(\'' + k + '\',\'status\',this.value)" style="color:' + statusColor + ';border-color:' + statusColor + '">' +
+                ['Not Started','In Progress','Known Issue','Done'].map(function(s){return '<option' + (t.status===s?' selected':'') + '>' + s + '</option>';}).join('') +
+              '</select>' +
+              editedBadge +
+            '</div>' +
+            '<div class="live-task-action" contenteditable="true" data-field="action" data-key="' + k + '">' + t.action + '</div>' +
+            '<div class="live-task-detail" contenteditable="true" data-field="detail" data-key="' + k + '">' + (t.detail||'') + '</div>' +
+            '<div class="live-task-meta">' +
+              '<span>\u{1F464} <input type="text" class="live-task-field live-task-owner-input" data-field="owner" data-key="' + k + '" value="' + (t.owner||'').replace(/"/g,'&quot;') + '"></span>' +
+              '<span>\u{1F4C5} <input type="text" class="live-task-field live-task-due-input" data-field="due" data-key="' + k + '" value="' + (t.due||'').replace(/"/g,'&quot;') + '"></span>' +
+              '<span>\u{1F3AF} ' + t.standard + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+    return html;
+  }
+
   let html = `
   <div class="ev-header">
     <h2>Workshop Actions — Registration Renewal</h2>
@@ -3387,6 +3602,8 @@ function renderWorkshop() {
     <div class="ev-stat gap" data-tip="Actions not yet started — need attention"><div class="num" style="color:var(--red)">${notStartedCount}</div><div class="label">Not Started</div></div>
     <div class="ev-stat na" data-tip="Strategic decisions across all workshops"><div class="num" style="color:var(--gray-400)">${allDecisions.length}</div><div class="label">Key Decisions</div></div>
   </div>
+
+  ${renderLiveTaskList()}
 
   <div class="ev-section-title"><span class="icon">\u26A1</span> Workshop 3 — New Actions (14 April 2026)</div>
   <table class="ev-table">
@@ -3477,6 +3694,74 @@ function renderWorkshop() {
   </div>`;
 
   wv.innerHTML = html;
+
+  // Wire up filter buttons
+  wv.querySelectorAll('[data-task-filter]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      window._taskFilter = btn.dataset.taskFilter;
+      renderWorkshop();
+    });
+  });
+
+  // Wire up contenteditable fields — only save if user actually interacted (focused then blurred)
+  wv.querySelectorAll('[contenteditable="true"][data-field]').forEach(function(el){
+    var hasFocused = false;
+    el.addEventListener('focus', function(){ hasFocused = true; });
+    el.addEventListener('blur', function(){
+      if (!hasFocused) return; // ignore spurious blurs from innerHTML rewrites
+      var k = el.dataset.key;
+      var f = el.dataset.field;
+      var original = allActions.find(function(a){return taskKey(a) === k;});
+      if (!original) return;
+      var newVal = el.innerText.trim();
+      var effective = applyEdits(original);
+      if (newVal === (effective[f]||'').trim()) return;
+      editTask(k, f, newVal);
+    });
+    if (el.dataset.field === 'action') {
+      el.addEventListener('keydown', function(e){
+        if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+      });
+    }
+  });
+
+  // Wire up owner + due text inputs — only save if user actually focused
+  wv.querySelectorAll('input.live-task-field[data-field]').forEach(function(el){
+    var hasFocused = false;
+    el.addEventListener('focus', function(){ hasFocused = true; });
+    el.addEventListener('blur', function(){
+      if (!hasFocused) return;
+      var k = el.dataset.key;
+      var f = el.dataset.field;
+      var original = allActions.find(function(a){return taskKey(a) === k;});
+      if (!original) return;
+      var newVal = el.value.trim();
+      var effective = applyEdits(original);
+      if (newVal === (effective[f]||'').trim()) return;
+      editTask(k, f, newVal);
+    });
+    el.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+    });
+  });
+
+  // Update Workshops tab badge + pulse using allTasks from this render
+  var tab = document.querySelector('.tab[data-tab="workshop"]');
+  if (tab) {
+    var allTasksForBadge = allActions.map(applyEdits);
+    var openCount = allTasksForBadge.filter(function(t){return t.status !== 'Done';}).length;
+    var urgentCount = allTasksForBadge.filter(function(t){return (t.priority === 'URGENT' || t.status === 'Known Issue') && t.status !== 'Done';}).length;
+    var existing = tab.querySelector('.tab-badge');
+    if (existing) existing.remove();
+    tab.classList.remove('urgent-pulse');
+    if (openCount > 0) {
+      var badge = document.createElement('span');
+      badge.className = 'tab-badge' + (urgentCount > 0 ? ' tab-badge-warn' : '');
+      badge.textContent = openCount;
+      tab.appendChild(badge);
+      if (urgentCount > 0) tab.classList.add('urgent-pulse');
+    }
+  }
 }
 
 // ============ EXPORT VIEW ============
@@ -4144,6 +4429,11 @@ window.reviewAction = function(itemTitle, action) {
 // ============ INIT ============
 renderSidebar();
 renderGap();
+
+// Hydrate Workshop tab badge on load (renders invisibly then shows count)
+setTimeout(function(){
+  try { renderWorkshop(); } catch(e){ console.error('Workshop init error:', e); }
+}, 100);
 
 // Auto-expand first standard
 const firstStd = document.querySelector('.sidebar-standard');
