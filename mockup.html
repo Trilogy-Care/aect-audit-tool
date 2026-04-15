@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AECT Policy Mapper — Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#2C4C79;
+  --secondary:#E3F6F5;
+  --background:#fff;
+  --foreground:#162C4C;
+  --card:#fff;
+  --accent:#E3F6F5;
+  --border:#E1E7EF;
+  --ring:#2C4C79;
+  --radius:.625rem;
+  --teal:#007F7E;
+  --teal-light:#43C0BE;
+  --teal-bg:rgba(67,192,190,.1);
+  --teal-bg-strong:rgba(67,192,190,.2);
+  --muted:#5373A3;
+  --muted-light:#8FA4C2;
+  --gray-50:#F8FAFC;
+  --gray-100:#F1F5F9;
+  --gray-200:#E2E8F0;
+  --gray-300:#CBD5E1;
+  --gray-400:#94A3B8;
+  --gray-500:#64748B;
+  --gray-600:#475569;
+  --gray-700:#334155;
+  --red:#E04B51;
+  --red-bg:#FEF2F2;
+  --amber:#F59E0B;
+  --amber-bg:#FFFBEB;
+  --green:#10B981;
+  --green-bg:#ECFDF5;
+  --blue:#2563EB;
+  --blue-bg:#EFF6FF;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{font-family:'Inter','Inter Fallback',system-ui,-apple-system,sans-serif;color:var(--foreground);background:var(--background);min-height:100vh;line-height:1.5;font-feature-settings:"cv11","ss01","cv02"}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+
+/* Layout */
+.app{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:250px;min-width:250px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sidebar-header{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.brand-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--teal-light) 0%,var(--teal) 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;letter-spacing:-.5px;flex-shrink:0}
+.brand-info{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.brand-name{font-size:.95rem;font-weight:700;color:var(--foreground)}
+.brand-app{font-size:.7rem;color:var(--muted);font-weight:500}
+
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px}
+.nav-section{margin-bottom:18px}
+.nav-section-label{font-size:.7rem;font-weight:600;color:var(--muted-light);text-transform:uppercase;letter-spacing:.6px;padding:0 12px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;height:36px;border-radius:var(--radius);font-size:.875rem;color:var(--muted);font-weight:500;cursor:pointer;transition:background .12s ease;margin-bottom:1px;position:relative}
+.nav-item:hover{background:var(--gray-50);color:var(--foreground)}
+.nav-item.active{background:var(--teal-bg);color:var(--teal);font-weight:600}
+.nav-item .icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nav-item .icon svg{width:16px;height:16px;stroke-width:2}
+.nav-item-badge{margin-left:auto;background:var(--gray-200);color:var(--gray-700);padding:1px 7px;border-radius:10px;font-size:.65rem;font-weight:700;line-height:1.4}
+.nav-item.active .nav-item-badge{background:var(--teal);color:#fff}
+.nav-item-badge.warn{background:var(--red);color:#fff}
+
+.sidebar-footer{padding:16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FFB347 0%,#FF7043 100%);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:.85rem;font-weight:600;color:var(--foreground);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-email{font-size:.7rem;color:var(--muted);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;background:var(--background)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:50}
+.breadcrumb{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--muted)}
+.breadcrumb-current{color:var(--foreground);font-weight:600}
+.breadcrumb-sep{color:var(--gray-300)}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+
+.countdown-pill{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 10px;border-radius:8px;background:var(--teal-bg);border:1px solid var(--teal-light)}
+.cd-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.cd-text{font-size:.78rem;color:var(--muted);font-weight:500}
+.cd-num{font-size:.95rem;font-weight:700;color:var(--teal);letter-spacing:-.3px}
+
+.search-btn{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--gray-50);border:1px solid var(--border);border-radius:8px;font-size:.8rem;color:var(--muted);cursor:pointer;transition:all .15s}
+.search-btn:hover{border-color:var(--gray-300);background:var(--card)}
+.search-btn kbd{background:var(--card);border:1px solid var(--border);padding:1px 5px;border-radius:3px;font-size:.7rem;font-family:monospace;color:var(--gray-500)}
+
+/* Content */
+.content{padding:32px;max-width:1600px;width:100%;margin:0 auto}
+
+.page-header{margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+.page-title{font-size:1.6rem;font-weight:700;color:var(--foreground);letter-spacing:-.5px;margin-bottom:4px}
+.page-subtitle{font-size:.9rem;color:var(--muted);font-weight:500}
+.page-meta{font-size:.8rem;color:var(--muted-light)}
+
+/* Stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;transition:all .15s ease;position:relative}
+.stat-card:hover{border-color:var(--gray-300);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.stat-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.stat-card-label{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.1px}
+.stat-card-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-card-icon.teal{background:var(--teal-bg);color:var(--teal)}
+.stat-card-icon.red{background:var(--red-bg);color:var(--red)}
+.stat-card-icon.amber{background:var(--amber-bg);color:var(--amber)}
+.stat-card-icon.green{background:var(--green-bg);color:var(--green)}
+.stat-card-icon.blue{background:var(--blue-bg);color:var(--blue)}
+.stat-card-icon svg{width:16px;height:16px}
+.stat-card-value{font-size:1.85rem;font-weight:700;color:var(--foreground);letter-spacing:-.8px;line-height:1.05;font-feature-settings:"tnum"}
+.stat-card-meta{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:.75rem;color:var(--muted)}
+.stat-trend{display:inline-flex;align-items:center;gap:3px;font-weight:600;padding:2px 6px;border-radius:4px;font-size:.7rem}
+.stat-trend.up{background:var(--green-bg);color:var(--green)}
+.stat-trend.down{background:var(--red-bg);color:var(--red)}
+
+/* Two-col grid */
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:24px}
+@media (max-width:1100px){.two-col{grid-template-columns:1fr}}
+
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.panel-title{font-size:1rem;font-weight:700;color:var(--foreground);letter-spacing:-.2px}
+.panel-action{font-size:.78rem;color:var(--teal);font-weight:600;cursor:pointer}
+.panel-action:hover{text-decoration:underline}
+.panel-body{padding:8px 0}
+.panel-body.padded{padding:18px 20px}
+
+.list-item{padding:12px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background .12s}
+.list-item:hover{background:var(--gray-50)}
+.list-item:last-child{border-bottom:none}
+.list-item-icon{width:34px;height:34px;border-radius:8px;background:var(--teal-bg);color:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem;font-weight:700}
+.list-item-content{flex:1;min-width:0}
+.list-item-title{font-size:.875rem;font-weight:600;color:var(--foreground);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item-meta{font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.list-item-status{padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
+.status-progress{background:var(--blue-bg);color:var(--blue)}
+.status-done{background:var(--green-bg);color:var(--green)}
+.status-stale{background:var(--red-bg);color:var(--red)}
+
+/* Bar viz */
+.bar-row{display:flex;align-items:center;gap:12px;padding:8px 20px;border-bottom:1px solid var(--gray-100)}
+.bar-row:last-child{border-bottom:none}
+.bar-label{font-size:.82rem;color:var(--foreground);font-weight:500;width:120px;flex-shrink:0}
+.bar-track{flex:1;height:8px;background:var(--gray-100);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal-light),var(--teal));transition:width .4s ease}
+.bar-fill.warn{background:linear-gradient(90deg,var(--amber),#D97706)}
+.bar-fill.danger{background:linear-gradient(90deg,#F87171,var(--red))}
+.bar-value{font-size:.78rem;font-weight:700;color:var(--foreground);width:48px;text-align:right;font-feature-settings:"tnum"}
+
+/* Tabs (within content) */
+.tabs-bar{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px;padding:0 20px}
+.subtab{padding:10px 14px;font-size:.85rem;color:var(--muted);font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.subtab:hover{color:var(--foreground)}
+.subtab.active{color:var(--teal);border-bottom-color:var(--teal-light);font-weight:600}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:#243f66}
+.btn-outline{background:var(--card);color:var(--foreground);border-color:var(--border)}
+.btn-outline:hover{border-color:var(--gray-300);background:var(--gray-50)}
+.btn-ghost{background:transparent;color:var(--muted)}
+.btn-ghost:hover{background:var(--gray-50);color:var(--foreground)}
+
+/* CI hierarchy */
+.ci-standard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+.ci-standard-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--gray-50)}
+.ci-standard-title{display:flex;align-items:center;gap:10px;font-size:.95rem;font-weight:700;color:var(--foreground)}
+.std-pill{padding:3px 8px;border-radius:6px;font-size:.7rem;font-weight:700;letter-spacing:.3px}
+.std-pill-1{background:#DBEAFE;color:#1E40AF}
+.std-pill-2{background:#E0E7FF;color:#3730A3}
+.std-pill-3{background:#D1FAE5;color:#065F46}
+.std-pill-4{background:#FEF3C7;color:#92400E}
+.std-pill-5{background:#FCE7F3;color:#9D174D}
+.ci-standard-meta{font-size:.75rem;color:var(--muted)}
+
+.ci-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.ci-table th{background:var(--gray-50);padding:9px 14px;text-align:left;font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)}
+.ci-table td{padding:11px 14px;border-bottom:1px solid var(--gray-100);vertical-align:top}
+.ci-table tr:last-child td{border-bottom:none}
+.ci-table tr:hover td{background:var(--gray-50)}
+
+.outcome-chip{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.7rem;font-weight:600;background:#fff;color:var(--blue);border:1px solid #BFDBFE;margin-right:3px}
+.score-pill{display:inline-flex;align-items:center;justify-content:center;width:34px;height:22px;border-radius:11px;font-size:.72rem;font-weight:700;font-feature-settings:"tnum"}
+.score-pill.high{background:var(--green-bg);color:var(--green)}
+.score-pill.med{background:var(--amber-bg);color:var(--amber)}
+.score-pill.low{background:var(--red-bg);color:var(--red)}
+
+.verify-btn{padding:4px 10px;font-size:.7rem;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+
+.stale-tag{display:inline-block;padding:1px 6px;background:var(--red);color:#fff;font-size:.62rem;font-weight:700;border-radius:4px;margin-left:6px;letter-spacing:.4px}
+
+/* View tabs at top of CI */
+.view-toggle{display:flex;gap:4px;background:var(--gray-100);padding:4px;border-radius:8px}
+.view-toggle button{padding:6px 12px;font-size:.78rem;font-weight:600;background:transparent;border:none;border-radius:6px;cursor:pointer;color:var(--muted)}
+.view-toggle button.active{background:var(--card);color:var(--foreground);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+
+/* View switcher */
+.view-switcher{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.view-label{font-size:.78rem;color:var(--muted);font-weight:600;margin-right:4px}
+.filter-pill{padding:5px 11px;font-size:.75rem;font-weight:500;background:var(--card);border:1px solid var(--border);border-radius:14px;cursor:pointer;color:var(--muted);transition:all .15s}
+.filter-pill:hover{border-color:var(--gray-300)}
+.filter-pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* View tabs at top */
+.mock-toggles{position:fixed;top:14px;right:14px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px;display:flex;gap:4px;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.mock-toggles button{padding:6px 12px;font-size:.78rem;font-weight:600;background:transparent;border:none;border-radius:6px;cursor:pointer;color:var(--muted)}
+.mock-toggles button.active{background:var(--primary);color:#fff}
+
+.hidden{display:none!important}
+
+/* Section title */
+.section-title{font-size:1rem;font-weight:700;color:var(--foreground);margin:24px 0 12px;display:flex;align-items:center;gap:8px;letter-spacing:-.2px}
+.section-title:first-child{margin-top:0}
+</style>
+</head>
+<body>
+
+<div class="mock-toggles">
+  <button class="active" onclick="showView('home')">Dashboard</button>
+  <button onclick="showView('ci')">CI Register</button>
+  <button onclick="showView('triage')">Triage</button>
+</div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">TC</div>
+      <div class="brand-info">
+        <div class="brand-name">AECT Mapper</div>
+        <div class="brand-app">Registration Renewal 2026</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Daily Workflow</div>
+        <div class="nav-item active" data-nav="home">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+          Dashboard
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+          Gap Analysis
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+          Triage
+          <span class="nav-item-badge">50</span>
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          Stale Items
+          <span class="nav-item-badge warn">70</span>
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/></svg></span>
+          Auditor Sim
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">CI Register</div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          CI Register
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+          CQCC
+          <span class="nav-item-badge">22</span>
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          Owners
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span>
+          AI Verify
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Audit Reference</div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-5"/><polyline points="9 6 12 3 15 6"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          Workshops
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+          Staff Prep
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+          Standards
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
+          Documents
+        </div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+          Verified Evidence
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Tools</div>
+        <div class="nav-item">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          Export / Import
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-avatar">AW</div>
+      <div class="user-info">
+        <div class="user-name">Ash Williams</div>
+        <div class="user-email">ashw@trilogycare.com.au</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="breadcrumb">
+        <span>Daily Workflow</span>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current" id="bcCurrent">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <div class="countdown-pill">
+          <span class="cd-dot"></span>
+          <span class="cd-text">Audit in</span>
+          <span class="cd-num">74 days</span>
+          <span class="cd-text">· 28 Jun 2026</span>
+        </div>
+        <button class="search-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Quick Jump
+          <kbd>/</kbd>
+        </button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div class="content" id="view-home">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Good afternoon, Ash</div>
+          <div class="page-subtitle">Wednesday, 15 April 2026</div>
+        </div>
+        <div class="page-meta">Last sync · 2 minutes ago</div>
+      </div>
+
+      <!-- KPI Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-label">CRM Improvements</div>
+            <div class="stat-card-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          </div>
+          <div class="stat-card-value">371</div>
+          <div class="stat-card-meta">
+            <span class="stat-trend up">+6 this week</span>
+            <span>282 complete · 89 in progress</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-label">Unmapped Items</div>
+            <div class="stat-card-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          </div>
+          <div class="stat-card-value">50</div>
+          <div class="stat-card-meta">
+            <span class="stat-trend down">−5 this week</span>
+            <span>Awaiting Fran/Celeste/Liz</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-label">Stale Items</div>
+            <div class="stat-card-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          </div>
+          <div class="stat-card-value">70</div>
+          <div class="stat-card-meta">
+            <span>16 are >3 years old</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-label">Audit Readiness</div>
+            <div class="stat-card-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          </div>
+          <div class="stat-card-value">82%</div>
+          <div class="stat-card-meta">
+            <span class="stat-trend up">+4% this week</span>
+            <span>23/28 policies verified</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two column main -->
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Recent CRM Improvements</div>
+            <a class="panel-action">View all →</a>
+          </div>
+          <div class="panel-body">
+            <div class="list-item">
+              <div class="list-item-icon">📋</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Cab Charge Optimisation & Risk Mitigation Initiative</div>
+                <div class="list-item-meta"><span>Compliance</span><span>·</span><span>Self Identified</span><span>·</span><span>1 Mar 2026</span></div>
+              </div>
+              <span class="list-item-status status-progress">In Progress</span>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon">🚐</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Transport Service Continuity Enhancement</div>
+                <div class="list-item-meta"><span>Compliance</span><span>·</span><span>Self Identified</span><span>·</span><span>1 Mar 2026</span></div>
+              </div>
+              <span class="list-item-status status-progress">In Progress</span>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon">📞</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Communications Framework Update</div>
+                <div class="list-item-meta"><span>Compliance</span><span>·</span><span>Recent Review</span><span>·</span><span>24 Oct 2025</span></div>
+              </div>
+              <span class="list-item-status status-progress">In Progress</span>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon">📝</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Complaints Framework</div>
+                <div class="list-item-meta"><span>Operations</span><span>·</span><span>Self Identified</span><span>·</span><span>14 Oct 2025</span></div>
+              </div>
+              <span class="list-item-status status-progress">In Progress</span>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon">🧠</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Behavioural and Communication Plans</div>
+                <div class="list-item-meta"><span>Clinical</span><span>·</span><span>Commission Complaint</span><span>·</span><span>20 May 2025</span></div>
+              </div>
+              <span class="list-item-status status-stale">Stale 11mo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">CI Coverage by Standard</div>
+          </div>
+          <div class="panel-body">
+            <div class="bar-row">
+              <span class="bar-label">Std 1 — Individual</span>
+              <div class="bar-track"><div class="bar-fill" style="width:60%"></div></div>
+              <span class="bar-value">56</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Std 2 — Org</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+              <span class="bar-value">187</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Std 3 — Care</span>
+              <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+              <span class="bar-value">167</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Std 4 — Env</span>
+              <div class="bar-track"><div class="bar-fill warn" style="width:15%"></div></div>
+              <span class="bar-value">15</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Std 5 — Clinical</span>
+              <div class="bar-track"><div class="bar-fill" style="width:35%"></div></div>
+              <span class="bar-value">38</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Unmapped</span>
+              <div class="bar-track"><div class="bar-fill danger" style="width:50%"></div></div>
+              <span class="bar-value">50</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- This week + Workshop actions -->
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">This Week</div>
+          </div>
+          <div class="panel-body">
+            <div class="list-item">
+              <div class="list-item-icon" style="background:var(--blue-bg);color:var(--blue)">📅</div>
+              <div class="list-item-content">
+                <div class="list-item-title">L&D Meeting — Brent + Dina</div>
+                <div class="list-item-meta"><span>Thursday 17 Apr</span><span>·</span><span>Isaac attending</span></div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon" style="background:var(--amber-bg);color:var(--amber)">👋</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Maryanne returns from leave</div>
+                <div class="list-item-meta"><span>Friday 18 Apr</span><span>·</span><span>Policy debrief scheduled</span></div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon" style="background:var(--red-bg);color:var(--red)">🎯</div>
+              <div class="list-item-content">
+                <div class="list-item-title">ACQSC Audit</div>
+                <div class="list-item-meta"><span>Sunday 28 Jun 2026</span><span>·</span><span>74 days away</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Workshop 3 Actions</div>
+            <a class="panel-action">View all →</a>
+          </div>
+          <div class="panel-body">
+            <div class="list-item">
+              <div class="list-item-icon">W3-1</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Build policy reference suite</div>
+                <div class="list-item-meta"><span>Ash</span><span>·</span><span>HIGH</span></div>
+              </div>
+              <span class="list-item-status status-progress">In Progress</span>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon">W3-3</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Deploy AI agents for CI gathering</div>
+                <div class="list-item-meta"><span>Ash</span><span>·</span><span>HIGH</span></div>
+              </div>
+              <span class="list-item-status status-progress">In Progress</span>
+            </div>
+            <div class="list-item">
+              <div class="list-item-icon">W3-5</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Reconcile CRM CI module — Supported Home</div>
+                <div class="list-item-meta"><span>Celeste / Fran</span><span>·</span><span>HIGH</span></div>
+              </div>
+              <span class="list-item-status status-stale">Not Started</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CI REGISTER VIEW -->
+    <div class="content hidden" id="view-ci">
+      <div class="page-header">
+        <div>
+          <div class="page-title">CI Register</div>
+          <div class="page-subtitle">Quality Standard → CRM Improvement (Zoho CO-004_1) → Linear/Confluence Evidence</div>
+        </div>
+        <div class="view-toggle">
+          <button>Linear/Digital</button>
+          <button class="active">Hierarchy</button>
+        </div>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="stat-card">
+          <div class="stat-card-label">Total</div>
+          <div class="stat-card-value">371</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Complete</div>
+          <div class="stat-card-value" style="color:var(--green)">282</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">In Progress</div>
+          <div class="stat-card-value" style="color:var(--blue)">89</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Unmapped</div>
+          <div class="stat-card-value" style="color:var(--amber)">50</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Linear Evidence</div>
+          <div class="stat-card-value" style="color:var(--teal)">41</div>
+        </div>
+      </div>
+
+      <div class="view-switcher">
+        <span class="view-label">Source:</span>
+        <span class="filter-pill active">All</span>
+        <span class="filter-pill">Self Identified</span>
+        <span class="filter-pill">CQCC</span>
+        <span class="filter-pill">Consumer Feedback</span>
+        <span class="filter-pill">Commission Complaint</span>
+        <span class="filter-pill">SIRS</span>
+      </div>
+
+      <div class="ci-standard">
+        <div class="ci-standard-header">
+          <div class="ci-standard-title">
+            <span class="std-pill std-pill-2">STD 2</span>
+            <span>The Organisation</span>
+          </div>
+          <div class="ci-standard-meta">187 CRM items · 11 in progress · 7 Linear evidence</div>
+        </div>
+        <table class="ci-table">
+          <thead>
+            <tr><th>Improvement</th><th>Outcomes</th><th>Score</th><th>Department</th><th>Date</th><th>Source</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr style="background:var(--red-bg)">
+              <td><strong>Index all policies against the ACQS</strong><span class="stale-tag">STALE</span></td>
+              <td><span class="outcome-chip">2.3</span></td>
+              <td><span class="score-pill med">3/5</span></td>
+              <td>Operations</td>
+              <td>8 Feb 2024</td>
+              <td>CQCC</td>
+              <td><button class="verify-btn">🤖 Verify</button></td>
+            </tr>
+            <tr style="background:var(--red-bg)">
+              <td><strong>Policy gap analysis</strong><span class="stale-tag">STALE</span></td>
+              <td><span class="outcome-chip">2.3</span><span class="outcome-chip">2.4</span></td>
+              <td><span class="score-pill med">3/5</span></td>
+              <td>Operations</td>
+              <td>8 Feb 2024</td>
+              <td>CQCC</td>
+              <td><button class="verify-btn">🤖 Verify</button></td>
+            </tr>
+            <tr>
+              <td><strong>Communications Framework Update</strong></td>
+              <td><span class="outcome-chip">2.6a</span><span class="outcome-chip">2.6b</span></td>
+              <td><span class="score-pill high">5/5</span></td>
+              <td>Compliance</td>
+              <td>24 Oct 2025</td>
+              <td>—</td>
+              <td><button class="verify-btn">🤖 Verify</button></td>
+            </tr>
+            <tr>
+              <td><strong>Complaints Framework</strong></td>
+              <td><span class="outcome-chip">2.6a</span><span class="outcome-chip">2.6b</span><span class="outcome-chip">2.3</span></td>
+              <td><span class="score-pill high">5/5</span></td>
+              <td>Operations</td>
+              <td>14 Oct 2025</td>
+              <td>Self Identified</td>
+              <td><button class="verify-btn">🤖 Verify</button></td>
+            </tr>
+            <tr>
+              <td><strong>Workforce Compliance QA Exercise</strong></td>
+              <td><span class="outcome-chip">2.8</span><span class="outcome-chip">2.9</span></td>
+              <td><span class="score-pill high">4/5</span></td>
+              <td>Compliance</td>
+              <td>21 Nov 2024</td>
+              <td>Self Identified</td>
+              <td><button class="verify-btn">🤖 Verify</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ci-standard">
+        <div class="ci-standard-header">
+          <div class="ci-standard-title">
+            <span class="std-pill std-pill-3">STD 3</span>
+            <span>The Care and Services</span>
+          </div>
+          <div class="ci-standard-meta">167 CRM items · 8 in progress · 5 Linear evidence</div>
+        </div>
+        <table class="ci-table">
+          <thead>
+            <tr><th>Improvement</th><th>Outcomes</th><th>Score</th><th>Department</th><th>Date</th><th>Source</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Cab Charge Optimisation & Risk Mitigation</strong></td>
+              <td><span class="outcome-chip">3.2</span><span class="outcome-chip">3.4</span></td>
+              <td><span class="score-pill high">5/5</span></td>
+              <td>—</td>
+              <td>1 Mar 2026</td>
+              <td>Self Identified</td>
+              <td><button class="verify-btn">🤖 Verify</button></td>
+            </tr>
+            <tr>
+              <td><strong>Transport Service Continuity Enhancement</strong></td>
+              <td><span class="outcome-chip">3.2</span></td>
+              <td><span class="score-pill high">5/5</span></td>
+              <td>Compliance</td>
+              <td>1 Mar 2026</td>
+              <td>Self Identified</td>
+              <td><button class="verify-btn">🤖 Verify</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TRIAGE VIEW -->
+    <div class="content hidden" id="view-triage">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Unmapped CI Triage</div>
+          <div class="page-subtitle">Workshop 3 action W3-8 — weekly review by Fran/Celeste/Liz</div>
+        </div>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="stat-card">
+          <div class="stat-card-label">Total Unmapped</div>
+          <div class="stat-card-value">50</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Mapped</div>
+          <div class="stat-card-value" style="color:var(--green)">23</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">N/A</div>
+          <div class="stat-card-value" style="color:var(--gray-500)">2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Remaining</div>
+          <div class="stat-card-value" style="color:var(--red)">25</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Progress</div>
+          <div class="stat-card-value" style="color:var(--teal)">50%</div>
+        </div>
+      </div>
+
+      <div style="background:var(--gray-100);height:6px;border-radius:3px;margin-bottom:24px;overflow:hidden">
+        <div style="height:100%;width:50%;background:linear-gradient(90deg,var(--teal),var(--green))"></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px">
+        <span style="font-size:.8rem;color:var(--muted);font-weight:600">Reviewer:</span>
+        <select style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;background:var(--card)">
+          <option>Fran Da Silva</option>
+          <option>Celeste Davis</option>
+          <option>Liz Nelson</option>
+        </select>
+        <span style="font-size:.78rem;color:var(--muted-light);margin-left:auto">Item 24 of 50</span>
+      </div>
+
+      <div class="panel" style="max-width:780px;margin:0 auto">
+        <div class="panel-body padded">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:16px;margin-bottom:16px">
+            <div>
+              <div style="font-size:.7rem;font-weight:700;color:var(--muted-light);text-transform:uppercase;letter-spacing:.6px">Item #24</div>
+              <h3 style="font-size:1.15rem;font-weight:700;color:var(--foreground);margin-top:4px;letter-spacing:-.3px">Postage Distribution Quality Check Implementation</h3>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+              <span class="list-item-status status-progress">In Progress</span>
+              <span style="background:var(--gray-100);color:var(--gray-700);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600">Services and Support</span>
+            </div>
+          </div>
+
+          <div style="background:var(--red-bg);border-left:3px solid var(--red);padding:10px 14px;border-radius:6px;margin-bottom:12px">
+            <div style="font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.4px">Issue</div>
+            <div style="font-size:.875rem;color:var(--gray-700);margin-top:4px;line-height:1.5">No formal or consistent process for managing incoming and outgoing mail across the organisation. Privacy and security risks identified.</div>
+          </div>
+
+          <div style="background:var(--green-bg);border-left:3px solid var(--green);padding:10px 14px;border-radius:6px;margin-bottom:18px">
+            <div style="font-size:.7rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.4px">Outcomes</div>
+            <div style="font-size:.875rem;color:var(--gray-700);margin-top:4px;line-height:1.5">Outgoing mail to be put into outbox; outgoing prepare scans into every file. Implementing centralised tracking.</div>
+          </div>
+
+          <div style="font-size:.78rem;color:var(--muted);margin-bottom:20px">
+            <strong>Source:</strong> Consumer Feedback · <strong>Identified:</strong> — · <strong>Owner:</strong> —
+          </div>
+
+          <div style="border-top:1px solid var(--border);padding-top:16px">
+            <div style="font-size:.85rem;font-weight:700;color:var(--foreground);margin-bottom:14px">Map to Quality Standard Outcomes (max 3):</div>
+
+            <div style="margin-bottom:14px">
+              <div style="font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.3px;text-transform:uppercase">Std 2 · The Organisation</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <span class="filter-pill active">2.7</span>
+                <span class="filter-pill">2.1</span>
+                <span class="filter-pill">2.2a</span>
+                <span class="filter-pill">2.3</span>
+                <span class="filter-pill">2.4</span>
+                <span class="filter-pill">2.5</span>
+                <span class="filter-pill">2.6a</span>
+                <span class="filter-pill">2.6b</span>
+                <span class="filter-pill">2.8</span>
+                <span class="filter-pill">2.9</span>
+                <span class="filter-pill">2.10</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom:14px">
+              <div style="font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.3px;text-transform:uppercase">Std 3 · Care & Services</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <span class="filter-pill">3.1</span>
+                <span class="filter-pill active">3.3</span>
+                <span class="filter-pill">3.2</span>
+                <span class="filter-pill">3.4</span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)">
+              <button class="btn btn-primary">Save & Next →</button>
+              <button class="btn btn-outline">Skip</button>
+              <button class="btn btn-ghost">Mark N/A</button>
+              <button class="btn btn-ghost" style="margin-left:auto">← Previous</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function showView(v) {
+  document.querySelectorAll('#view-home, #view-ci, #view-triage').forEach(el => el.classList.add('hidden'));
+  document.getElementById('view-' + v).classList.remove('hidden');
+  document.querySelectorAll('.mock-toggles button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const labels = {home:'Dashboard', ci:'CI Register', triage:'Triage'};
+  const cats = {home:'Daily Workflow', ci:'CI Register', triage:'Daily Workflow'};
+  document.getElementById('bcCurrent').textContent = labels[v];
+  document.querySelector('.breadcrumb span:first-child').textContent = cats[v];
+}
+</script>
+</body>
+</html>
