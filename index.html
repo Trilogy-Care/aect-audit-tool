@@ -138,8 +138,29 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .lt-due-text{font-size:.72rem;color:var(--gray-400);font-style:italic;margin-left:4px}
 .live-task-history{font-size:.65rem;color:var(--gray-400);background:var(--gray-100);padding:2px 6px;border-radius:8px;margin-left:auto}
 
-/* Pulse on Workshops tab when urgent */
+/* Action Items tab — bright and distinctive */
+.tab.tab-action-items{font-weight:700;position:relative}
+.tab.tab-action-items::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:6px;animation:pulse 2s infinite}
+.tab.tab-action-items.active{background:linear-gradient(180deg,transparent 0%,rgba(224,75,81,.06) 100%);color:var(--red);border-bottom-color:var(--red)}
 .tab[data-tab="workshop"].urgent-pulse{animation:tabPulse 2s infinite}
+
+/* Collapsible workshop sections */
+.ws-collapsible{margin-bottom:12px;border:1px solid var(--gray-100);border-radius:10px;overflow:hidden}
+.ws-collapsible-summary{padding:14px 20px;font-size:.92rem;font-weight:600;color:var(--navy);cursor:pointer;background:var(--gray-50);display:flex;align-items:center;gap:8px;user-select:none;transition:background .15s;list-style:none}
+.ws-collapsible-summary::-webkit-details-marker{display:none}
+.ws-collapsible-summary::before{content:'\u25B6';font-size:.7rem;color:var(--gray-400);transition:transform .2s;flex-shrink:0}
+details[open].ws-collapsible .ws-collapsible-summary::before{transform:rotate(90deg)}
+.ws-collapsible-summary:hover{background:var(--gray-100)}
+.ws-hint{margin-left:auto;font-size:.72rem;font-weight:400;color:var(--gray-400);font-style:italic}
+details[open].ws-collapsible .ws-hint{display:none}
+.ws-collapsible > *:not(summary){padding:0 20px 16px}
+.ws-collapsible .ev-table{margin-left:-20px;margin-right:-20px;width:calc(100% + 40px)}
+
+/* Fix: Quick Search + header z-index stacking */
+.header{z-index:200!important}
+.quick-search-btn{position:relative;z-index:201}
+.qs-overlay{z-index:500}
+.navbar{z-index:100;position:relative}
 
 /* Quick search button */
 .quick-search-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s;font-family:inherit}
@@ -513,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <div class="nav-group">
     <div class="nav-group-label">Audit Reference</div>
     <div class="nav-group-tabs">
-      <div class="tab" data-tab="workshop" data-tip="Action items from Workshop 1 (26 Mar) + Workshop 3 (14 Apr)">📋 Workshops</div>
+      <div class="tab tab-action-items" data-tab="workshop" data-tip="Your team's action items — editable, trackable">Action Items</div>
       <div class="tab" data-tab="prep" data-tip="Golden rules, likely questions, terminology for staff audit interviews">🎓 Staff Prep</div>
       <div class="tab" data-tab="standards" data-tip="Map TC policies to individual Standard outcomes and actions">📚 Standards</div>
       <div class="tab" data-tab="documents" data-tip="All 48 AECT required supporting documents + policy + CI references">📂 Documents</div>
@@ -3486,6 +3507,7 @@ function renderWorkshop() {
   }
   window.setEditorFromDropdown = function(val){
     setEditorName(val);
+    if (val) window._taskFilter = 'mine'; // auto-filter to My Tasks when name selected
     renderWorkshop();
   };
 
@@ -3528,7 +3550,7 @@ function renderWorkshop() {
     var editor = getEditorMember();
     var allTasks = allActions.map(applyEdits);
 
-    var filter = window._taskFilter || 'open';
+    var filter = window._taskFilter || (getEditorName() ? 'mine' : 'open');
     var filtered;
     if (filter === 'all') filtered = allTasks;
     else if (filter === 'open') filtered = allTasks.filter(function(t){return t.status !== 'Done';});
@@ -3678,7 +3700,8 @@ function renderWorkshop() {
 
   ${renderLiveTaskList()}
 
-  <div class="ev-section-title"><span class="icon">\u26A1</span> Workshop 3 — New Actions (14 April 2026)</div>
+  <details class="ws-collapsible"><summary class="ws-collapsible-summary">\u26A1 Workshop 3 — New Actions (14 April 2026) <span class="ws-hint">click to expand</span></summary>
+  <div class="ev-section-title"><span class="icon">\u26A1</span> Workshop 3 Actions (${workshop3Actions.length})</div>
   <table class="ev-table">
     <thead><tr><th style="width:50px" data-tip="Action ID">#</th><th style="min-width:300px" data-tip="What needs to be done and detailed context">Action</th><th style="width:90px" data-tip="Person responsible">Owner</th><th style="width:120px" data-tip="Target completion date">Due</th><th style="width:85px;text-align:center" data-tip="Priority level">Priority</th><th style="width:100px;text-align:center" data-tip="Current status">Status</th><th style="width:120px" data-tip="Quality Standards this supports">Standards</th><th style="min-width:160px" data-tip="Supporting documents">Docs</th></tr></thead>
     <tbody>
@@ -3694,8 +3717,10 @@ function renderWorkshop() {
       </tr>`).join('')}
     </tbody>
   </table>
+  </details>
 
-  <div class="ev-section-title"><span class="icon">\uD83D\uDCCB</span> Workshop 1 — Original Actions (26 March 2026) — Updated</div>
+  <details class="ws-collapsible"><summary class="ws-collapsible-summary">\uD83D\uDCCB Workshop 1 — Original Actions (26 March 2026) <span class="ws-hint">click to expand</span></summary>
+  <div class="ev-section-title"><span class="icon">\uD83D\uDCCB</span> Workshop 1 Actions (${actions.length})</div>
   <table class="ev-table">
     <thead><tr><th style="width:30px" data-tip="Action item number from Workshop 1">#</th><th style="min-width:300px" data-tip="What needs to be done and detailed context">Action</th><th style="width:90px" data-tip="Person responsible for completing this action">Owner</th><th style="width:100px" data-tip="Target completion date">Due</th><th style="width:85px;text-align:center" data-tip="Priority level">Priority</th><th style="width:100px;text-align:center" data-tip="Current progress">Status</th><th style="width:120px" data-tip="Which Strengthened Quality Standard outcomes this action supports">Standards</th><th style="min-width:160px" data-tip="AECT documents that depend on this action being completed">Supporting Docs</th></tr></thead>
     <tbody>
@@ -3711,7 +3736,9 @@ function renderWorkshop() {
       </tr>`).join('')}
     </tbody>
   </table>
+  </details>
 
+  <details class="ws-collapsible"><summary class="ws-collapsible-summary">\u2705 Key Decisions (${allDecisions.length} across both workshops) <span class="ws-hint">click to expand</span></summary>
   <div class="ev-section-title"><span class="icon">\u2705</span> Workshop 3 Decisions (${workshop3Decisions.length})</div>
   <table class="ev-table">
     <thead><tr><th data-tip="Strategic decision from Workshop 3">Decision</th><th data-tip="Context and implications">Detail</th><th style="width:100px" data-tip="Who made this decision">By</th></tr></thead>
@@ -3735,7 +3762,9 @@ function renderWorkshop() {
       </tr>`).join('')}
     </tbody>
   </table>
+  </details>
 
+  <details class="ws-collapsible"><summary class="ws-collapsible-summary">\uD83D\uDCC2 Supporting Documents & Past Audits <span class="ws-hint">click to expand</span></summary>
   <div class="ev-section-title"><span class="icon">\uD83D\uDCC2</span> Where to Find Supporting Documents (${docLocations.length})</div>
   <table class="ev-table">
     <thead><tr><th style="width:160px" data-tip="AECT supporting document reference">Document</th><th data-tip="Where this document should be found or stored">Current Location</th><th data-tip="Whether the document exists, needs creating, or needs updating">Status</th><th data-tip="What needs to happen to make this document audit-ready">Action Required</th></tr></thead>
@@ -3764,7 +3793,8 @@ function renderWorkshop() {
       <li><strong>Weekly ongoing:</strong> Unmapped CI items review by Fran/Celeste/Liz. Fortnightly management meetings running (Celeste). Clinical Governance and Quality Committee meetings continuing.</li>
       <li><strong>Before audit (28 June):</strong> All 48 docs in SharePoint repository. Staff trained via quizzes and role-play. Policy review complete for Supported Home. CI register fully reconciled across CRM/Confluence/Linear. Mock audit conducted.</li>
     </ul>
-  </div>`;
+  </div>
+  </details>`;
 
   wv.innerHTML = html;
 
