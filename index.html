@@ -113,6 +113,31 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .live-task-owner-input:hover,.live-task-due-input:hover{border-color:var(--gray-200);background:#fff}
 .live-task-owner-input:focus,.live-task-due-input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
 
+/* Identity bar */
+.live-tasks-identity{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:16px 22px;background:linear-gradient(135deg,#162C4C 0%,#2C4C79 100%);color:#fff;border-radius:12px 12px 0 0;flex-wrap:wrap}
+.live-tasks-identity-left{display:flex;align-items:center;gap:12px}
+.lt-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#fff;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.lt-identity-label{font-size:.72rem;opacity:.7;margin-bottom:2px;font-weight:500}
+.lt-identity-select{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:5px 28px 5px 10px;border-radius:8px;font-size:.85rem;font-weight:600;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path d="M2 3l3 4 3-4" stroke="white" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 8px center}
+.lt-identity-select:hover{background:rgba(255,255,255,.2)}
+.lt-identity-select option{color:#162C4C;background:#fff}
+
+/* Pill selects */
+.lt-pill-select{-webkit-appearance:none;appearance:none;border:none;color:#fff;padding:3px 22px 3px 8px;border-radius:10px;font-size:.7rem;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:.3px;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 2l3 3 3-3" stroke="white" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 6px center;transition:filter .15s}
+.lt-pill-select:hover{filter:brightness(1.15)}
+.lt-pill-select option{color:#333;background:#fff;font-weight:500}
+
+/* Meta row selects/inputs */
+.lt-meta-item{display:inline-flex;align-items:center;gap:4px}
+.lt-meta-select{background:#fff;border:1px solid var(--gray-200);padding:3px 24px 3px 8px;border-radius:6px;font-size:.75rem;font-family:inherit;color:var(--gray-700);cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 2l3 3 3-3" stroke="%235373A3" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 6px center;transition:border-color .15s;min-width:130px}
+.lt-meta-select:hover{border-color:var(--blue)}
+.lt-meta-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1);outline:none}
+.lt-meta-date{background:#fff;border:1px solid var(--gray-200);padding:3px 8px;border-radius:6px;font-size:.75rem;font-family:inherit;color:var(--gray-700);cursor:pointer;transition:border-color .15s}
+.lt-meta-date:hover{border-color:var(--blue)}
+.lt-meta-date:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1);outline:none}
+.lt-due-text{font-size:.72rem;color:var(--gray-400);font-style:italic;margin-left:4px}
+.live-task-history{font-size:.65rem;color:var(--gray-400);background:var(--gray-100);padding:2px 6px;border-radius:8px;margin-left:auto}
+
 /* Pulse on Workshops tab when urgent */
 .tab[data-tab="workshop"].urgent-pulse{animation:tabPulse 2s infinite}
 
@@ -3433,28 +3458,36 @@ function renderWorkshop() {
   // ===== LIVE TASK LIST WITH INLINE EDITING + EDIT TRACKING =====
   const TASK_EDITS_KEY = 'aect_task_edits_v1';
   const EDITOR_NAME_KEY = 'aect_editor_name';
+  const TEAM_MEMBERS = [
+    {name:'Ash Williams', initials:'AW', color:'#FF7043'},
+    {name:'Isaac Baker', initials:'IB', color:'#42A5F5'},
+    {name:'Celeste Donnachie', initials:'CD', color:'#AB47BC'},
+    {name:'Fran Da Silva', initials:'FD', color:'#26A69A'},
+    {name:'Zoe Judd', initials:'ZJ', color:'#EF5350'},
+    {name:'Maryanne', initials:'MA', color:'#5C6BC0'},
+    {name:'Liz Nelson', initials:'LN', color:'#66BB6A'},
+    {name:'Sophie Pickett', initials:'SP', color:'#FFA726'},
+    {name:'Megs', initials:'MG', color:'#EC407A'},
+    {name:'Romy', initials:'RO', color:'#7E57C2'},
+    {name:'Erin Headley', initials:'EH', color:'#29B6F6'},
+    {name:'Dina', initials:'DI', color:'#8D6E63'},
+    {name:'Brent', initials:'BR', color:'#78909C'},
+    {name:'Joan', initials:'JO', color:'#D4E157'},
+    {name:'Candice', initials:'CA', color:'#4DB6AC'},
+  ];
 
   function loadTaskEdits(){ try { return JSON.parse(localStorage.getItem(TASK_EDITS_KEY)) || {}; } catch(e){ return {}; } }
   function saveTaskEdits(o){ localStorage.setItem(TASK_EDITS_KEY, JSON.stringify(o)); }
-  function getEditorName(askIfMissing){
-    var name = localStorage.getItem(EDITOR_NAME_KEY);
-    if (name) return name;
-    if (askIfMissing) {
-      name = prompt('Your name (so others can see who updated what):') || 'Anonymous';
-      localStorage.setItem(EDITOR_NAME_KEY, name);
-      return name;
-    }
-    return '';
+  function getEditorName(){ return localStorage.getItem(EDITOR_NAME_KEY) || ''; }
+  function setEditorName(name){ localStorage.setItem(EDITOR_NAME_KEY, name); }
+  function getEditorMember(){
+    var name = getEditorName();
+    return TEAM_MEMBERS.find(function(m){return m.name === name;}) || (name ? {name:name, initials:name.split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase(), color:'#90A4AE'} : null);
   }
-  function changeEditorName(){
-    var current = localStorage.getItem(EDITOR_NAME_KEY) || '';
-    var next = prompt('Your name:', current);
-    if (next !== null && next.trim()) {
-      localStorage.setItem(EDITOR_NAME_KEY, next.trim());
-      renderWorkshop();
-    }
-  }
-  window.changeEditorName = changeEditorName;
+  window.setEditorFromDropdown = function(val){
+    setEditorName(val);
+    renderWorkshop();
+  };
 
   function taskKey(a) { return typeof a.id === 'number' ? 'W1-'+a.id : a.id; }
 
@@ -3471,17 +3504,20 @@ function renderWorkshop() {
   }
 
   function editTask(key, field, value) {
-    // Guard: if value matches current effective value, skip
     var edits = loadTaskEdits();
     var original = allActions.find(function(a){return taskKey(a) === key;});
     if (original) {
       var effective = applyEdits(original);
       if (String(effective[field] || '').trim() === String(value || '').trim()) return;
     }
-    if (!edits[key]) edits[key] = { fields: {} };
+    var editor = getEditorName();
+    if (!editor) { setEditorName('Anonymous'); editor = 'Anonymous'; }
+    if (!edits[key]) edits[key] = { fields: {}, history: [] };
     if (!edits[key].fields) edits[key].fields = {};
+    if (!edits[key].history) edits[key].history = [];
+    edits[key].history.push({field:field, value:value, by:editor, at:new Date().toISOString()});
     edits[key].fields[field] = value;
-    edits[key].editedBy = getEditorName(true); // prompt only on actual edit
+    edits[key].editedBy = editor;
     edits[key].editedAt = new Date().toISOString();
     saveTaskEdits(edits);
     renderWorkshop();
@@ -3489,7 +3525,7 @@ function renderWorkshop() {
   window.editTask = editTask;
 
   function renderLiveTaskList() {
-    var editorName = localStorage.getItem(EDITOR_NAME_KEY) || '(not set)';
+    var editor = getEditorMember();
     var allTasks = allActions.map(applyEdits);
 
     var filter = window._taskFilter || 'open';
@@ -3500,7 +3536,7 @@ function renderWorkshop() {
     else if (filter === 'inprogress') filtered = allTasks.filter(function(t){return t.status === 'In Progress' || t.status === 'Known Issue';});
     else if (filter === 'done') filtered = allTasks.filter(function(t){return t.status === 'Done';});
     else if (filter === 'mine') {
-      var me = (localStorage.getItem(EDITOR_NAME_KEY) || '').toLowerCase();
+      var me = (getEditorName()).toLowerCase();
       filtered = allTasks.filter(function(t){return (t.owner||'').toLowerCase().includes(me.split(' ')[0] || 'nonematch');});
     }
     else filtered = allTasks;
@@ -3517,17 +3553,26 @@ function renderWorkshop() {
     var totalDone = allTasks.filter(function(t){return t.status === 'Done';}).length;
     var pct = allTasks.length > 0 ? Math.round(totalDone / allTasks.length * 100) : 0;
 
-    var html = '<div class="live-tasks">' +
-      '<div class="live-tasks-header">' +
-        '<div class="live-tasks-title-row">' +
-          '<div><h3 class="live-tasks-title">\u{1F4CB} Live Task List</h3>' +
-          '<div class="live-tasks-sub">Consolidated W1 + W3 actions. Click any field to edit \u2014 saves automatically and tracks who made the change. <span class="live-tasks-editor">Editing as: <strong>' + editorName + '</strong> <a href="#" onclick="changeEditorName();return false;">change</a></span></div></div>' +
-          '<div class="live-tasks-progress-wrap">' +
-            '<div class="live-tasks-progress-label"><span>' + totalDone + ' of ' + allTasks.length + ' done</span><span class="live-tasks-progress-pct">' + pct + '%</span></div>' +
-            '<div class="live-tasks-progress-bar"><div class="live-tasks-progress-fill" style="width:' + pct + '%"></div></div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="live-tasks-filters">';
+    // Identity bar
+    var html = '<div class="live-tasks">';
+    html += '<div class="live-tasks-identity">' +
+      '<div class="live-tasks-identity-left">' +
+        (editor ? '<div class="lt-avatar" style="background:' + editor.color + '">' + editor.initials + '</div>' : '') +
+        '<div><div class="lt-identity-label">' + (editor ? 'Editing as' : 'Select your name to start editing') + '</div>' +
+        '<select class="lt-identity-select" onchange="setEditorFromDropdown(this.value)">' +
+          '<option value="">Choose your name...</option>' +
+          TEAM_MEMBERS.map(function(m){return '<option value="' + m.name + '"' + (editor && editor.name===m.name?' selected':'') + '>' + m.name + '</option>';}).join('') +
+        '</select></div>' +
+      '</div>' +
+      '<div class="live-tasks-progress-wrap">' +
+        '<div class="live-tasks-progress-label"><span>' + totalDone + '/' + allTasks.length + ' done</span><span class="live-tasks-progress-pct">' + pct + '%</span></div>' +
+        '<div class="live-tasks-progress-bar"><div class="live-tasks-progress-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>' +
+    '</div>';
+
+    // Filters
+    html += '<div class="live-tasks-header">' +
+      '<div class="live-tasks-filters">';
     var filters = [
       {id:'open', label:'Open', n:totalOpen},
       {id:'notstarted', label:'Not Started', n:allTasks.filter(function(t){return t.status==='Not Started';}).length},
@@ -3541,40 +3586,68 @@ function renderWorkshop() {
     });
     html += '</div></div>';
 
+    var prColors = {URGENT:'#E04B51',HIGH:'#c05621',MEDIUM:'#F59E0B',LOW:'#94A3B8'};
+    var stColors = {'Done':'#10B981','In Progress':'#2563EB','Not Started':'#E04B51','Known Issue':'#F59E0B'};
+    var stIcons = {'Done':'\u2705','In Progress':'\u{1F504}','Not Started':'\u26AA','Known Issue':'\u26A0\uFE0F'};
+
     if (filtered.length === 0) {
-      html += '<div class="live-tasks-empty">\u{1F389} Nothing matches this filter. Try another.</div>';
+      html += '<div class="live-tasks-empty">\u{1F389} Nothing matches this filter.</div>';
     } else {
       html += '<div class="live-tasks-list">';
       filtered.forEach(function(t) {
         var isDone = t.status === 'Done';
-        var statusColors = {'Done':'var(--green)','In Progress':'var(--blue)','Not Started':'var(--red)','Known Issue':'var(--amber)'};
-        var statusColor = statusColors[t.status] || 'var(--gray-400)';
-        var prColors = {URGENT:'var(--red)',HIGH:'#c05621',MEDIUM:'var(--amber)',LOW:'var(--gray-400)'};
         var idStr = typeof t.id === 'number' ? 'W1-'+t.id : t.id;
         var k = t._key;
         var editedBadge = t._editedBy ? '<span class="live-task-edited" title="Last edited ' + new Date(t._editedAt).toLocaleString() + '">\u270F\uFE0F ' + t._editedBy + '</span>' : '';
+        var edits = loadTaskEdits();
+        var historyCount = edits[k] && edits[k].history ? edits[k].history.length : 0;
 
-        html += '<div class="live-task-row' + (isDone?' done':'') + '" data-task-key="' + k + '">' +
-          '<button class="live-task-check' + (isDone?' checked':'') + '" onclick="editTask(\'' + k + '\',\'status\',\'' + (isDone?'Not Started':'Done') + '\')" title="Toggle done">' + (isDone?'\u2713':'') + '</button>' +
+        html += '<div class="live-task-row' + (isDone?' done':'') + '">' +
+          '<button class="live-task-check' + (isDone?' checked':'') + '" onclick="editTask(\'' + k + '\',\'status\',\'' + (isDone?'Not Started':'Done') + '\')">' + (isDone?'\u2713':'') + '</button>' +
           '<div class="live-task-body">' +
+
+            // Row 1: ID + Priority pill + Status pill + Edited badge
             '<div class="live-task-top">' +
               '<span class="live-task-id">' + idStr + '</span>' +
               '<span class="live-task-workshop">' + t._workshop + '</span>' +
-              '<select class="live-task-field live-task-pr-sel" onchange="editTask(\'' + k + '\',\'priority\',this.value)" style="background:' + (prColors[t.priority]||'var(--gray-400)') + ';color:#fff">' +
-                ['URGENT','HIGH','MEDIUM','LOW'].map(function(p){return '<option' + (t.priority===p?' selected':'') + '>' + p + '</option>';}).join('') +
+
+              // Priority: clickable pill
+              '<select class="lt-pill-select" onchange="editTask(\'' + k + '\',\'priority\',this.value)" style="background:' + (prColors[t.priority]||'#94A3B8') + '">' +
+                ['URGENT','HIGH','MEDIUM','LOW'].map(function(p){return '<option value="' + p + '"' + (t.priority===p?' selected':'') + '>' + p + '</option>';}).join('') +
               '</select>' +
-              '<select class="live-task-field live-task-status-sel" onchange="editTask(\'' + k + '\',\'status\',this.value)" style="color:' + statusColor + ';border-color:' + statusColor + '">' +
-                ['Not Started','In Progress','Known Issue','Done'].map(function(s){return '<option' + (t.status===s?' selected':'') + '>' + s + '</option>';}).join('') +
+
+              // Status: clickable pill
+              '<select class="lt-pill-select lt-status-pill" onchange="editTask(\'' + k + '\',\'status\',this.value)" style="background:' + (stColors[t.status]||'#94A3B8') + '">' +
+                ['Not Started','In Progress','Known Issue','Done'].map(function(s){return '<option value="' + s + '"' + (t.status===s?' selected':'') + '>' + (stIcons[s]||'') + ' ' + s + '</option>';}).join('') +
               '</select>' +
+
               editedBadge +
+              (historyCount > 0 ? '<span class="live-task-history" title="' + historyCount + ' edits">' + historyCount + ' edits</span>' : '') +
             '</div>' +
+
+            // Row 2: Editable action title
             '<div class="live-task-action" contenteditable="true" data-field="action" data-key="' + k + '">' + t.action + '</div>' +
+
+            // Row 3: Editable detail
             '<div class="live-task-detail" contenteditable="true" data-field="detail" data-key="' + k + '">' + (t.detail||'') + '</div>' +
+
+            // Row 4: Owner (dropdown) + Due (date picker) + Standards
             '<div class="live-task-meta">' +
-              '<span>\u{1F464} <input type="text" class="live-task-field live-task-owner-input" data-field="owner" data-key="' + k + '" value="' + (t.owner||'').replace(/"/g,'&quot;') + '"></span>' +
-              '<span>\u{1F4C5} <input type="text" class="live-task-field live-task-due-input" data-field="due" data-key="' + k + '" value="' + (t.due||'').replace(/"/g,'&quot;') + '"></span>' +
-              '<span>\u{1F3AF} ' + t.standard + '</span>' +
+              '<span class="lt-meta-item">\u{1F464} ' +
+                '<select class="lt-meta-select" data-field="owner" data-key="' + k + '" onchange="editTask(\'' + k + '\',\'owner\',this.value)">' +
+                  '<option value="">Assign...</option>' +
+                  TEAM_MEMBERS.map(function(m){return '<option value="' + m.name + '"' + ((t.owner||'').includes(m.name.split(' ')[0])?' selected':'') + '>' + m.name + '</option>';}).join('') +
+                  '<option value="Team">Team</option>' +
+                  ((t.owner && !TEAM_MEMBERS.some(function(m){return (t.owner||'').includes(m.name.split(' ')[0]);})) ? '<option selected>' + t.owner + '</option>' : '') +
+                '</select>' +
+              '</span>' +
+              '<span class="lt-meta-item">\u{1F4C5} ' +
+                '<input type="date" class="lt-meta-date" data-field="due" data-key="' + k + '" value="' + (t.due && t.due.match && t.due.match(/\d{4}-\d{2}-\d{2}/) ? t.due : '') + '" onchange="editTask(\'' + k + '\',\'due\',this.value)">' +
+                (t.due && !t.due.match(/\d{4}-\d{2}-\d{2}/) ? '<span class="lt-due-text">' + t.due + '</span>' : '') +
+              '</span>' +
+              '<span class="lt-meta-item">\u{1F3AF} ' + t.standard + '</span>' +
             '</div>' +
+
           '</div>' +
         '</div>';
       });
