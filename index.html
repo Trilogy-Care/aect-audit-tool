@@ -6,9 +6,9 @@
 <title>AECT Policy Mapper - Trilogy Care</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-[data-tip]{position:relative;cursor:help}
-[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#162C4C;color:#fff;padding:6px 12px;border-radius:6px;font-size:.75rem;font-weight:400;white-space:normal;width:max-content;max-width:280px;z-index:300;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.15);pointer-events:none}
-[data-tip]:hover::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#162C4C;z-index:301;pointer-events:none}
+[data-tip]{cursor:help}
+/* Tooltips handled by JS — see tooltip init below */
+/* tooltip arrow handled by JS */
 .clickable{cursor:pointer;transition:all .15s ease}.clickable:hover{opacity:.85;text-decoration:underline}
 .policy-link{color:#2C4C79;font-weight:600;cursor:pointer;border-bottom:1px dashed #2C4C79;transition:all .15s ease}
 .policy-link:hover{color:#007F7E;border-bottom-color:#43C0BE}
@@ -167,14 +167,13 @@ details[open].ws-collapsible .ws-hint{display:none}
 .quick-search-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35)}
 
 /* New navbar with grouped tabs */
-.navbar{background:#fff;border-bottom:1px solid var(--gray-200);display:flex;align-items:flex-end;padding:0 16px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow-x:auto;gap:0}
-.navbar::-webkit-scrollbar{height:0}
+.navbar{background:#fff;border-bottom:1px solid var(--gray-200);display:flex;align-items:flex-end;padding:0 12px;box-shadow:0 1px 3px rgba(0,0,0,.04);gap:0;flex-wrap:wrap}
 .nav-group{display:flex;flex-direction:column;padding:6px 8px 0}
 .nav-group-label{font-size:.62rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.8px;padding:0 8px 4px;white-space:nowrap}
 .nav-group-tabs{display:flex;gap:0}
 .nav-divider{width:1px;background:var(--gray-200);margin:14px 0 4px;align-self:stretch;flex-shrink:0}
 
-.tab{padding:8px 14px 10px;font-weight:500;font-size:.85rem;color:var(--gray-500);border-bottom:2.5px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none;display:flex;align-items:center;gap:5px;border-radius:6px 6px 0 0;margin-bottom:-1px}
+.tab{padding:6px 10px 8px;font-weight:500;font-size:.8rem;color:var(--gray-500);border-bottom:2.5px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none;display:flex;align-items:center;gap:4px;border-radius:6px 6px 0 0;margin-bottom:-1px}
 .tab:hover{color:var(--gray-700);background:var(--gray-50)}
 .tab.active{color:#007F7E;border-bottom-color:#43C0BE;background:linear-gradient(180deg,transparent 0%,rgba(67,192,190,.06) 100%);font-weight:600}
 .tab-badge{background:var(--gray-200);color:var(--gray-600);padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;line-height:1.2}
@@ -193,7 +192,11 @@ details[open].ws-collapsible .ws-hint{display:none}
 .qs-hint{padding:10px 22px;background:var(--gray-50);border-top:1px solid var(--gray-100);font-size:.72rem;color:var(--gray-500);display:flex;gap:12px}
 
 /* Main */
-.main{flex:1;display:flex;overflow:hidden;height:calc(100vh - 116px)}
+.main{flex:1;display:flex;overflow:hidden;min-height:0}
+
+/* Responsive table wrappers */
+.table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.table-responsive .ev-table{min-width:800px}
 
 /* Panels */
 .panel{display:none;width:100%;overflow:auto}
@@ -364,9 +367,9 @@ details[open].ws-collapsible .ws-hint{display:none}
   .action-card,.doc-card,.gap-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ccc!important}
 }
 /* Tooltip system */
-[data-tip]{position:relative;cursor:help}
-[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#162C4C;color:#fff;padding:6px 12px;border-radius:6px;font-size:.75rem;font-weight:400;white-space:normal;width:max-content;max-width:280px;z-index:300;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.15);pointer-events:none}
-[data-tip]:hover::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#162C4C;z-index:301;pointer-events:none}
+[data-tip]{cursor:help}
+/* Tooltips handled by JS — see tooltip init below */
+/* tooltip arrow handled by JS */
 
 /* Clickable policy badge */
 a.policy-link{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap;background:var(--blue-pale);color:var(--blue);text-decoration:none;cursor:pointer;transition:all .15s ease}
@@ -4532,6 +4535,32 @@ window.reviewAction = function(itemTitle, action) {
 // ============ INIT ============
 renderSidebar();
 renderGap();
+
+// JS Tooltip system — uses position:fixed so never clips
+(function(){
+  var tip = document.createElement('div');
+  tip.id = 'jsTip';
+  tip.style.cssText = 'position:fixed;z-index:9999;background:#162C4C;color:#fff;padding:6px 12px;border-radius:6px;font-size:.75rem;font-weight:400;max-width:280px;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.2);pointer-events:none;opacity:0;transition:opacity .15s;font-family:Inter,-apple-system,sans-serif;white-space:normal;word-wrap:break-word';
+  document.body.appendChild(tip);
+  var hideTimeout;
+  document.addEventListener('mouseover', function(e){
+    var el = e.target.closest('[data-tip]');
+    if (!el) return;
+    clearTimeout(hideTimeout);
+    tip.textContent = el.getAttribute('data-tip');
+    tip.style.opacity = '1';
+    var r = el.getBoundingClientRect();
+    tip.style.left = Math.min(r.left + r.width/2 - 140, window.innerWidth - 290) + 'px';
+    tip.style.left = Math.max(10, r.left + r.width/2 - tip.offsetWidth/2) + 'px';
+    if (r.top > 80) { tip.style.top = (r.top - tip.offsetHeight - 8) + 'px'; }
+    else { tip.style.top = (r.bottom + 8) + 'px'; }
+  });
+  document.addEventListener('mouseout', function(e){
+    var el = e.target.closest('[data-tip]');
+    if (!el) return;
+    hideTimeout = setTimeout(function(){ tip.style.opacity = '0'; }, 100);
+  });
+})();
 
 // Hydrate Workshop tab badge on load (renders invisibly then shows count)
 setTimeout(function(){
