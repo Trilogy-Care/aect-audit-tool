@@ -77,41 +77,62 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .live-tasks-filter-n{opacity:.7;font-size:.7rem;margin-left:3px;padding:1px 5px;background:rgba(255,255,255,.15);border-radius:6px}
 .live-tasks-filter:not(.active) .live-tasks-filter-n{background:var(--gray-100);color:var(--gray-500)}
 
-.live-tasks-list{max-height:620px;overflow-y:auto}
-.live-tasks-empty{padding:40px 22px;text-align:center;color:var(--gray-400);font-size:.9rem}
+.live-tasks-list{max-height:700px;overflow-y:auto;padding:12px 16px}
+.live-tasks-empty{padding:48px 22px;text-align:center;color:var(--gray-400);font-size:1rem}
 
-.live-task-row{display:flex;gap:14px;padding:14px 22px;border-bottom:1px solid var(--gray-100);transition:background .12s}
-.live-task-row:last-child{border-bottom:none}
-.live-task-row:hover{background:#fafbfc}
-.live-task-row.done{opacity:.55}
-.live-task-row.done .live-task-action{text-decoration:line-through;color:var(--gray-500)}
+/* Task Card */
+.task-card{background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:0;margin-bottom:12px;transition:all .15s;overflow:hidden}
+.task-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06);border-color:var(--gray-300)}
+.task-card.done{opacity:.5;border-color:var(--gray-100)}
+.task-card.done:hover{opacity:.7}
 
-.live-task-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--gray-300);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px;transition:all .15s;font-family:inherit}
-.live-task-check:hover{border-color:var(--green)}
-.live-task-check.checked{background:var(--green);border-color:var(--green)}
+.task-card-top{display:flex;align-items:center;gap:12px;padding:14px 18px 0}
+.task-card-check{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--gray-300);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff;flex-shrink:0;transition:all .2s;font-family:inherit}
+.task-card-check:hover{border-color:#10B981;transform:scale(1.1)}
+.task-card-check.checked{background:#10B981;border-color:#10B981}
 
-.live-task-body{flex:1;min-width:0}
-.live-task-top{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
-.live-task-id{font-weight:700;color:var(--blue);font-size:.78rem;font-family:monospace}
-.live-task-workshop{font-size:.68rem;font-weight:700;background:var(--gray-100);color:var(--gray-600);padding:2px 6px;border-radius:4px;letter-spacing:.3px}
-.live-task-field{font-family:inherit;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:10px;border:1px solid transparent;cursor:pointer;outline:none;transition:all .15s}
-.live-task-field:hover{filter:brightness(1.1)}
-.live-task-pr-sel{-webkit-appearance:none;appearance:none;padding-right:18px;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 2l3 3 3-3" stroke="white" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 6px center}
-.live-task-status-sel{background:#fff;border:1px solid;-webkit-appearance:none;appearance:none;padding-right:18px;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 2l3 3 3-3" stroke="%235373A3" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 6px center}
-.live-task-edited{font-size:.7rem;color:var(--gray-400);margin-left:auto;font-style:italic}
+.task-card-title{flex:1;font-size:1rem;font-weight:700;color:var(--foreground);line-height:1.4;padding:4px 6px;border-radius:6px;cursor:text;outline:none;border:1px solid transparent;transition:all .15s;min-width:0}
+.task-card-title:hover{background:var(--gray-50);border-color:var(--gray-200)}
+.task-card-title:focus{background:#fff;border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.done .task-card-title{text-decoration:line-through;color:var(--gray-400)}
 
-.live-task-action{font-size:.92rem;font-weight:600;color:var(--foreground, var(--gray-800));line-height:1.45;margin-bottom:4px;padding:2px 4px;border-radius:4px;cursor:text;outline:none;border:1px solid transparent;transition:all .15s}
-.live-task-action:hover{background:var(--gray-50)}
-.live-task-action:focus{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-.live-task-detail{font-size:.8rem;color:var(--gray-500);line-height:1.5;margin-bottom:8px;padding:4px;border-radius:4px;cursor:text;outline:none;border:1px solid transparent;transition:all .15s}
-.live-task-detail:hover{background:var(--gray-50)}
-.live-task-detail:focus{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-.live-task-detail:empty::before{content:'Click to add detail...';color:var(--gray-300);font-style:italic}
+.task-card-badges{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.task-card-id{font-weight:700;color:#2563EB;font-size:.75rem;font-family:'SF Mono',monospace;background:#EFF6FF;padding:3px 8px;border-radius:6px}
 
-.live-task-meta{display:flex;gap:14px;font-size:.75rem;color:var(--gray-500);align-items:center;flex-wrap:wrap}
-.live-task-owner-input,.live-task-due-input{background:transparent;border:1px solid transparent;padding:2px 6px;border-radius:4px;font-size:.75rem;color:var(--gray-700);width:auto;min-width:80px;cursor:text}
-.live-task-owner-input:hover,.live-task-due-input:hover{border-color:var(--gray-200);background:#fff}
-.live-task-owner-input:focus,.live-task-due-input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.task-card-body{padding:10px 18px 14px}
+
+/* Detail text */
+.task-card-detail{font-size:.85rem;color:var(--gray-500);line-height:1.6;padding:8px 10px;border-radius:8px;cursor:text;outline:none;border:1px dashed transparent;transition:all .15s;margin-bottom:12px;background:var(--gray-50)}
+.task-card-detail:hover{border-color:var(--gray-300);background:#fff}
+.task-card-detail:focus{background:#fff;border-color:#2563EB;border-style:solid;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.task-card-detail:empty::before{content:'Click to add notes...';color:var(--gray-300);font-style:italic}
+
+/* Fields grid */
+.task-card-fields{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+@media(max-width:900px){.task-card-fields{grid-template-columns:1fr 1fr}}
+.task-field{display:flex;flex-direction:column;gap:4px}
+.task-field-label{font-size:.68rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px}
+.task-field select,.task-field input{width:100%;padding:8px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:.85rem;font-family:inherit;color:var(--gray-700);background:#fff;cursor:pointer;transition:all .15s;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path d="M2 3l3 4 3-4" stroke="%235373A3" fill="none" stroke-width="1.5"/></svg>');background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.task-field input[type="date"]{background-image:none;padding-right:10px}
+.task-field select:hover,.task-field input:hover{border-color:var(--gray-400)}
+.task-field select:focus,.task-field input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.1);outline:none}
+
+/* Priority select coloring */
+.task-field select.pr-urgent{background-color:#FEF2F2;color:#E04B51;font-weight:600;border-color:#FECACA}
+.task-field select.pr-high{background-color:#FFF7ED;color:#C05621;font-weight:600;border-color:#FED7AA}
+.task-field select.pr-medium{background-color:#FFFBEB;color:#D97706;font-weight:600;border-color:#FDE68A}
+.task-field select.pr-low{background-color:var(--gray-50);color:var(--gray-500)}
+
+/* Status select coloring */
+.task-field select.st-notstarted{background-color:#FEF2F2;color:#E04B51;font-weight:600;border-color:#FECACA}
+.task-field select.st-inprogress{background-color:#EFF6FF;color:#2563EB;font-weight:600;border-color:#BFDBFE}
+.task-field select.st-knownissue{background-color:#FFFBEB;color:#D97706;font-weight:600;border-color:#FDE68A}
+.task-field select.st-done{background-color:#ECFDF5;color:#10B981;font-weight:600;border-color:#A7F3D0}
+
+/* Footer with edit info */
+.task-card-footer{padding:8px 18px;background:var(--gray-50);border-top:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--gray-400)}
+.task-card-footer a{color:#2563EB;font-weight:600;text-decoration:none}
+.task-edit-badge{display:inline-flex;align-items:center;gap:4px}
 
 /* Identity bar */
 .live-tasks-identity{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:16px 22px;background:linear-gradient(135deg,#162C4C 0%,#2C4C79 100%);color:#fff;border-radius:12px 12px 0 0;flex-wrap:wrap}
@@ -3562,7 +3583,7 @@ function renderWorkshop() {
     else if (filter === 'done') filtered = allTasks.filter(function(t){return t.status === 'Done';});
     else if (filter === 'mine') {
       var me = (getEditorName()).toLowerCase();
-      filtered = allTasks.filter(function(t){return (t.owner||'').toLowerCase().includes(me.split(' ')[0] || 'nonematch');});
+      filtered = allTasks.filter(function(t){return me && (t.owner||'').toLowerCase().includes(me.split(' ')[0]);});
     }
     else filtered = allTasks;
 
@@ -3577,6 +3598,9 @@ function renderWorkshop() {
     var totalOpen = allTasks.filter(function(t){return t.status !== 'Done';}).length;
     var totalDone = allTasks.filter(function(t){return t.status === 'Done';}).length;
     var pct = allTasks.length > 0 ? Math.round(totalDone / allTasks.length * 100) : 0;
+
+    var prClasses = {URGENT:'pr-urgent',HIGH:'pr-high',MEDIUM:'pr-medium',LOW:'pr-low'};
+    var stClasses = {'Not Started':'st-notstarted','In Progress':'st-inprogress','Known Issue':'st-knownissue','Done':'st-done'};
 
     // Identity bar
     var html = '<div class="live-tasks">';
@@ -3596,85 +3620,85 @@ function renderWorkshop() {
     '</div>';
 
     // Filters
-    html += '<div class="live-tasks-header">' +
-      '<div class="live-tasks-filters">';
-    var filters = [
-      {id:'open', label:'Open', n:totalOpen},
-      {id:'notstarted', label:'Not Started', n:allTasks.filter(function(t){return t.status==='Not Started';}).length},
-      {id:'inprogress', label:'In Progress', n:allTasks.filter(function(t){return t.status==='In Progress'||t.status==='Known Issue';}).length},
-      {id:'done', label:'Done', n:totalDone},
-      {id:'mine', label:'My Tasks', n:null},
-      {id:'all', label:'All', n:allTasks.length}
-    ];
-    filters.forEach(function(f) {
+    html += '<div class="live-tasks-header"><div class="live-tasks-filters">';
+    [{id:'open',label:'Open',n:totalOpen},{id:'notstarted',label:'Not Started',n:allTasks.filter(function(t){return t.status==='Not Started';}).length},{id:'inprogress',label:'In Progress',n:allTasks.filter(function(t){return t.status==='In Progress'||t.status==='Known Issue';}).length},{id:'done',label:'Done',n:totalDone},{id:'mine',label:'My Tasks',n:null},{id:'all',label:'All',n:allTasks.length}].forEach(function(f){
       html += '<button class="live-tasks-filter' + (filter===f.id?' active':'') + '" data-task-filter="' + f.id + '">' + f.label + (f.n !== null ? ' <span class="live-tasks-filter-n">' + f.n + '</span>' : '') + '</button>';
     });
     html += '</div></div>';
 
-    var prColors = {URGENT:'#E04B51',HIGH:'#c05621',MEDIUM:'#F59E0B',LOW:'#94A3B8'};
-    var stColors = {'Done':'#10B981','In Progress':'#2563EB','Not Started':'#E04B51','Known Issue':'#F59E0B'};
-    var stIcons = {'Done':'\u2705','In Progress':'\u{1F504}','Not Started':'\u26AA','Known Issue':'\u26A0\uFE0F'};
-
     if (filtered.length === 0) {
-      html += '<div class="live-tasks-empty">\u{1F389} Nothing matches this filter.</div>';
+      html += '<div class="live-tasks-empty">' + (filter === 'mine' ? 'No tasks assigned to you. Switch filter to see all.' : 'Nothing matches this filter.') + '</div>';
     } else {
       html += '<div class="live-tasks-list">';
       filtered.forEach(function(t) {
         var isDone = t.status === 'Done';
         var idStr = typeof t.id === 'number' ? 'W1-'+t.id : t.id;
         var k = t._key;
-        var editedBadge = t._editedBy ? '<span class="live-task-edited" title="Last edited ' + new Date(t._editedAt).toLocaleString() + '">\u270F\uFE0F ' + t._editedBy + '</span>' : '';
         var edits = loadTaskEdits();
         var historyCount = edits[k] && edits[k].history ? edits[k].history.length : 0;
 
-        html += '<div class="live-task-row' + (isDone?' done':'') + '">' +
-          '<button class="live-task-check' + (isDone?' checked':'') + '" onclick="editTask(\'' + k + '\',\'status\',\'' + (isDone?'Not Started':'Done') + '\')">' + (isDone?'\u2713':'') + '</button>' +
-          '<div class="live-task-body">' +
+        html += '<div class="task-card' + (isDone?' done':'') + '">' +
 
-            // Row 1: ID + Priority pill + Status pill + Edited badge
-            '<div class="live-task-top">' +
-              '<span class="live-task-id">' + idStr + '</span>' +
-              '<span class="live-task-workshop">' + t._workshop + '</span>' +
+          // Top row: checkbox + title + ID badge
+          '<div class="task-card-top">' +
+            '<button class="task-card-check' + (isDone?' checked':'') + '" onclick="editTask(\'' + k + '\',\'status\',\'' + (isDone?'Not Started':'Done') + '\')">' + (isDone?'\u2713':'') + '</button>' +
+            '<div class="task-card-title" contenteditable="true" data-field="action" data-key="' + k + '">' + t.action + '</div>' +
+            '<div class="task-card-badges"><span class="task-card-id">' + idStr + '</span></div>' +
+          '</div>' +
 
-              // Priority: clickable pill
-              '<select class="lt-pill-select" onchange="editTask(\'' + k + '\',\'priority\',this.value)" style="background:' + (prColors[t.priority]||'#94A3B8') + '">' +
-                ['URGENT','HIGH','MEDIUM','LOW'].map(function(p){return '<option value="' + p + '"' + (t.priority===p?' selected':'') + '>' + p + '</option>';}).join('') +
-              '</select>' +
+          // Body
+          '<div class="task-card-body">' +
 
-              // Status: clickable pill
-              '<select class="lt-pill-select lt-status-pill" onchange="editTask(\'' + k + '\',\'status\',this.value)" style="background:' + (stColors[t.status]||'#94A3B8') + '">' +
-                ['Not Started','In Progress','Known Issue','Done'].map(function(s){return '<option value="' + s + '"' + (t.status===s?' selected':'') + '>' + (stIcons[s]||'') + ' ' + s + '</option>';}).join('') +
-              '</select>' +
+            // Detail (editable)
+            '<div class="task-card-detail" contenteditable="true" data-field="detail" data-key="' + k + '">' + (t.detail||'') + '</div>' +
 
-              editedBadge +
-              (historyCount > 0 ? '<span class="live-task-history" title="' + historyCount + ' edits">' + historyCount + ' edits</span>' : '') +
-            '</div>' +
+            // Fields grid: Owner, Due, Priority, Status
+            '<div class="task-card-fields">' +
 
-            // Row 2: Editable action title
-            '<div class="live-task-action" contenteditable="true" data-field="action" data-key="' + k + '">' + t.action + '</div>' +
-
-            // Row 3: Editable detail
-            '<div class="live-task-detail" contenteditable="true" data-field="detail" data-key="' + k + '">' + (t.detail||'') + '</div>' +
-
-            // Row 4: Owner (dropdown) + Due (date picker) + Standards
-            '<div class="live-task-meta">' +
-              '<span class="lt-meta-item">\u{1F464} ' +
-                '<select class="lt-meta-select" data-field="owner" data-key="' + k + '" onchange="editTask(\'' + k + '\',\'owner\',this.value)">' +
+              // Owner
+              '<div class="task-field">' +
+                '<div class="task-field-label">Owner</div>' +
+                '<select onchange="editTask(\'' + k + '\',\'owner\',this.value)">' +
                   '<option value="">Assign...</option>' +
                   TEAM_MEMBERS.map(function(m){return '<option value="' + m.name + '"' + ((t.owner||'').includes(m.name.split(' ')[0])?' selected':'') + '>' + m.name + '</option>';}).join('') +
                   '<option value="Team">Team</option>' +
                   ((t.owner && !TEAM_MEMBERS.some(function(m){return (t.owner||'').includes(m.name.split(' ')[0]);})) ? '<option selected>' + t.owner + '</option>' : '') +
                 '</select>' +
-              '</span>' +
-              '<span class="lt-meta-item">\u{1F4C5} ' +
-                '<input type="date" class="lt-meta-date" data-field="due" data-key="' + k + '" value="' + (t.due && t.due.match && t.due.match(/\d{4}-\d{2}-\d{2}/) ? t.due : '') + '" onchange="editTask(\'' + k + '\',\'due\',this.value)">' +
-                (t.due && !t.due.match(/\d{4}-\d{2}-\d{2}/) ? '<span class="lt-due-text">' + t.due + '</span>' : '') +
-              '</span>' +
-              '<span class="lt-meta-item">\u{1F3AF} ' + t.standard + '</span>' +
-            '</div>' +
+              '</div>' +
 
-          '</div>' +
-        '</div>';
+              // Due date
+              '<div class="task-field">' +
+                '<div class="task-field-label">Due Date</div>' +
+                '<input type="date" value="' + (t.due && t.due.match && t.due.match(/\d{4}-\d{2}-\d{2}/) ? t.due : '') + '" onchange="editTask(\'' + k + '\',\'due\',this.value)">' +
+                (t.due && !t.due.match(/\d{4}-\d{2}-\d{2}/) ? '<div style="font-size:.72rem;color:var(--gray-400);margin-top:2px;font-style:italic">' + t.due + '</div>' : '') +
+              '</div>' +
+
+              // Priority
+              '<div class="task-field">' +
+                '<div class="task-field-label">Priority</div>' +
+                '<select class="' + (prClasses[t.priority]||'') + '" onchange="editTask(\'' + k + '\',\'priority\',this.value)">' +
+                  ['URGENT','HIGH','MEDIUM','LOW'].map(function(p){return '<option value="' + p + '"' + (t.priority===p?' selected':'') + '>' + p + '</option>';}).join('') +
+                '</select>' +
+              '</div>' +
+
+              // Status
+              '<div class="task-field">' +
+                '<div class="task-field-label">Status</div>' +
+                '<select class="' + (stClasses[t.status]||'') + '" onchange="editTask(\'' + k + '\',\'status\',this.value)">' +
+                  ['Not Started','In Progress','Known Issue','Done'].map(function(s){return '<option value="' + s + '"' + (t.status===s?' selected':'') + '>' + s + '</option>';}).join('') +
+                '</select>' +
+              '</div>' +
+
+            '</div>' + // end fields grid
+          '</div>' + // end body
+
+          // Footer with edit info
+          (t._editedBy || historyCount > 0 ? '<div class="task-card-footer">' +
+            '<span class="task-edit-badge">' + (t._editedBy ? '\u270F\uFE0F Last edited by <strong>' + t._editedBy + '</strong>' : '') + (t._editedAt ? ' \u2022 ' + new Date(t._editedAt).toLocaleDateString('en-AU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '') + '</span>' +
+            (historyCount > 0 ? '<span>' + historyCount + ' edit' + (historyCount>1?'s':'') + '</span>' : '') +
+          '</div>' : '') +
+
+        '</div>'; // end task-card
       });
       html += '</div>';
     }
@@ -3682,7 +3706,6 @@ function renderWorkshop() {
     html += '</div>';
     return html;
   }
-
   let html = `
   <div class="ev-header">
     <h2>Workshop Actions — Registration Renewal</h2>
