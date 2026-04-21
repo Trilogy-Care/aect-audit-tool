@@ -179,6 +179,48 @@
         </td>
         <td><span class="sha">d5b6f3d</span></td>
       </tr>
+      <tr>
+        <td>2026-04-21</td>
+        <td>
+          <strong>CI pipeline adds worker + API import smoke tests before ECR push.</strong>
+          Build pipeline now verifies that both the worker and API service images can
+          import cleanly before they are promoted to the container registry, preventing
+          broken deploys from reaching any environment that QA or clinical staff rely on.
+        </td>
+        <td class="std">Standard 2 &mdash; The Organisation<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 2.8 (Quality &amp; Continuous Improvement) &mdash; deploy-time quality gates.</span>
+        </td>
+        <td><span class="sha">e6e74e7</span></td>
+      </tr>
+      <tr>
+        <td>2026-04-21</td>
+        <td>
+          <strong>Null-safe rendering of metric_value, threshold and care_partner in ExceptionsTab.</strong>
+          Hardened the Exceptions tab against partial upstream data so clinical and
+          care exceptions continue to render for QA review even when individual fields
+          are missing, preserving visibility of risk signals that drive follow-up action.
+        </td>
+        <td class="std">Standard 8 &mdash; Clinical &amp; Care Governance<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 8.3 (Risk &amp; Incident Management Systems) &mdash; reliable exception visibility.</span>
+        </td>
+        <td><span class="sha">152e3ee</span></td>
+      </tr>
+      <tr>
+        <td>2026-04-21</td>
+        <td>
+          <strong>News feed narrowed to Trilogy Care operational relevance.</strong>
+          Filtered the live News sidebar and page to prioritise content relevant to
+          Trilogy Care operations, so staff see signal (regulatory change, sector news
+          affecting clients) over noise and can act on current direction faster.
+        </td>
+        <td class="std">Standard 2 &mdash; The Organisation<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 2.10 (Workforce Planning) &mdash; relevant internal comms for staff.</span>
+        </td>
+        <td><span class="sha">1472096</span></td>
+      </tr>
     </tbody>
   </table>
 
