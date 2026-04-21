@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI Register - AECT | Trilogy Care</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#2C4C79;--blue:#64BCEA;--green:#43C0BE;--green-bg:#E3F6F5;
+    --amber:#FEBD33;--gray-50:#F0F5FA;--gray-200:#e2e8f0;--gray-600:#2C4C79;
+    --gray-800:#162C4C;--radius:6px;
+  }
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--gray-50);color:var(--gray-800);padding:32px;line-height:1.5}
+  .wrap{max-width:1200px;margin:0 auto;background:#fff;border-radius:var(--radius);
+    box-shadow:0 1px 3px rgba(0,0,0,.12);padding:32px}
+  h1{color:var(--navy);font-size:24px;margin-bottom:8px}
+  .sub{color:#5373A3;font-size:13px;margin-bottom:24px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;
+    background:var(--green-bg);color:var(--navy);font-size:11px;font-weight:600;
+    margin-left:8px;vertical-align:middle}
+  table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+  thead th{background:var(--navy);color:#fff;text-align:left;padding:10px 12px;
+    font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  tbody td{padding:12px;border-bottom:1px solid var(--gray-200);vertical-align:top}
+  tbody tr:hover td{background:rgba(67,192,190,.06)}
+  .sha{font-family:"SF Mono",Menlo,monospace;font-size:12px;color:var(--navy);
+    background:var(--gray-50);padding:2px 6px;border-radius:4px}
+  .std{font-weight:600;color:var(--navy)}
+  .meta{color:#5373A3;font-size:12px;margin-top:16px;padding-top:16px;
+    border-top:1px solid var(--gray-200)}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Continuous Improvement Register <span class="badge">SEED</span></h1>
+  <div class="sub">
+    ACQSC Strengthened Quality Standard &rarr; Ops-App Commit Evidence &rarr; Linear / Confluence follow-up
+    <br>
+    Backfill source: <code>trilogy-care/tc-operations-applications</code> git history (last 30 days).
+    <a href="./index.html">&larr; Back to AECT Policy Mapper</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:110px">Date</th>
+        <th>Improvement Summary</th>
+        <th style="width:260px">ACQSC Strengthened Quality Standard</th>
+        <th style="width:110px">Commit SHA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2026-04-11</td>
+        <td>
+          <strong>Added <code>X-User-ID</code> header to Graph API MCP calls.</strong>
+          Ensures per-user identity attribution on every downstream tool invocation,
+          improving auditability of who accessed which client record and when.
+        </td>
+        <td class="std">Standard 2 &mdash; The Organisation<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 2.9 (Information Management) &mdash; accountable access to personal info.</span>
+        </td>
+        <td><span class="sha">875d560</span></td>
+      </tr>
+      <tr>
+        <td>2026-04-07</td>
+        <td>
+          <strong>CSP violations fixed across all pages.</strong>
+          Closed out Content Security Policy gaps flagged in internal audit,
+          restoring analytics + error-monitoring coverage so clinical governance
+          dashboards render reliably for QA staff.
+        </td>
+        <td class="std">Standard 8 &mdash; Clinical &amp; Care Governance<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 8.3 (Risk &amp; Incident Management Systems) &mdash; reliable monitoring tooling.</span>
+        </td>
+        <td><span class="sha">7861dca</span></td>
+      </tr>
+      <tr>
+        <td>2026-04-03</td>
+        <td>
+          <strong>Supplier Document Reader dashboard launched under Quality nav.</strong>
+          New module lets QA review supplier docs (insurance, police checks, service
+          agreements) in one place, strengthening evidence that the service
+          environment is delivered by appropriately-credentialed providers.
+        </td>
+        <td class="std">Standard 4 &mdash; The Service Environment<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 4.1b (Service Environment Oversight) &mdash; supplier credentialing visibility.</span>
+        </td>
+        <td><span class="sha">06e4fa0</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="meta">
+    Seeded 2026-04-17 from <code>~/trilogy-care/tc-operations-applications</code>
+    via AECT workshop CI backfill task (Action 5, first slice).
+    Next cycles will extend this register backwards to cover 12 months of ops-app work
+    and link each row to Linear issues / Confluence pages where remediation was tracked.
+  </div>
+</div>
+</body>
+</html>
