@@ -137,6 +137,48 @@
         </td>
         <td><span class="sha">30f30a0</span></td>
       </tr>
+      <tr>
+        <td>2026-04-17</td>
+        <td>
+          <strong>Null-safe rendering for Cat 5 Monitor stats.</strong>
+          Hardened the Category 5 clinical risk monitor against undefined metric
+          values so the dashboard continues to render even when upstream data is
+          partial, preserving QA visibility of high-acuity risk signals.
+        </td>
+        <td class="std">Standard 8 &mdash; Clinical &amp; Care Governance<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 8.3 (Risk &amp; Incident Management Systems) &mdash; reliable high-acuity monitoring.</span>
+        </td>
+        <td><span class="sha">614f02b</span></td>
+      </tr>
+      <tr>
+        <td>2026-04-16</td>
+        <td>
+          <strong>Collapsible sidebar section groups with chevron toggle.</strong>
+          Reorganised platform navigation so staff can scan quality, clinical and
+          compliance tool groups at a glance, lowering the effort required to reach
+          the right tool for an investigation or audit task.
+        </td>
+        <td class="std">Standard 2 &mdash; The Organisation<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 2.10 (Workforce Planning) &mdash; usable quality tooling for frontline staff.</span>
+        </td>
+        <td><span class="sha">1bd8cc8</span></td>
+      </tr>
+      <tr>
+        <td>2026-04-13</td>
+        <td>
+          <strong>Removed dead byType/typeEntries code in ComplianceDashboard.</strong>
+          Cleaned unreachable branches from the compliance dashboard so the
+          displayed aggregates match the single source of truth, reducing the risk
+          of audit misinterpretation from stale or inconsistent code paths.
+        </td>
+        <td class="std">Standard 2 &mdash; The Organisation<br>
+          <span style="font-weight:400;font-size:12px;color:#5373A3">
+          Outcome 2.8 (Quality &amp; Continuous Improvement) &mdash; code hygiene reduces audit error.</span>
+        </td>
+        <td><span class="sha">d5b6f3d</span></td>
+      </tr>
     </tbody>
   </table>
 
