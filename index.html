@@ -3347,7 +3347,7 @@ function renderWorkshop() {
     {id:"W3-7", action:"Debrief with Maryanne on policy review status", owner:"Celeste / Maryanne", due:"Fri 18 Apr", priority:"HIGH", status:"Not Started",
      detail:"Maryanne returns from leave. Need full debrief: where does the policy review stand in Supported Home transition? Which policies reviewed? Confirm which tracker (Catherine's original or Maryanne's gap analysis) is the current source of truth. Locate the policy-to-standard mapping tracker.",
      standard:"All", doc:"Docs 1-30"},
-    {id:"W3-8", action:"Weekly unmapped CI items review", owner:"Fran / Celeste / Liz", due:"Weekly ongoing", priority:"MEDIUM", status:"Not Started",
+    {id:"W3-8", action:"Weekly unmapped CI items review", owner:"Fran / Celeste / Leslie", due:"Weekly ongoing", priority:"MEDIUM", status:"Not Started",
      detail:"Once integration interface is built (W3-4), review 'unmapped' CI items weekly. Map new items from Confluence/Linear to CRM CI entries and quality standards. Reconcile across CRM, Confluence, and Linear.",
      standard:"2.1, 2.3, 2.4", doc:"Doc 37 (CI Plan)"},
     {id:"W3-9", action:"Define human-in-the-loop process for AI agent outputs", owner:"Isaac", due:"Before next workshop", priority:"MEDIUM", status:"Not Started",
@@ -3565,7 +3565,7 @@ function renderWorkshop() {
     {name:'Fran Da Silva', initials:'FD', color:'#26A69A'},
     {name:'Zoe Judd', initials:'ZJ', color:'#EF5350'},
     {name:'Maryanne', initials:'MA', color:'#5C6BC0'},
-    {name:'Liz Nelson', initials:'LN', color:'#66BB6A'},
+    {name:'Leslie Nelson', initials:'LN', color:'#66BB6A'},
     {name:'Sophie Pickett', initials:'SP', color:'#FFA726'},
     {name:'Megs', initials:'MG', color:'#EC407A'},
     {name:'Romy', initials:'RO', color:'#7E57C2'},
@@ -3934,7 +3934,7 @@ function renderWorkshop() {
       <li><strong>Friday 18 Apr:</strong> Maryanne returns from leave — debrief on policy review status and Catherine/Maryanne tracker. Confirm source of truth for policy-to-standard mapping.</li>
       <li><strong>This week:</strong> Ash builds policy reference suite architecture. CRM CI module reconciliation begins (Celeste/Fran). Isaac defines human-in-the-loop AI review process.</li>
       <li><strong>Next 2 weeks:</strong> AI agent CI data gathering deployed with confidence scoring. Integration interface designed (CRM → Confluence/Linear). Zoe QA gap analysis status check.</li>
-      <li><strong>Weekly ongoing:</strong> Unmapped CI items review by Fran/Celeste/Liz. Fortnightly management meetings running (Celeste). Clinical Governance and Quality Committee meetings continuing.</li>
+      <li><strong>Weekly ongoing:</strong> Unmapped CI items review by Fran/Celeste/Leslie. Fortnightly management meetings running (Celeste). Clinical Governance and Quality Committee meetings continuing.</li>
       <li><strong>Before audit (28 June):</strong> All 48 docs in SharePoint repository. Staff trained via quizzes and role-play. Policy review complete for Supported Home. CI register fully reconciled across CRM/Confluence/Linear. Mock audit conducted.</li>
     </ul>
   </div>
@@ -4205,7 +4205,7 @@ function renderTriage() {
   const curKey = cur ? 'idx_' + trState.currentIdx : null;
   const curAssign = curKey && trState.assignments[curKey] ? trState.assignments[curKey] : {outcomes:[]};
 
-  let html = '<div class="ev-header"><h2>Unmapped CI Triage</h2><p>Workshop 3 action W3-8 \u2014 Weekly review by Fran/Celeste/Liz to map ' + total + ' unmapped CRM items to Quality Standard outcomes.</p></div>';
+  let html = '<div class="ev-header"><h2>Unmapped CI Triage</h2><p>Workshop 3 action W3-8 \u2014 Weekly review by Fran/Celeste/Leslie to map ' + total + ' unmapped CRM items to Quality Standard outcomes.</p></div>';
 
   const pct = total > 0 ? Math.round((mappedCount + naCount) / total * 100) : 0;
   html += '<div class="ev-summary">' +
@@ -4222,7 +4222,7 @@ function renderTriage() {
     '<label style="font-size:.85rem;font-weight:600;color:var(--gray-600)">Reviewer:</label>' +
     '<select id="triageReviewer" class="field-select" style="width:auto;min-width:140px">' +
       '<option value="">Select...</option>' +
-      ['Fran Da Silva','Celeste Davis','Liz Nelson','Other'].map(n => '<option ' + (trState.reviewer===n?'selected':'') + '>' + n + '</option>').join('') +
+      ['Fran Da Silva','Celeste Davis','Leslie Nelson','Other'].map(n => '<option ' + (trState.reviewer===n?'selected':'') + '>' + n + '</option>').join('') +
     '</select>' +
     '<span style="font-size:.82rem;color:var(--gray-500)">Item ' + (trState.currentIdx+1) + ' of ' + total + '</span>' +
   '</div>';
