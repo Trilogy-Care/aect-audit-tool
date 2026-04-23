@@ -1153,7 +1153,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="ideas-view">
       <div class="ideas-hero">
         <h1><span>💡</span> Have an idea for the AECT tool?</h1>
-        <p class="ideas-hero-sub">Drop it here &mdash; anything you&rsquo;d like to see, change, or fix. No need to format or file it anywhere. Ideas stay in your browser and can be shared with Ash on demand.</p>
+        <p class="ideas-hero-sub">Drop it here &mdash; anything you&rsquo;d like to see, change, or fix. Every submission is shared with the whole team (visible below).</p>
         <textarea class="ideas-textarea" id="ideasContent" placeholder="e.g. It&rsquo;d help if I could filter CI items by the person who raised them… or the Auditor Sim should let me re-roll without refreshing…"></textarea>
         <div class="ideas-row">
           <input class="ideas-name" id="ideasName" type="text" placeholder="Your name (optional)" />
@@ -1167,7 +1167,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
       <div class="ideas-list">
         <div class="ideas-list-title">
-          <span>Your ideas</span>
+          <span>What the team has asked for</span>
           <span id="ideasCount" style="font-weight:400;color:var(--gray-500);font-size:.72rem"></span>
         </div>
         <div id="ideasList"></div>
@@ -1772,13 +1772,19 @@ document.addEventListener('click', e => {
 });
 
 // ============ IDEAS ============
-const IDEAS_KEY = 'aect.ideas.v1';
-function loadIdeas() {
-  try { return JSON.parse(localStorage.getItem(IDEAS_KEY) || '[]'); } catch(e) { return []; }
+// Primary store: shared server endpoint (everyone sees everyone's ideas).
+// Fallback: localStorage (if the API is unreachable we keep pending submissions
+// and flush them on next successful load).
+const IDEAS_API = 'https://operations.trilogycare.com.au/api/public/aect-ideas';
+const IDEAS_PENDING_KEY = 'aect.ideas.pending.v1';
+
+function loadPending() {
+  try { return JSON.parse(localStorage.getItem(IDEAS_PENDING_KEY) || '[]'); } catch(e) { return []; }
 }
-function saveIdeas(arr) {
-  try { localStorage.setItem(IDEAS_KEY, JSON.stringify(arr)); } catch(e) {}
+function savePending(arr) {
+  try { localStorage.setItem(IDEAS_PENDING_KEY, JSON.stringify(arr)); } catch(e) {}
 }
+
 function formatRelative(iso) {
   if (!iso) return '';
   const d = new Date(iso);
@@ -1792,69 +1798,122 @@ function formatRelative(iso) {
   if (diffDay < 30) return diffDay + 'd ago';
   return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 }
-function renderIdeas() {
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function fetchIdeas() {
+  const res = await fetch(IDEAS_API, { method: 'GET', credentials: 'omit' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  return (data.ideas || []).map(i => ({
+    id: i.id,
+    content: i.content,
+    author: i.author_name,
+    createdAt: i.created_at,
+  }));
+}
+
+async function postIdea(payload) {
+  const res = await fetch(IDEAS_API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'omit',
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+async function flushPending() {
+  const pending = loadPending();
+  if (!pending.length) return;
+  const stillPending = [];
+  for (const p of pending) {
+    try {
+      await postIdea({ content: p.content, author_name: p.author || null });
+    } catch (e) {
+      stillPending.push(p);
+    }
+  }
+  savePending(stillPending);
+}
+
+async function renderIdeas() {
   const list = document.getElementById('ideasList');
   const count = document.getElementById('ideasCount');
   if (!list) return;
-  const ideas = loadIdeas();
-  count.textContent = ideas.length ? ideas.length + ' saved locally' : '';
+
+  list.innerHTML = '<div class="ideas-empty">Loading ideas…</div>';
+
+  // Fire off any queued-while-offline submissions before reading
+  await flushPending();
+
+  let ideas = [];
+  let offline = false;
+  try {
+    ideas = await fetchIdeas();
+  } catch (e) {
+    offline = true;
+    // Show pending local entries so the user at least sees what they've queued
+    ideas = loadPending().map(p => ({ ...p, pending: true }));
+  }
+
+  count.textContent = offline
+    ? 'Offline — showing pending only'
+    : ideas.length ? ideas.length + (ideas.length === 1 ? ' idea' : ' ideas') : '';
+
   if (ideas.length === 0) {
-    list.innerHTML = '<div class="ideas-empty">No ideas yet. Be the first &mdash; submit one above.</div>';
+    list.innerHTML = '<div class="ideas-empty">' + (offline
+      ? 'Can&rsquo;t reach the shared store. Your ideas will queue locally and post next time the site is online.'
+      : 'No ideas yet. Be the first &mdash; submit one above.') + '</div>';
     return;
   }
-  list.innerHTML = ideas.map((i, idx) => `
+  list.innerHTML = ideas.map(i => `
     <div class="idea-item">
-      <div class="idea-content">${escapeHtml(i.content)}</div>
+      <div class="idea-content">${escapeHtml(i.content)}${i.pending ? ' <span style="font-size:.68rem;color:#E0763C;margin-left:6px;padding:2px 6px;border:1px solid #E0763C;border-radius:6px">pending</span>' : ''}</div>
       <div class="idea-meta">
         <span>👤 ${escapeHtml(i.author || 'Anonymous')}</span>
         <span>🕒 ${formatRelative(i.createdAt)}</span>
-        <button class="idea-meta-action" data-idea-mailto="${idx}">Send to Ash</button>
-        <button class="idea-meta-action" data-idea-delete="${idx}">Delete</button>
       </div>
     </div>
   `).join('');
 }
-function escapeHtml(s) {
-  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-document.addEventListener('click', e => {
-  const del = e.target.closest('[data-idea-delete]');
-  if (del) {
-    const ideas = loadIdeas();
-    ideas.splice(parseInt(del.dataset.ideaDelete, 10), 1);
-    saveIdeas(ideas);
-    renderIdeas();
-    return;
-  }
-  const mail = e.target.closest('[data-idea-mailto]');
-  if (mail) {
-    const ideas = loadIdeas();
-    const i = ideas[parseInt(mail.dataset.ideaMailto, 10)];
-    if (!i) return;
-    const subject = encodeURIComponent('AECT tool idea from ' + (i.author || 'someone'));
-    const body = encodeURIComponent(i.content + '\n\n— Submitted ' + (i.createdAt || '') + ' via AECT Policy Mapper');
-    window.location.href = 'mailto:ashw@trilogycare.com.au?subject=' + subject + '&body=' + body;
-  }
-});
+
 document.addEventListener('DOMContentLoaded', () => {
   const submit = document.getElementById('ideasSubmit');
   const content = document.getElementById('ideasContent');
   const name = document.getElementById('ideasName');
   const fb = document.getElementById('ideasFeedback');
-  if (submit && content) {
-    submit.addEventListener('click', () => {
-      const text = (content.value || '').trim();
-      if (!text) return;
-      const ideas = loadIdeas();
-      ideas.unshift({ content: text, author: (name.value || '').trim() || null, createdAt: new Date().toISOString() });
-      saveIdeas(ideas);
+  if (!submit || !content) return;
+
+  submit.addEventListener('click', async () => {
+    const text = (content.value || '').trim();
+    if (!text) return;
+    const author = (name.value || '').trim() || null;
+
+    submit.disabled = true;
+    try {
+      await postIdea({ content: text, author_name: author });
       content.value = '';
-      fb.textContent = '✓ Saved. Click "Send to Ash" on your idea to share it.';
+      fb.style.color = '#007F7E';
+      fb.textContent = '✓ Shared. Everyone can see it now.';
       fb.style.display = 'block';
+    } catch (e) {
+      // Queue for later
+      const pending = loadPending();
+      pending.unshift({ content: text, author, createdAt: new Date().toISOString() });
+      savePending(pending);
+      content.value = '';
+      fb.style.color = '#E0763C';
+      fb.textContent = '✓ Saved locally — will auto-post next time the shared store is reachable.';
+      fb.style.display = 'block';
+    } finally {
+      submit.disabled = false;
       setTimeout(() => { fb.style.display = 'none'; }, 3500);
       renderIdeas();
-    });
-  }
+    }
+  });
 });
 
 // ============ SIDEBAR ============
